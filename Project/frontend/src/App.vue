@@ -87,6 +87,7 @@
       v-model="isDrawer"
       absolute
       temporary
+      app
     >
       <v-list
         nav
