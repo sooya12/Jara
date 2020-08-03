@@ -59,7 +59,7 @@
           background-color="lime"
           class="elevation-2"
           dark
-          :grow="grow"
+          grow
         >
           <v-tabs-slider></v-tabs-slider>
 
@@ -192,7 +192,7 @@
                   <v-btn
                     color="red darken-1"
                     text
-                    @click="dialog = false"
+                    @click="sendReport"
                     class="font-weight-bold"
                   >
                     신고
@@ -227,6 +227,7 @@
 
 <script>
 import { mapState, mapGetters, mapMutations, mapActions } from 'vuex'
+
 export default {
   name: 'App',
   mounted() {
@@ -267,6 +268,7 @@ export default {
       'goToTips',
       'goToProfile',
       'report',
+      'sendReport'
     ]),
     ...mapMutations([
       'SET_ENTRANCE',
@@ -284,6 +286,9 @@ export default {
         this.$router.push(`/accounts/${this.searchWord}`)
         this.searchWord = null
       }
+    },
+    sendReport() {
+      this.$store.dispatch('sendReport', this.reportData) 
     }
   },
   data() {

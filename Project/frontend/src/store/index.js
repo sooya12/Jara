@@ -10,7 +10,7 @@ Vue.use(VueCookies)
 
 export default new Vuex.Store({
   state: {
-    api_server: 'http://i3a308.p.ssafy.io:8081',
+    api_server: 'http://localhost:8081',
     authToken: VueCookies.get('auth-token'),
     entrance: true,
     drawer: false,
@@ -79,8 +79,6 @@ export default new Vuex.Store({
       router.push('/accounts/signin')
     },
     getUsers({ commit, state }) {
-      state.results.push({ header: '최근 검색 결과' })
-      state.results.push({ divider: true })
       Axios.get(`${state.api_server}/accounts`)
         .then(res => {
           const nicks = {}
@@ -140,6 +138,17 @@ export default new Vuex.Store({
           VueCookies.remove('auth-token')
           alert('로그인 유효 시간이 만료되었습니다. 다시 로그인 해 주세요.')
           router.push('/accounts/signin')
+        })
+    },
+    sendReport({ commit, state }, data) {
+      Axios.post(`${state.api_server}/reports`, data)
+        .then(() => {
+          alert('신고 내역이 성공적으로 접수되었습니다.')
+          commit('SET_DIALOG', false)
+        })
+        .catch(() => {
+          alert('유효하지 않은 닉네임이거나, 이미 신고하신 유저입니다.')
+          commit('SET_DIALOG', false)
         })
     }
   },
