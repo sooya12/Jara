@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="Account">
+<mapper namespace="com.ssafy.jara.dao.AccountDao">
 	
 
 	<!-- 회원가입 -->
@@ -37,11 +37,18 @@
 		WHERE id=#{id}
 	</select>
 	
+	<!-- 회원 email 확인 -->
+	<select id="findEmail" resultType="java.lang.Integer">
+		SELECT count(*)
+		FROM user
+		WHERE email=#{email}
+	</select>
+	
 	<!-- 회원 정보 수정 -->
 	<update id="updateAccount">
 		UPDATE user SET
 		email=#{email}, nickname=#{nickname}, password=#{password}, 
-		sex=#{sex}, birthday=#{birthday}, location=#{location}
+		sex=#{sex}, birthday=#{birthday}, location=#{location}, bio=#{bio}
 		WHERE id=#{id}
 	</update>
 	
@@ -52,13 +59,18 @@
 		ORDER BY nickname
 	</select>
 	
-
-	
-	<!-- 팔로우 추가 -->
+	<!-- 팔로우 추가 : 팔로우 요청 보내기 -->
 	<insert id="insertFollow">
-		INSERT INTO follow (follower, following)
-		VALUES(#{follower}, #{following})
+		INSERT INTO follow (following,follower, status)
+		VALUES(#{following}, #{follower} ,false)
 	</insert>
+	
+	<!-- 팔로우 추가 : 팔로우 요청 승인하기 -->
+	<update id="approveFollow">
+		UPDATE follow
+		SET status= true
+		WHERE follower=#{follower} AND following=#{following}
+	</update>
 	
 	<!-- 팔로우 리스트 조회 -->
 	<select id="findAllFollow" resultType="com.ssafy.jara.dto.Follow">
@@ -66,5 +78,62 @@
 		FROM follow
 	</select>
 	
+	<!-- 팔로워 정보 조회 -->
+	<select id="findFollowing" resultType="java.lang.Integer">
+		SELECT follower
+		FROM follow
+		WHERE following=#{following} and status=1
+	</select>
+	
+	<!-- 팔로잉 정보 조회 -->
+	<select id="findFollower" resultType="java.lang.Integer">
+		SELECT following
+		FROM follow
+		WHERE follower=#{follower} and status=1
+	</select>
+	
+	<!-- 팔로우 여부 조회 -->
+	<select id="findFollow" resultType="java.lang.Integer">
+		SELECT count(*)
+		FROM follow 
+		WHERE follower=#{follower} and following=#{following} 
+	</select>
+	
+	<!-- 팔로우 취소 -->
+	<delete id="deleteFollow">
+		DELETE
+		FROM follow
+		WHERE follower=#{follower} and following=#{following} 
+	</delete>
+	
+	
+	<!-- 위치 x 조회하기 -->
+	<select id="findX" resultType="java.lang.Double">
+		SELECT x
+		FROM location
+		WHERE name=#{name}
+	</select>
+	
+	<!-- 위치 y 조회하기 -->
+	<select id="findY" resultType="java.lang.Double">
+		SELECT y
+		FROM location
+		WHERE name=#{name}
+	</select>
+	
+	<!-- 위치  조회하기 -->
+	<select id="findlocation" resultType="com.ssafy.jara.dto.Location">
+		SELECT *
+		FROM location
+		WHERE name=#{name}
+	</select>
+	
+	
+	<!-- 모든 위치 조회하기 -->
+	<select id="findAllLocation" resultType="com.ssafy.jara.dto.Location">
+		SELECT *
+		FROM location
+		ORDER BY name
+	</select>
 
 </mapper>
