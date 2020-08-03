@@ -343,23 +343,22 @@ ssh -i [pem 파일] ubuntu@i3a308.p.ssafy.io
 npm run build
 ```
 
-- 로컬에서 dist 디렉토리 확인
-  - 빌드 후에 dist 디렉토리가 생겼는지 확인
+- 로컬에서 빌드 후에 생긴 dist 폴더 확인
 
-- 로컬의 dist 폴더를 github에 push
-  - 빌드 파일이 .gitignore에 등록돼있기 때문에 `git add`를 할 때,  `git add -f [파일명]` 으로 강제로 등록해서 푸쉬해줘야함.
-
-- AWS에서 git clone 또는 git pull
-  - 경로 : /jara/s03p12a308
+- 로컬에서 dist 폴더를 AWS로 전송
+    - `scp -i "[pem file]" -r "~~~\dist" ubuntu@i3a308.p.ssafy.io:~/dist`
 ```
-// clone
-sudo git clone https://lab.ssafy.com/s03-webmobile2-sub2/s03p12a308.git
-
-// pull
-sudo git pull origin develop
+#파일 전송시
+scp -i [pem file] [upload file] [user id]@[ec2 public IP]:~/[transfer address]
+#예시
+scp -i Desktop/amazon/juhyung.pem Desktop/pant.py ubuntu@~~~~:~/
+#폴더 전송시
+scp -i [pem file] -r [upload folder] [user id]@[ec2 public IP]:~/[transfer address]
+#예시
+scp -i Desktop/amazon/juhyung.pem -r Desktop/example ubuntu@~~~~:~/
 ```
 
-- AWS에서 pull해서 받아온 빌드 파일을 기존에 환경설정 해두었던 디렉토리(/var/www/html/dist)로 복사
+- AWS에서 dist 폴더를 `/var/www/html/dist`로 옮기기
 ```
-sudo cp -r /jara/s03p12a308/Project/frontend/dist /var/www/html/dist
+sudo mv ~/dist /var/www/html/dist
 ```
