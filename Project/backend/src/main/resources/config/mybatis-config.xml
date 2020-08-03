@@ -12,6 +12,5 @@
 		<mapper resource="mappers/article-mapper.xml"/>
 		<mapper resource="mappers/article-comment-mapper.xml"/>
 		<mapper resource="mappers/report-mapper.xml"/>
-
 	</mappers>
 </configuration>
