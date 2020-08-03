@@ -1,11 +1,17 @@
 package com.ssafy.jara.controller;
 
+import java.io.UnsupportedEncodingException;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.mail.Message;
+import javax.mail.MessagingException;
+import javax.mail.internet.AddressException;
+import javax.mail.internet.InternetAddress;
+import javax.mail.internet.MimeMessage;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -13,6 +19,10 @@ import javax.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.mail.SimpleMailMessage;
+import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.mail.javamail.MimeMessageHelper;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -23,11 +33,13 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.servlet.ModelAndView;
 
 import com.ssafy.jara.common.service.jwt.JwtService;
 import com.ssafy.jara.dto.Account;
 import com.ssafy.jara.dto.Follow;
 import com.ssafy.jara.dto.Location;
+import com.ssafy.jara.handler.MailHandler;
 import com.ssafy.jara.service.AccountService;
 
 import io.swagger.annotations.ApiOperation;
@@ -45,13 +57,40 @@ public class AccountController extends HttpServlet {
 	@Autowired
     private JwtService jwtService;
 	
+	@Autowired
+	JavaMailSender javaMailSender;
+	
+
+//	@Async
+//	public void sendMail(String email) {
+//		SimpleMailMessage simpleMessage = new SimpleMailMessage();
+//		simpleMessage.setFrom("lcy00707@gmail.com"); 
+//		simpleMessage.setTo(email);
+//		simpleMessage.setSubject("이메일 인증");
+//		simpleMessage.setText("인증번호: 123456");
+//		javaMailSender.send(simpleMessage);
+//	}
+
 
 	@ApiOperation(value = "닉네임과 이메일 중복 체크하여 회원가입 처리", response = String.class)
 	@PostMapping("signup")
-	private ResponseEntity<String> signupAccount(@RequestBody Account account) {
+	private ResponseEntity<String> signupAccount(@RequestBody Account account) throws MessagingException, UnsupportedEncodingException {
 
 		if (accountService.duplicateCheck(account) < 1) {
 			if (accountService.insertAccount(account) > 0) {
+//				sendMail(account.getEmail());
+				
+				//-5
+//				MailHandler sendMail = new MailHandler(javaMailSender);
+//				sendMail.setSubject("[이메일 인증]");
+//				sendMail.setText(new StringBuffer().append("<h1>메일인증</h1>")
+//						.append("자라에 가입해주셔서 감사합니다.<br>" +account.getEmail())
+//						.append("' target='_blenk'>이메일 인증 확인</a>").toString());
+//				sendMail.setFrom("lcy00707@gmail.com","jara");
+//				sendMail.setTo(account.getEmail());
+//				sendMail.send();
+				
+				
 				return new ResponseEntity<String>("success", HttpStatus.OK);
 			}
 			return new ResponseEntity<String>("fail", HttpStatus.NO_CONTENT);
@@ -136,16 +175,19 @@ public class AccountController extends HttpServlet {
 		return new ResponseEntity<String>("success",HttpStatus.OK);
 	}
 	
-	@ApiOperation(value = "비밀번호 변경 전 이메일 인증하기")
+	@ApiOperation(value = "이메일 보내기")
 	@GetMapping("email")
-	public ResponseEntity<Boolean> findEmail(@RequestParam String email){
+	public ResponseEntity<Boolean> findEmail(@RequestParam String email) throws MessagingException, UnsupportedEncodingException{
 		
-//		if(accountService.findEmail(email) > 0) { // email 이 있음
-//			return new ResponseEntity<String>("success", HttpStatus.OK);
-//		
-//		} else { 
-//			return new ResponseEntity<String>("fail", HttpStatus.NO_CONTENT);
-//		}
+		MailHandler sendMail = new MailHandler(javaMailSender);
+		sendMail.setSubject("[이메일 인증]");
+		sendMail.setText(new StringBuffer().append("<h1>메일인증</h1>")
+				.append("자라에 가입해주셔서 감사합니다.<br>" +email)
+				.append("<a href=http://i3a308.p.ssafy.io/>이메일 인증하기</a>").toString());
+
+		sendMail.setFrom("lcy00707@gmail.com","jara");
+		sendMail.setTo(email);
+		sendMail.send();
 		
 		return new ResponseEntity<Boolean>(accountService.findEmail(email) > 0 , HttpStatus.OK);
 	}
