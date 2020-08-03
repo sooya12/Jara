@@ -67,41 +67,62 @@ export default {
       formHasErrors: false,
     }
   },
+  mounted() {
+    if (this.$route.path != '/tips/new') {
+      console.log(this.$route)
+      axios.get(`${this.$store.state.api_server}/tips/${this.$route.params.tip_id}`)
+        .then(res => {
+          const tag_id_dict = {1:'요리', 2:'세탁', 3:'청소', 4:'보관'}
+          this.tip.title = res.data.title
+          this.tip.contents = res.data.contents
+          this.tag = tag_id_dict[res.data.tag_id]
+        })
+    }
+  },
   methods: {
     createTip() {
       const tag_id_dict = {'요리': 1, '세탁': 2, '청소': 3, '보관': 4}
       this.tip.tag_id = tag_id_dict[this.tag]
 
-      console.log(this.$store.state.authToken)
+      // console.log(this.$store.state.authToken)
+      // console.log(this.$route.path)
 
-      axios.post('https://fcm.googleapis.com/fcm/send',
-        { "to": `${this.$store.state.authToken}`, "data": {"message": "푸시 푸시 베이베~ 오 푸시 베이베"}},
-        {headers: {'Accept': 'application/json', 'Content-type' : 'application/json', 'Authorization': 'key=AAAAqnvMOtY:APA91bFyqcyHLsR0mVk5AzquA6oNgLEnuRvhyNdpUTKhC_tFL287Y6jCRAjtmKthB7M1daRIzoPyYhYkN7UBLy0CYt3fkKvFCSiNlJ3v_d5GttA593enRX0x3qGfnAnMl66NK966EHNw'}}
-      )
-        .then(res => {
-          console.log('성공', res)
-        })
-        .catch(err => {
-          console.log('실패',err)
-        })
-
-      axios.post(`${this.$store.state.api_server}/tips`, this.tip)
-        .then(() => {
-          axios.post('https://fcm.googleapis.com/fcm/send',
-            { "to": `${this.$store.state.authToken}`, "data": {"message": "푸시 푸시 베이베~ 오 푸시 베이베"}},
-            {headers: {'Accept': 'application/json', 'Content-type' : 'application/json', 'Authorization': 'key=AAAAqnvMOtY:APA91bFyqcyHLsR0mVk5AzquA6oNgLEnuRvhyNdpUTKhC_tFL287Y6jCRAjtmKthB7M1daRIzoPyYhYkN7UBLy0CYt3fkKvFCSiNlJ3v_d5GttA593enRX0x3qGfnAnMl66NK966EHNw'}}
-          )
-            .then(res => {
-              console.log('성공', res)
-            })
-            .catch(err => {
-              console.log('실패',err)
-            })
-          this.$router.push('/tips')
-        })
-        .catch(err => {
-          console.log(err)
-        })
+      if (this.$route.path == '/tips/new') {
+        axios.post(`${this.$store.state.api_server}/tips`, this.tip)
+          .then(() => {
+            // const to = `${this.$store.state.authToken}`
+            // const data = {"message": "푸시 푸시 베이베~ 오 푸시 베이베"}
+                          
+            // const headers = {'Accept': 'application/json', 
+            //               'Content-type' : 'application/json', 
+            //               'Authorization': 'key=AAAAqnvMOtY:APA91bFyqcyHLsR0mVk5AzquA6oNgLEnuRvhyNdpUTKhC_tFL287Y6jCRAjtmKthB7M1daRIzoPyYhYkN7UBLy0CYt3fkKvFCSiNlJ3v_d5GttA593enRX0x3qGfnAnMl66NK966EHNw'}
+            // const params = {
+            //   to,
+            //   data,
+            //   headers
+            // }
+            // console.log(params)
+            // axios.post('https://fcm.googleapis.com/fcm/send', params)
+            //   .then(res => {
+            //     console.log('성공', res)
+            //   })
+            //   .catch(err => {
+            //     console.log('실패',err)
+            //   })
+            this.$router.push('/tips')
+          })
+          .catch(err => {
+            console.log(err)
+          })
+      } else {
+        // console.log(`${this.$store.state.api_server}/tips/${this.$route.params.tip_id}`)
+        axios.put(`${this.$store.state.api_server}/tips/${this.$route.params.tip_id}`, this.tip)
+          .then(() => this.$router.push(`/tips/${this.$route.params.tip_id}`))
+            // .then(res => {
+            //   console.log(res)
+            // })
+          .catch(err => {console.log(err)})
+      }
     }
   }
 }

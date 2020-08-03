@@ -172,6 +172,16 @@ Vue.use(VueRouter)
     }
   },
   {
+    path: '/tips/update',
+    name: 'UpdateTip',
+    component: NewTip,
+    beforeEnter(to, from, next) {
+      if (Vue.$cookies.isKey('auth-token')) {
+        next()
+      } else { next({ name: 'SignIn' }) }
+    }
+  },
+  {
     path: '/tips/:tip_id',
     name: 'TipsItemDetail',
     component: TipsItemDetail,
@@ -181,8 +191,7 @@ Vue.use(VueRouter)
         next()
       } else { next({name: 'SignIn' }) }
     }
-  },
-
+  }
 ]
 
 const router = new VueRouter({
