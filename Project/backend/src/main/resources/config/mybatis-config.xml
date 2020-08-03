@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE configuration PUBLIC "-//mybatis.org//DTD Config 3.0//EN" "http://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>
+	<mappers>
+		<mapper resource="mappers/account-mapper.xml"/>
+		<mapper resource="mappers/barter-mapper.xml"/>
+		<mapper resource="mappers/barter-comment-mapper.xml"/>
+		<mapper resource="mappers/tip-mapper.xml"/>
+		<mapper resource="mappers/tip-comment-mapper.xml"/>
+		<mapper resource="mappers/either-mapper.xml"/>
+		<mapper resource="mappers/either-comment-mapper.xml"/>
+		<mapper resource="mappers/article-mapper.xml"/>
+		<mapper resource="mappers/article-comment-mapper.xml"/>
+
+	</mappers>
+</configuration>

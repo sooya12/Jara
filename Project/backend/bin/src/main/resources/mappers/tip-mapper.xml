@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="Tip">
+	
+	<!-- 팁 등록 -->
+	<insert id="insertTip">
+		INSERT INTO tip (writer, title, contents, tag_id)
+		VALUES (#{writer}, #{title}, #{contents}, #{tag_id});
+	</insert>
+	
+	<!-- 전체 팁 조회 -->
+	<select id="selectListTip" resultType="com.ssafy.jara.dto.Tip">
+		SELECT *
+		FROM tip
+	</select>
+	
+	<!-- 태그에 해당하는 전체 팁 조회 -->
+	<select id="selectListTipTag" resultType="com.ssafy.jara.dto.Tip">
+		SELECT *
+		FROM tip
+		WHERE tag_id=#{tag_id}
+	</select>
+	
+	<!-- 검색어에 해당하는 전체 팁 조회 -->
+	<select id="selectListTipSearch" resultType="com.ssafy.jara.dto.Tip">
+		SELECT *
+		FROM tip
+		WHERE title like CONCAT('%', #{searchWord}, '%') or contents like CONCAT('%', #{searchWord}, '%');
+	</select>
+	
+	<!-- 해당하는 팁 조회 -->
+	<select id="selectTip" resultType="com.ssafy.jara.dto.Tip">
+		SELECT *
+		FROM tip
+		WHERE id=#{id}
+	</select>
+	
+	<!-- 팁 제목/내용 수정 -->
+	<update id="updateTip">
+		UPDATE tip
+		SET title=#{title}, contents=#{contents}
+		WHERE id=#{id}
+	</update>
+	
+	<!-- 팁 조회수 수정 -->
+	<update id="updateTipHits">
+		UPDATE tip
+		SET hits=hits+1
+		WHERE id=#{id}
+	</update>
+	
+	<!-- 팁 삭제 -->
+	<delete id="deleteTip">
+		DELETE 
+		FROM tip 
+		WHERE id=#{id}
+	</delete>
+	
+	<!-- 팁 댓글 등록 -->
+	<insert id="insertTipComment">
+		INSERT INTO tip_comment (tip_id, writer, contents)
+		VALUES (#{tip_id}, #{writer}, #{contents})
+	</insert>
+	
+	<!-- 팁 전체 댓글 조회 -->
+	<select id="selectTipComments" resultType="com.ssafy.jara.dto.TipComment">
+		SELECT *
+		FROM tip_comment
+		WHERE tip_id=#{tip_id}
+		ORDER BY created_at
+	</select>
+	
+	<!-- 해당하는 팁 댓글 조회 -->
+	<select id="selectTipComment" resultType="com.ssafy.jara.dto.TipComment">
+		SELECT *
+		FROM tip_comment
+		WHERE id=#{id}
+	</select>
+	
+	<!-- 해당하는 팁 댓글 수정 -->
+	<update id="updateTipComment">
+		UPDATE tip_comment
+		SET contents=#{contents}
+		WHERE id=#{id}
+	</update>
+	
+	<!-- 해당하는 팁 댓글 삭제 -->
+	<delete id="deleteTipComment">
+		DELETE
+		FROM tip_comment
+		WHERE id=#{id}
+	</delete>
+</mapper>

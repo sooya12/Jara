@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ssafy.jara.dao.ArticleDao">
+	
+	<!-- 게시글 등록 -->
+	<insert id="insertArticle" useGeneratedKeys="true" keyProperty="id">
+		INSERT INTO article (writer, contents)
+		VALUES (#{writer}, #{contents})
+	</insert>
+	
+	<!-- 전체 게시글 조회 -->
+	<select id="selectListTotalArticle" resultType="com.ssafy.jara.dto.Article">
+		SELECT * <!-- , (SELECT count(*) 
+				   FROM article_like 
+				   WHERE article_id=article.id) AS likes -->
+		FROM article
+		ORDER BY created_at DESC
+	</select>
+	
+	<!-- 사용자가 작성한 전체 게시글 조회 -->
+	<select id="selectListMyArticle" resultType="com.ssafy.jara.dto.Article">
+		SELECT * <!-- , (SELECT count(*) 
+				   FROM article_like 
+				   WHERE article_id=article.id) AS likes -->
+		FROM article
+		WHERE writer=#{writer}
+		ORDER BY created_at DESC
+	</select>
+	
+	<!-- 사용자가 작성한 전체 게시글 및 사용자가 팔로우하는 다른 사용자의 전체 게시글 -->
+	<select id="selectListArticle" resultType="com.ssafy.jara.dto.Article">
+		SELECT id, writer, contents, created_at, updated_at, shares
+			   <!-- , (SELECT count(*) 
+			    FROM article_like 
+			    WHERE article_id=article.id) AS likes -->
+		FROM article
+		WHERE writer=#{user_id} OR (writer IN (SELECT following 
+											   FROM follow 
+											   WHERE follower=#{user_id} AND status=1))
+		ORDER BY created_at DESC
+	</select>
+	
+	<!-- 게시글 조회 -->
+	<select id="selectArticle" resultType="com.ssafy.jara.dto.Article">
+		SELECT * <!-- , (SELECT count(*) 
+				   FROM article_like 
+				   WHERE article_id=article.id) AS likes -->
+		FROM article
+		WHERE id=#{id}
+	</select>
+	
+	<!-- 게시글 수정 -->
+	<update id="updateArticle">
+		UPDATE article
+		SET writer=#{writer}, contents=#{contents}
+		WHERE id=#{id}
+	</update>
+	
+	<!-- 게시글 삭제 -->
+	<delete id="deleteArticle">
+		DELETE
+		FROM article
+		WHERE id=#{id}
+	</delete>
+	
+	<!-- 게시글 공유 수 수정 -->
+	<update id="updateArticleShares">
+		UPDATE article
+		SET shares=shares+1
+		WHERE id=#{id}
+	</update>
+	
+	<!-- 게시글 좋아요 등록 -->
+	<insert id="insertArticleLike" parameterType="java.util.HashMap">
+		INSERT INTO article_like
+		VALUES (#{article_id}, #{user_id})
+	</insert>
+	
+	<!-- 사용자의 해당 게시글 좋아요 여부 확인 -->
+	<select id="selectArticleLike" parameterType="java.util.HashMap" resultType="java.lang.Integer">
+		SELECT count(*)
+		FROM article_like
+		WHERE article_id=#{article_id} AND user_id=#{user_id}
+	</select>
+	
+	<select id="selectArticleLikes" resultType="java.lang.Integer">
+		SELECT count(*)
+		FROM article_like
+		WHERE article_id=#{article_id}
+	</select>
+	
+	<!-- 사용자의 해당 게시글 좋아요 삭제 -->
+	<delete id="deleteArticleLike" parameterType="java.util.HashMap">
+		DELETE
+		FROM article_like
+		WHERE article_id=#{article_id} AND user_id=#{user_id}
+	</delete>
+	
+	<!-- 게시글 좋아요 삭제 -->
+	<delete id="deleteArticleLikes">
+		DELETE
+		FROM article_like
+		WHERE article_id=#{article_id}
+	</delete>
+	
+	<!-- 게시글 좋아요 하는 사용자 전체 조회 -->
+	<select id="selectArticleLikeAccount" resultType="java.lang.Integer">
+		SELECT user_id
+		FROM article_like
+		WHERE article_id=#{article_id}
+	</select>
+	
+</mapper>

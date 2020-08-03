@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ssafy.jara.dao.BarterDao">
+   
+   <!-- 물물교환 등록 -->
+   <insert id="insertBarter" parameterType="com.ssafy.jara.dto.Barter">
+      INSERT INTO item (writer, title, price, contents, tag_id)
+      VALUES (#{writer}, #{title}, #{price}, #{contents}, #{tag_id});
+   </insert>
+   
+   <!-- 하나의 물물교환 조회 -->
+   <select id="selectBarter" parameterType="int" resultType="com.ssafy.jara.dto.Barter">
+      SELECT *
+      FROM item
+      WHERE id=#{id}
+   </select>
+   
+   <!-- 물물교환 수정 -->
+   <update id="updateBarter" parameterType="com.ssafy.jara.dto.Barter">
+      UPDATE item
+      SET title=#{title}, price=#{price}, contents=#{contents}, status=#{status}
+      WHERE id=#{id}
+   </update>
+   
+   <!-- 물물교환 삭제 -->
+   <delete id="deleteBarter" parameterType="int">
+      DELETE FROM item
+      WHERE id=#{id}
+   </delete>
+   
+   <!-- 전체 물물교환 조회 -->
+   <select id="selectListBarter" resultType="com.ssafy.jara.dto.Barter">
+      SELECT *
+      FROM item
+   </select>
+   
+   <!-- 태그에 해당하는 전체 물물교환 조회 -->
+   <select id="selectListBarterTag" parameterType="int" resultType="com.ssafy.jara.dto.Barter">
+      SELECT *
+      FROM item
+      WHERE tag_id=#{tag_id}
+   </select>
+   
+   <!-- 검색어에 해당하는 전체 물물교환 조회 -->
+   <select id="selectListBarterSearch" parameterType="String" resultType="com.ssafy.jara.dto.Barter">
+      SELECT *
+      FROM item
+      WHERE title like CONCAT('%', #{searchWord}, '%') or contents like CONCAT('%', #{searchWord}, '%');
+   </select>
+   
+   <!-- 물물교환 조회수 증가 -->
+   <update id="updateBarterHits" parameterType="int">
+      UPDATE item
+      SET hits=hits+1
+      WHERE id=#{id}
+   </update>
+   
+</mapper>

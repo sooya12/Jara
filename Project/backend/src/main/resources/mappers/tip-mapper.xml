@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ssafy.jara.dao.TipDao">
+	
+	<!-- 팁 등록 -->
+	<insert id="insertTip">
+		INSERT INTO tip (writer, title, contents, tag_id)
+		VALUES (#{writer}, #{title}, #{contents}, #{tag_id})
+	</insert>
+	
+	<!-- 전체 팁 조회 -->
+	<select id="selectListTip" resultType="com.ssafy.jara.dto.Tip">
+		SELECT *, (SELECT count(*) 
+				   FROM tip_like 
+				   WHERE tip_id=tip.id) AS likes
+		FROM tip
+	</select>
+	
+	<!-- 태그에 해당하는 전체 팁 조회 -->
+	<select id="selectListTipTag" resultType="com.ssafy.jara.dto.Tip">
+		SELECT *, (SELECT count(*) 
+				   FROM tip_like 
+				   WHERE tip_id=tip.id) AS likes
+		FROM tip
+		WHERE tag_id=#{tag_id}
+	</select>
+	
+	<!-- 검색어에 해당하는 전체 팁 조회 -->
+	<select id="selectListTipSearch" resultType="com.ssafy.jara.dto.Tip">
+		SELECT *, (SELECT count(*) 
+				   FROM tip_like 
+				   WHERE tip_id=tip.id) AS likes
+		FROM tip
+		WHERE title LIKE CONCAT('%', #{searchWord}, '%') OR contents LIKE CONCAT('%', #{searchWord}, '%')
+	</select>
+	
+	<!-- 태그와 검색어에 해당하는 전체 팁 조회 -->
+	<select id="selectListTipTagSearch" parameterType="java.util.HashMap" resultType="com.ssafy.jara.dto.Tip">
+		SELECT *, (SELECT count(*) 
+				   FROM tip_like 
+				   WHERE tip_id=tip.id) AS likes
+		FROM tip
+		WHERE (title LIKE CONCAT('%', #{searchWord}, '%') OR contents LIKE CONCAT('%', #{searchWord}, '%')) AND tag_id=#{tag_id}
+	</select>
+	
+	<!-- 해당하는 팁 조회 -->
+	<select id="selectTip" resultType="com.ssafy.jara.dto.Tip">
+		SELECT *, (SELECT count(*) 
+				   FROM tip_like 
+				   WHERE tip_id=tip.id) AS likes
+		FROM tip
+		WHERE id=#{id}
+	</select>
+	
+	<!-- 팁 제목/내용 수정 -->
+	<update id="updateTip">
+		UPDATE tip
+		SET title=#{title}, contents=#{contents}
+		WHERE id=#{id}
+	</update>
+	
+	<!-- 팁 조회수 수정 -->
+	<update id="updateTipHits">
+		UPDATE tip
+		SET hits=hits+1
+		WHERE id=#{id}
+	</update>
+	
+	<!-- 팁 삭제 -->
+	<delete id="deleteTip">
+		DELETE 
+		FROM tip 
+		WHERE id=#{id}
+	</delete>
+	
+	<!-- 팁 좋아요 등록 -->
+	<insert id="insertTipLike" parameterType="java.util.HashMap">
+		INSERT INTO tip_like
+		VALUES (#{tip_id}, #{user_id})
+	</insert>
+	
+	<!-- 사용자의 해당 팁 좋아요 여부 확인 -->
+	<select id="selectTipLike" parameterType="java.util.HashMap" resultType="java.lang.Integer">
+		SELECT count(*)
+		FROM tip_like
+		WHERE tip_id=#{tip_id} AND user_id=#{user_id}
+	</select>
+	
+	<!-- 팁 좋아요 삭제 -->
+	<delete id="deleteTipLike" parameterType="java.util.HashMap">
+		DELETE 
+		FROM tip_like
+		WHERE tip_id=#{tip_id} AND user_id=#{user_id}
+	</delete>
+	
+	<!-- 팁 좋아요 모두 삭제 -->
+	<delete id="deleteTipLikes">
+		DELETE 
+		FROM tip_like
+		WHERE tip_id=#{tip_id}
+	</delete>
+	
+</mapper>

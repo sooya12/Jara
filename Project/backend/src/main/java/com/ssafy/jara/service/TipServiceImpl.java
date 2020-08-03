@@ -1,0 +1,85 @@
+package com.ssafy.jara.service;
+
+import java.util.HashMap;
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import com.ssafy.jara.dao.TipDao;
+import com.ssafy.jara.dto.Tip;
+
+@Service
+public class TipServiceImpl implements TipService {
+
+	@Autowired
+	TipDao tipDao;
+	
+	@Override
+	public int insertTip(Tip tip) {
+		return tipDao.insertTip(tip);
+	}
+
+	@Override
+	public List<Tip> selectListTip() {
+		return tipDao.selectListTip();
+	}
+
+	@Override
+	public List<Tip> selectListTipTag(int tag_id) {
+		System.out.println("service : " + tag_id);
+		return tipDao.selectListTipTag(tag_id);
+	}
+
+	@Override
+	public List<Tip> selectListTipSearch(String searchWord) {
+		return tipDao.selectListTipSearch(searchWord); 
+	}
+	
+	@Override
+	public List<Tip> selectListTipTagSearch(HashMap<String, String> hashMap) {
+		return tipDao.selectListTipTagSearch(hashMap);
+	}
+
+
+	@Override
+	public Tip selectTip(int id) {
+		return tipDao.selectTip(id);
+	}
+
+	@Override
+	public int updateTip(Tip tip) {
+		return tipDao.updateTip(tip);
+	}
+
+	@Override
+	public int updateTipHits(int id) {
+		return tipDao.updateTipHits(id);
+	}
+
+	@Override
+	public int deleteTip(int id) {
+		return tipDao.deleteTip(id);
+	}
+
+	@Override
+	public int insertTipLike(HashMap<String, Integer> hashMap) {
+		return tipDao.insertTipLike(hashMap);
+	}
+
+	@Override
+	public int selectTipLike(HashMap<String, Integer> hashMap) {
+		return tipDao.selectTipLike(hashMap);
+	}
+
+	@Override
+	public int deleteTipLike(HashMap<String, Integer> hashMap) {
+		return tipDao.deleteTipLike(hashMap);
+	}
+
+	@Override
+	public int deleteTipLikes(int tip_id) {
+		return tipDao.deleteTipLikes(tip_id);
+	}
+
+}

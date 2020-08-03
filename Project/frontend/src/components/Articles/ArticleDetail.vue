@@ -1,0 +1,209 @@
+<template>
+  <v-container fluid mt-5>
+    <div class="d-flex justify-space-between align-center">
+      <div class="d-flex align-center">      
+        <v-icon x-large>mdi-account-circle</v-icon>
+        <div class="ml-2 font-weight-bold text-sm-h6 text-subtitle-2">{{ users[article.writer] }}</div>
+      </div>
+      <div class="d-flex align-center">
+        <div class="grey--text">{{ article.created_at }}</div>
+        <v-menu offset-y>
+          <template v-slot:activator="{ on, attrs }">
+            <v-btn
+              icon
+              v-bind="attrs"
+              v-on="on"
+            >
+              <v-icon>mdi-dots-horizontal</v-icon>
+            </v-btn>
+          </template>
+          <v-list>
+            <v-list-item
+              v-for="(menu, idx) in menuItems"
+              :key="idx"
+              @click="updateOrDelete(idx)"
+            >
+              <v-list-item-title>{{ menu.title }}</v-list-item-title>
+            </v-list-item>
+          </v-list>
+        </v-menu>
+      </div>
+    </div>
+    <div class="mt-5 ml-5">{{ article.contents }}</div>   
+    <v-divider class="mt-5"></v-divider>
+    <div class="d-flex justify-space-around">
+      <div v-if="!liked">
+        <v-btn @click="like" icon><v-icon>mdi-heart-outline</v-icon></v-btn>{{ article.likeAccounts.length }}명이 이 글을 좋아합니다.
+      </div>
+      <div v-else-if="liked && article.likeAccounts.length == 1">
+        <v-btn @click="unLike" icon><v-icon color="red darken-1">mdi-heart</v-icon></v-btn>{{ userInfo.nickname }}님 이 글을 좋아합니다.
+      </div>
+      <div v-else>
+        <v-btn @click="unLike" icon><v-icon color="red darken-1">mdi-heart</v-icon></v-btn>{{ userInfo.nickname }}님 외 {{ article.likeAccounts.length-1 }} 명이 글을 좋아합니다.
+      </div>
+      <div><v-btn icon><v-icon>mdi-comment-processing</v-icon></v-btn>{{ article.comments.length }}</div>
+      <div><v-btn icon><v-icon color="teal">mdi-share-variant</v-icon></v-btn>{{ article.shares }}</div>
+    </div>
+    <v-divider class="mb-5"></v-divider>
+    <div class="text-sm-h6 text-subtitle-2">댓글</div>
+    <v-form v-model="isValid" class="mt-5 d-flex">
+      <v-textarea
+        v-model="commentData.contents"
+        label="댓글을 남겨주세요."
+        color="green darken-1"
+        auto-grow
+        outlined
+        rows="1"
+        row-height="15"
+        :rules="[commentRules.min]"
+      ></v-textarea>
+      <div>
+        <v-btn v-if="!isUpdate" @click="addComment" text class="mt-3 font-weight-bold" :disabled="!isValid" color="green darken-1">등록</v-btn>
+        <v-btn v-else @click="updateComment" text class="mt-3 font-weight-bold" :disabled="!isValid" color="teal">수정</v-btn>
+      </div>
+    </v-form>
+    <ArticleComment :comments="comments" @updateOrDeleteOrHide="updateOrDeleteOrHide"/>
+    <v-btn @click="scrollToTop" class="top" color="light-green" fab small dark>
+      <v-icon>mdi-apple-keyboard-control</v-icon>
+    </v-btn>
+  </v-container>
+</template>
+
+<script>
+import { mapState } from 'vuex'
+import ArticleComment from '../Articles/ArticleComment.vue'
+import axios from 'axios'
+
+
+export default {
+  name: 'ArticleDetail',
+  components: {
+    ArticleComment
+  },
+  data() {
+    return {
+      liked: false,
+      isValid: false,
+      article: null,
+      commentData: {
+        contents: '',
+        writer: this.$store.state.userInfo.id
+      },
+      comments: null,
+      menuItems: [
+        { title: '수정' },
+        { title: '삭제' }
+      ],
+      commentRules : {
+        min: v => v.trim().length > 0 || '유효한 입력이 아닙니다.'
+      }
+    }
+  },
+  methods: {
+    fetchArticle() {
+      axios.get(`${this.$store.state.api_server}/articles/${this.$route.params.article_id}`)
+        .then(res => {
+          this.article = res.data
+          if (this.article.likeAccounts.length > 0 && this.article.likeAccounts.includes(this.$store.state.userInfo.id)) {
+            this.liked = true
+          }
+          this.comments = res.data.comments
+        })
+    },
+    updateOrDelete(val) {
+      if (this.$store.state.userInfo.id == this.article.writer) {
+        if (val == 0) { this.$router.push({ name: 'UpdateArticle', params: { article_id : val.id }}) }
+        else { 
+          const response = confirm('정말로 삭제 하시겠습니까?')
+          if (response) { 
+            axios.delete(`${this.$store.state.api_server}/articles/${this.article.id}`)
+              .then(() => this.$router.push('/main'))
+          }
+        }
+      } else { alert('작성자만 사용할 수 있어요.') }
+    },
+    like() {
+      axios.post(`${this.$store.state.api_server}/articles/${this.article.id}/like`, '' ,{ params: { user_id : this.$store.state.userInfo.id }})
+        .then(() => {
+          this.article.likeAccounts.push(this.$store.state.userInfo.id)
+          this.liked = true
+        })
+    },
+    unLike() {
+      axios.delete(`${this.$store.state.api_server}/articles/${this.article.id}/like`, { params: { user_id : this.$store.state.userInfo.id }})
+        .then(() => {
+          this.article.likeAccounts.pop(this.$store.state.userInfo.id)
+          this.liked = false
+        })
+    },
+    addComment() {
+      axios.post(`${this.$store.state.api_server}/articles/${this.article.id}/comments`, this.commentData)
+        .then(res => {
+          this.comments.unshift(res.data)
+          this.commentData.contents = ''
+          alert('댓글이 성공적으로 작성되었습니다.')
+        })
+    },
+    updateOrDeleteOrHide(comment, item, index) {
+      if (item === 0) {
+        if (this.$store.state.userInfo.id===comment.writer) {
+          this.isUpdate = true
+          this.$vuetify.goTo(0)
+          this.commentData = comment
+        } else { alert('작성자만 사용할 수 있어요.')}
+      }
+      else if (item === 1) {
+        if (this.$store.state.userInfo.id===comment.writer) {
+          if (confirm('정말로 삭제하시겠습니까?')) {
+            axios.delete(`${this.$store.state.api_server}/articles/${this.article.id}/comments/${comment.id}`)
+              .then(() => this.comments.splice(index,1))
+          }
+        } else { alert('작성자만 사용할 수 있어요.')}
+      }
+      else {
+        if (this.$store.state.userInfo.nickname===this.$store.state.users[this.article.writer]) {
+          axios.put(`${this.$store.state.api_server}/articles/${this.article.id}/comments/${comment.id}/invisible`, '')
+            .then(() => this.comments.splice(index, 1))
+        } else { alert('게시글의 작성자만 사용할 수 있어요.')}
+      }
+    },
+    updateComment() {
+      axios.put(`${this.$store.state.api_server}/articles/${this.article.id}/comments/${this.commentData.id}`, this.commentData)
+        .then(() => {
+          this.isUpdate = false
+          this.commentData = {
+            contents: '',
+            writer: this.$store.state.userInfo.id
+          }
+        })
+    },
+    scrollToTop() {
+      this.$vuetify.goTo(0)
+    },
+  },
+  computed: {
+    ...mapState([
+      'userInfo',
+      'users',
+      'api_server'
+    ])
+  },
+  created() {
+    this.fetchArticle()
+  },
+  beforeRouteLeave(to, from, next) {
+    if (this.commentData.contents.length > 0) {
+      if (confirm('입력 내용이 저장되지 않습니다. 정말로 이 페이지에서 벗어나시겠습니까?')) {next()}
+      else {next(false)}
+    } else {next()}
+  },
+}
+</script>
+
+<style scoped>
+  .top {
+    position: fixed;
+    bottom: 3vh;
+    right: 3vh;
+  }
+</style>

@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ssafy.jara.dao.BarterCommentDao">
+   
+   <!-- 물물교환 댓글 등록 -->
+   <insert id="insertBarterComment" parameterType="com.ssafy.jara.dto.BarterComment">
+      INSERT INTO item_comment (item_id, writer, contents)
+      VALUES (#{item_id}, #{writer}, #{contents});
+   </insert>
+   
+   <!-- 물물교환 댓글 수정 -->
+   <update id="updateBarterComment" parameterType="com.ssafy.jara.dto.BarterComment">
+      UPDATE item_comment
+      SET contents=#{contents}
+      WHERE id=#{id};
+   </update>
+   
+   <!-- 물물교환 댓글 삭제 -->
+   <delete id="deleteBarterComment" parameterType="int">
+      DELETE FROM item_comment
+      WHERE id=#{id};
+   </delete>
+   
+   <!-- 물물교환 전체 댓글 조회 -->
+   <select id="selectListBarterComment" resultType="com.ssafy.jara.dto.BarterComment">
+      SELECT *
+      FROM item_comment
+      WHERE item_id=#{item_id}
+      ORDER BY created_at;
+   </select>
+   
+</mapper>
