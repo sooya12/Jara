@@ -167,6 +167,8 @@
                     <div class="black--text font-weight-bold">신고할 유저의 닉네임</div>
                     <v-text-field
                       placeholder="닉네임을 입력해주세요."
+                      v-model="reportData.accused_nickname"
+                      :rules="[nickNameRules.required]"
                       outlined
                       color="green darken-2"
                       class="my-2"
@@ -174,6 +176,8 @@
                     <div class="black--text font-weight-bold">신고 사유</div>
                     <v-textarea
                       label="신고 사유를 입력해 주세요."
+                      v-model="reportData.contents"
+                      :rules="[contentsRules.required]"
                       color="green darken-1"
                       auto-grow
                       outlined
@@ -242,7 +246,11 @@ export default {
       'results',
       'authToken',
       'requested',
-      'dialog'
+      'dialog',
+      'api_server',
+      'reportData',
+      'nickNameRules',
+      'contentsRules'
     ]),
     ...mapGetters([
       'isLoggedIn',
@@ -272,6 +280,7 @@ export default {
     ]),
     ...mapMutations([
       'SET_ENTRANCE',
+      'SET_DIALOG',
     ]),
     querySelections(v) {
       this.items = this.$store.state.results.filter(e => {
@@ -287,26 +296,11 @@ export default {
         this.searchWord = null
       }
     },
-    sendReport() {
-      this.$store.dispatch('sendReport', this.reportData) 
-    }
   },
   data() {
     return {
       searched: null,
       searchWord: null,
-      dialog: false,
-      nickNameRules: {
-        required: value => value.trim().length > 0 || '닉네임을 입력해주세요.',
-      },
-      contentsRules : {
-        required: v => v.trim().length > 0 || '허위 신고는 제재당할 수 있습니다.'
-      },
-      reportData: {
-        nickname: '',
-        contents: '',
-        writer: this.$store.state.userInfo.id
-      },
     }
   },
   watch: {
