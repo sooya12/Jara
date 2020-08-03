@@ -54,6 +54,7 @@
               <v-card-text class="text-subtitle-1 black--text mx-1">
                 {{ item.contents }}
               </v-card-text>
+
               <div class="mt-5 mx-3 d-sn-flex justify-sm-end d-flex justify-end align-center">
                 <div v-if="!isLike(item.likeAccounts)">
                   <v-btn icon @click="like(item)">

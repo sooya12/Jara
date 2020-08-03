@@ -3,7 +3,7 @@
     <div class="d-flex align-center">
       <v-icon x-large>mdi-account-circle</v-icon>
       <div class="ml-2 font-weight-bold">{{ userInfo.nickname }}</div>
-      <v-btn fixed bottom right fab color="light-green" @click="createArticle" small dark><v-icon>mdi-pencil</v-icon></v-btn>
+      <v-btn fixed bottom right fab color="green lighten-1" @click="createArticle" small dark><v-icon>mdi-pencil</v-icon></v-btn>
     </div>
     <v-textarea
       v-model="article.contents"

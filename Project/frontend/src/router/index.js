@@ -14,6 +14,7 @@ import ChangePWD from '../components/Accounts/ChangePWD.vue'
 import Barters from '../views/Barters.vue'
 import Checks from '../views/Checks.vue'
 import Eithers from '../views/Eithers.vue'
+import EitherDetail from '../components/Eithers/EitherDetail.vue'
 import Tips from '../views/Tips.vue'
 import TipsItemDetail from '../components/Tips/TipsItemDetail.vue'
 import NewTip from '../components/Tips/NewTip.vue'
@@ -152,6 +153,16 @@ Vue.use(VueRouter)
     }
   },
   {
+    path: '/eithers/:either_id',
+    name: 'EitherDetail',
+    component: EitherDetail,
+    beforeEnter(to, from, next) {
+      if (Vue.$cookies.isKey('auth-token')) {
+        next()
+      } else { next({name: 'SignIn' }) }
+    }
+  },
+  {
     path: '/tips',
     name: 'Tips',
     component: Tips,
@@ -172,6 +183,16 @@ Vue.use(VueRouter)
     }
   },
   {
+    path: '/tips/update',
+    name: 'UpdateTip',
+    component: NewTip,
+    beforeEnter(to, from, next) {
+      if (Vue.$cookies.isKey('auth-token')) {
+        next()
+      } else { next({ name: 'SignIn' }) }
+    }
+  },
+  {
     path: '/tips/:tip_id',
     name: 'TipsItemDetail',
     component: TipsItemDetail,
@@ -181,8 +202,7 @@ Vue.use(VueRouter)
         next()
       } else { next({name: 'SignIn' }) }
     }
-  },
-
+  }
 ]
 
 const router = new VueRouter({

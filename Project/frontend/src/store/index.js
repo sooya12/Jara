@@ -10,7 +10,7 @@ Vue.use(VueCookies)
 
 export default new Vuex.Store({
   state: {
-    api_server: 'http://i3a308.p.ssafy.io:8081',
+    api_server: 'http://localhost:8081',
     authToken: VueCookies.get('auth-token'),
     entrance: true,
     drawer: false,
@@ -24,6 +24,17 @@ export default new Vuex.Store({
     error: false,
     request: false,
     dialog: false,
+    reportData: {
+      accused_nickname: '',
+      contents: '',
+      reporter_id: ''
+    },
+    nickNameRules: {
+      required: value => value.trim().length > 0 || '닉네임을 입력해주세요.'
+    },
+    contentsRules : {
+      required: v => v.trim().length > 0 || '허위 신고는 제재당할 수 있습니다.'
+    },
   },
   getters: {
     isLoggedIn: state => !!state.authToken,
@@ -79,8 +90,6 @@ export default new Vuex.Store({
       router.push('/accounts/signin')
     },
     getUsers({ commit, state }) {
-      state.results.push({ header: '최근 검색 결과' })
-      state.results.push({ divider: true })
       Axios.get(`${state.api_server}/accounts`)
         .then(res => {
           const nicks = {}
@@ -141,6 +150,26 @@ export default new Vuex.Store({
           alert('로그인 유효 시간이 만료되었습니다. 다시 로그인 해 주세요.')
           router.push('/accounts/signin')
         })
+    },
+    sendReport({ commit, state }) {
+      const data = {
+        accused_nickname: state.reportData.accused_nickname,
+        contents: state.reportData.contents,
+        reporter_id: state.userInfo.id
+      }
+      Axios.post(`${state.api_server}/reports`, data)
+      .then(() => {
+        alert('신고 내역이 성공적으로 접수되었습니다.')
+        state.reportData.accused_nickname = ''
+        state.reportData.contents = ''
+        commit('SET_DIALOG', false)
+      })
+      .catch(() => {
+        alert('유효하지 않은 닉네임입니다.')
+        state.reportData.accused_nickname = ''
+        state.reportData.contents = ''
+        commit('SET_DIALOG', false)
+      })
     }
   },
   modules: {

@@ -59,8 +59,8 @@ export default {
   },
   methods: {
     goTipDetail(t) {
-      // console.log(t)
-      this.$router.push(`/tips/${t}`)
+      console.log(t)
+      this.$router.push(`/tips/${t}`) // new -> t
     }
   }
 }
