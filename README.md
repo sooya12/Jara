@@ -202,7 +202,7 @@ $ git commit -m "| header | 설명"
 
 ## :computer: 프로젝트 배포
 
-#### Backend 배포 - Spring (STS)
+#### :cd: Backend 배포 - Spring (STS)
 
 - AWS에 NGINX 설치 (이미 설치된 상태라면 생략)
 ```
@@ -280,23 +280,32 @@ sudo systemctl start nginx
 - 로컬에서 빌드
   - `프로젝트 오른쪽 버튼 클릭` → `Run as` → `Maven Build` → `Goals: assembly:assembly`
 
-- 로컬에서 .jar 파일 확인
-  - `s03p12a308\Project\backend\target` 폴더에 `JARA-0.0.1-SNAPSHOT.jar` 파일이 생성됐는지 확인
+- 로컬에서 target 폴더 확인
+  - `target` 폴더가 생성됐는지 확인
 
-- 로컬에 있는 .jar 파일을 push
-  - 빌드 파일이 .gitignore에 등록돼있기 때문에 `git add`를 할 때,  `git add -f [파일명]` 으로 target 폴더를 강제로 추가한 후에 커밋과 푸시를 해줘야함.
-
-- AWS에서 git clone 또는 git pull
-  - 경로 : /jara/s03p12a308
+- AWS에서 실행 중인 기존 Spring Boot 백그라운드 jar 중지 (이미 실행 중이 아니면 생략)
 ```
-// clone
-sudo git clone https://lab.ssafy.com/s03-webmobile2-sub2/s03p12a308.git
-// pull
-sudo git pull origin develop
+ps -ef | grep jar	// PID 확인
+                    // 이런식으로 나옴 ==>  root     16404 12253  0 20:01 pts/1    00:00:00 sudo nohup java -jar JARA-0.0.1-
+sudo kill [pid]		// PID에 해당하는 프로세스 종료
+                    // ex) sudo kill 16404
+```
+
+- 로컬에서 target 폴더를 AWS로 전송
+    - `scp -i "[pem file]" -r "~~~\target" ubuntu@i3a308.p.ssafy.io:~/target`
+```
+#파일 전송시
+scp -i [pem file] [upload file] [user id]@[ec2 public IP]:~/[transfer address]
+#예시
+scp -i Desktop/amazon/juhyung.pem Desktop/pant.py ubuntu@~~~~:~/
+#폴더 전송시
+scp -i [pem file] -r [upload folder] [user id]@[ec2 public IP]:~/[transfer address]
+#예시
+scp -i Desktop/amazon/juhyung.pem -r Desktop/example ubuntu@~~~~:~/
 ```
 
 - AWS에서 .jar 파일이 있는 디렉토리로 이동
-    - `/JARA/s03p12a308/Project/backend/target`
+    - `cd ~/target`
 
 - AWS에서 .jar 파일 실행
 ```
@@ -308,15 +317,9 @@ sudo java -jar JARA-0.0.1-SNAPSHOT.jar
 sudo nohup java -jar JARA-0.0.1-SNAPSHOT.jar &
 ```
 
-- AWS에 jdk (1.8) 설치 (.jar 파일을 실행할 때 java 명령어가 실행되지 않을 경우에 설치)
+- (참고) AWS에 jdk (1.8) 설치 (.jar 파일을 실행할 때 java 명령어가 실행되지 않을 경우에 설치)
 ```
 sudo apt-get install openjdk-8-jdk
-```
-
-- (참고) Spring Boot 백그라운드 jar 중지
-```
-ps -ef | grep jar	// PID 확인
-sudo kill [pid]		// PID에 해당하는 프로세스 종료
 ```
 
 - (참고) nginx 재부팅
@@ -331,7 +334,7 @@ sudo reboot
 
 
 
-#### Frontend 배포 - Vue.js (VS Code)
+#### :cd: Frontend 배포 - Vue.js (VS Code)
 
 - AWS 서버 접속
 ```
