@@ -32,16 +32,17 @@
           <p class="text-h6 text--primary mt-5 ml-3">
             {{ either.question }}
           </p>
-          <v-row justify-space-around class="text-center white--text text-sm-h3 text-h6 font-weight-bold">
-            <v-col cols="5" class="red darken-1">{{ either.choiceA }}</v-col>
-            <v-col cols="2">OR</v-col>
-            <v-col cols="5" class="blue darken-1">{{ either.choiceB }}</v-col>
-          </v-row>
-          <!-- <div class="text--primary text-h6 d-flex justify-space-around mt-5">
-            <div id="choiceA" class="red darken-1 white--text font-weight-bold">{{ either.choiceA }}</div>
-            <div id="or" class="font-weight-bold">OR</div>
-            <div id="choiceB" class="blue darken-1 white--text font-weight-bold">{{ either.choiceB }}</div>
-          </div> -->
+          <div id="question">
+            <v-responsive 
+              class="or d-inline-flex justify-center align-center grey darken-4 rounded-circle font-weight-bold text-center white--text text-h6" 
+              width="48" 
+              height="48"
+            >OR</v-responsive>
+            <v-row justify-space-around class="mx-3 text-center white--text text-sm-h3 text-h6 font-weight-bold">
+              <v-col cols="6" class="red darken-1 rounded">{{ either.choiceA }}</v-col>
+              <v-col cols="6" class="blue darken-1 rounded">{{ either.choiceB }}</v-col>
+            </v-row>
+          </div>
         </v-card-text>
         <v-card-actions>
           <v-btn
@@ -154,5 +155,11 @@ export default {
 
   #create .v-btn--floating {
     position: relative;
+  }
+
+  .or {
+    position: absolute;
+    left: 43.1%;
+    top: 50%;
   }
 </style>
