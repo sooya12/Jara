@@ -23,7 +23,7 @@ public class ReportController {
 	ReportService reportService;
 	
 	@ApiOperation(value = "사용자 신고 등록", response = String.class)
-	@PostMapping("/")
+	@PostMapping("")
 	private ResponseEntity<String> insertBarter(@RequestBody Report report) {
 		if (reportService.insertReport(report) > 0) {
 			return new ResponseEntity<String>("success", HttpStatus.OK);
