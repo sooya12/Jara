@@ -85,7 +85,6 @@
 
     <v-navigation-drawer
       v-model="isDrawer"
-      absolute
       temporary
       app
     >
