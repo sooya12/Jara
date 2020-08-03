@@ -6,6 +6,7 @@
     <h3>{{ tip.title }}</h3>
     <h4>{{ tip.created_at }}</h4>
     <h5>{{ tip.writer }}</h5>
+    <h5>{{ tip.tag_id }}</h5>
     <button @click="goTipsDelete">삭제</button>
     <button @click="goTipsUpdate">수정</button>
   </v-container>

@@ -73,8 +73,7 @@ export default {
       axios.get(`${this.$store.state.api_server}/tips/${this.$route.params.tip_id}`)
         .then(res => {
           const tag_id_dict = {1:'요리', 2:'세탁', 3:'청소', 4:'보관'}
-          this.tip.title = res.data.title
-          this.tip.contents = res.data.contents
+          this.tip = res.data
           this.tag = tag_id_dict[res.data.tag_id]
         })
     }
