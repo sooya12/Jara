@@ -1,9 +1,8 @@
 <template>
   <v-container fluid mt-5>
     <div class="d-flex justify-space-between align-center">
-      <div class="d-flex align-center">      
-        <v-icon x-large>mdi-account-circle</v-icon>
-        <div class="ml-2 font-weight-bold text-sm-h6 text-subtitle-2">{{ users[article.writer] }}</div>
+      <div class="d-flex align-center">
+        <v-btn text class="pa-0 font-weight-bold text-sm-h5 text-h6" @click="goToUser" x-large><v-icon x-large>mdi-account-circle</v-icon>{{ users[article.writer] }}</v-btn>      
       </div>
       <div class="d-flex align-center">
         <div class="grey--text">{{ article.created_at }}</div>
@@ -180,6 +179,9 @@ export default {
     scrollToTop() {
       this.$vuetify.goTo(0)
     },
+    goToUser() {
+      this.$router.push(`/accounts/${this.article.writer}`)
+    }
   },
   computed: {
     ...mapState([
