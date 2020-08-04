@@ -86,7 +86,7 @@ public class FcmController {
 	 */
 	// [START retrieve_access_token]
 	private static String getAccessToken() throws IOException {
-		GoogleCredential googleCredential = GoogleCredential.fromStream(new FileInputStream("service-account.json"))
+		GoogleCredential googleCredential = GoogleCredential.fromStream(new FileInputStream("service-account.json")) // jara-fcm-firebase-adminsdk-68twq-d0e84cbd44.json
 				.createScoped(Arrays.asList(SCOPES));
 		googleCredential.refreshToken();
 		return googleCredential.getAccessToken();
