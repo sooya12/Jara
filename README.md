@@ -23,6 +23,10 @@
 ## :floppy_disk: Install
 
 ```bash
+$ npm install --save vue-check-view
+```
+
+```bash
 $ yarn add vuex
 ```
 
@@ -33,6 +37,10 @@ $ vue add vue-router vuetify vue-cookies
 
 
 ### :cloud: i3a308.p.ssafy.io
+
+> ID : ssafy@ssafy.com
+>
+> PW : 12341234
 
 
 
