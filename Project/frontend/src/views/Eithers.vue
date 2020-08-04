@@ -119,7 +119,7 @@ export default {
   updated() {
     if (this.eithers.length < this.numOfEithers) {
       setTimeout(() => {
-        this.loadEithers()
+        this.loadEithers('enter')
       }, 1000)
     }
   },

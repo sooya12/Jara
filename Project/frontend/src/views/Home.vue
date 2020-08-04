@@ -151,7 +151,7 @@ export default {
         const checkBottom = document.querySelector('#bottom')
         const bottom = checkBottom.getBoundingClientRect(checkBottom)
         if (bottom.top <= (window.innerHeight || document.documentElement.clientWidth)) {
-          axios.get(`${this.$store.state.api_server}/articles/${this.from}/${this.articlePerRQ}`)
+          axios.get(`${this.$store.state.api_server}/articles/${this.from}/${this.articlePerRQ}`, { params: { user_id : this.$store.state.userInfo.id }})
             .then(res => {
               this.articles = [ ...this.articles, ...res.data ]
               this.from += this.articlePerRQ
@@ -217,7 +217,7 @@ export default {
   updated() {
     if (this.articles.length < this.numOfArticles) {
       setTimeout(() => {
-        this.loadArticles()
+        this.loadArticles('enter')
       }, 1000)
     }
   },
