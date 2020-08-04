@@ -79,6 +79,26 @@ public class ArticleController {
 		return new ResponseEntity<List<Article>>(articleList, HttpStatus.OK);
 	}
 	
+	@ApiOperation(value = "사용자가 작성한 전체 게시글 및 사용자가 팔로우하는 다른 사용자의 전체 게시글 및 댓글, 좋아요 사용자 조회 / 개수 제한", response = List.class)
+	@GetMapping("/{s_idx}/{count}")
+	private ResponseEntity<List<Article>> selectRangeListArticle(@RequestParam int user_id, @PathVariable("s_idx") int s_idx, @PathVariable("count") int count) {
+		HashMap<String, Integer> hashMap = new HashMap<String, Integer>();
+		hashMap.put("user_id", user_id);
+		hashMap.put("s_idx", s_idx);
+		hashMap.put("count", count);
+		
+		List<Article> articleList = articleService.selectRangeListArticle(hashMap);
+		
+		for (int i = 0; i < articleList.size(); i++) {
+			Article article = articleList.get(i);
+			
+			article.setComments(articleCommentService.selectArticleComments(article.getId())); // 전체 댓글 조회
+			article.setLikeAccounts(articleService.selectArticleLikeAccount(article.getId())); // 전체 좋아요 사용자 조회
+		}
+		
+		return new ResponseEntity<List<Article>>(articleList, HttpStatus.OK);
+	}
+	
 	@ApiOperation(value = "게시글 및 댓글, 좋아요 사용자 조회", response = Article.class)
 	@GetMapping("/{id}")
 	private ResponseEntity<Article> selectArticle(@PathVariable("id") int id) {

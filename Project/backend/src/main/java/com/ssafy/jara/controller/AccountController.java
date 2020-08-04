@@ -132,8 +132,7 @@ public class AccountController extends HttpServlet {
 		return new ResponseEntity<String>("fail", HttpStatus.NO_CONTENT);
 	}
 	
-	
-	
+
 	@ApiOperation(value = "회원가입 시 이메일 인증", response = String.class)
 	@PostMapping("certification")
 	private ResponseEntity<String> certification(@RequestBody int code) {	
@@ -164,6 +163,7 @@ public class AccountController extends HttpServlet {
 //
 //		return new ResponseEntity<Account>(accountService.selectAccount(account), HttpStatus.OK);
 //	}
+
 
 
 	@ApiOperation(value = "이메일과 비밀번호로 로그인 처리", response = Account.class)
@@ -335,13 +335,18 @@ public class AccountController extends HttpServlet {
 	@GetMapping("/info")
 	private ResponseEntity<Map<String, Object>> infoAccount(HttpServletRequest request){
 		Map<String, Object> resultMap = new HashMap<>();
+		Map<String, Object> accountMap = new HashMap<>();
 		try {
 			resultMap.putAll(jwtService.get(request.getHeader("token")));
+			accountMap = (Map<String, Object>) resultMap.get("Account");
+			String location = (String) accountMap.get("location");
+			accountMap.put("x", (double) accountService.findX(location));
+			accountMap.put("y", (double) accountService.findY(location));
 		} catch (Exception e) {
 			e.printStackTrace();
 			return new ResponseEntity<Map<String,Object>>(HttpStatus.INTERNAL_SERVER_ERROR);
 		}
-		return new ResponseEntity<Map<String,Object>>((Map<String, Object>) resultMap.get("Account"), HttpStatus.OK);
+		return new ResponseEntity<Map<String,Object>>(accountMap, HttpStatus.OK);
 	}
 	
 //	@ApiOperation(value = "전체 위치 조회하기")

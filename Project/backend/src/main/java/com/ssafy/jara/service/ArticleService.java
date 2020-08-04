@@ -15,6 +15,8 @@ public interface ArticleService {
 	
 	public List<Article> selectListArticle(int user_id);
 	
+	public List<Article> selectRangeListArticle(HashMap<String, Integer> hashMap);
+	
 	public Article selectArticle(int id);
 	
 	public int updateArticle(Article article);

@@ -5,10 +5,7 @@ import java.util.Arrays;
 
 import javax.servlet.http.HttpServletRequest;
 
-import org.apache.logging.log4j.Logger;
 import org.json.simple.JSONObject;
-import org.mariadb.jdbc.internal.logging.LoggerFactory;
-import org.springframework.core.io.ClassPathResource;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
@@ -25,15 +22,11 @@ import com.google.api.client.googleapis.auth.oauth2.GoogleCredential;
 @RestController
 @RequestMapping("/fcm")
 public class FcmController {
-	
+
 	@GetMapping("")
 	public void fcm(HttpServletRequest request) throws Exception {
 		try {
-			ClassPathResource resource = new ClassPathResource("jara-fcm-firebase-adminsdk-68twq-d0e84cbd44.json");
-			
-//			String path = "jara-fcm-firebase-adminsdk-68twq-d0e84cbd44.json";
-			String path = resource.getPath();
-			System.out.println(path);
+			String path = "jara-fcm-firebase-adminsdk-68twq-d0e84cbd44.json";
 			String message_scope = "https://www.googleapis.com/auth/firebase.messaging";
 			String[] scopes = {message_scope};
 			
@@ -74,4 +67,5 @@ public class FcmController {
 			e.printStackTrace();
 		}
 	}
+
 }

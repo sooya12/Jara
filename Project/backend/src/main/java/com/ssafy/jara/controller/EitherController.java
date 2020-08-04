@@ -63,4 +63,17 @@ public class EitherController {
 	private ResponseEntity<List<Either>> selectListEither() {
 		return new ResponseEntity<List<Either>>(eitherService.selectListEither(), HttpStatus.OK);
 	}
+	
+	@ApiOperation(value = "투표 리스트에서 인덱스 {s_idx}번 부터 {count}개의 투표 조회", response = String.class)
+	@GetMapping("/{s_idx}/{count}")
+	private ResponseEntity<List<Either>> selectPartialListEither(@PathVariable int s_idx, @PathVariable int count) {
+		List<Either> partialList = eitherService.selectPartialListEither(s_idx, count);
+		
+		if (partialList.size() > 0) {
+			return new ResponseEntity<List<Either>>(partialList, HttpStatus.OK);
+		} else {
+			System.out.println("투표 리스트가 존재하지 않음");
+			return new ResponseEntity<List<Either>>(partialList, HttpStatus.BAD_REQUEST);
+		}
+	}
 }
