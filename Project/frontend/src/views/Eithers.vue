@@ -2,6 +2,7 @@
   <v-container class="mt-5">
     <div class="text-sm-h3 text-h6 font-weight-bold">JARA's Choice<v-icon x-large class="ml-2">mdi-checkbox-multiple-marked-outline</v-icon></div>
     <div class="mt-10">
+
       <v-card
         class="mx-auto my-5"
         v-for="either in eithers"
@@ -32,17 +33,14 @@
           <p class="text-h6 text--primary mt-5 ml-3">
             {{ either.question }}
           </p>
-          <div id="question">
-            <v-responsive 
-              class="or d-inline-flex justify-center align-center grey darken-4 rounded-circle font-weight-bold text-center white--text text-h6" 
-              width="48" 
-              height="48"
-            >OR</v-responsive>
-            <v-row justify-space-around class="mx-3 text-center white--text text-sm-h3 text-h6 font-weight-bold">
-              <v-col cols="6" class="red darken-1 rounded">{{ either.choiceA }}</v-col>
-              <v-col cols="6" class="blue darken-1 rounded">{{ either.choiceB }}</v-col>
-            </v-row>
-          </div>
+          <div
+            class="or d-inline-flex justify-center align-center grey darken-4 rounded-circle font-weight-bold text-center white--text text-h6" 
+            style="width: 48px; height: 48px;"
+          >OR</div>
+          <v-row justify-space-around class="px-3 text-center white--text text-sm-h3 text-h6 font-weight-bold">
+            <v-col cols="6" class="red darken-1 rounded">{{ either.choiceA }}</v-col>
+            <v-col cols="6" class="blue darken-1 rounded">{{ either.choiceB }}</v-col>
+          </v-row>
         </v-card-text>
         <v-card-actions>
           <v-btn
@@ -67,6 +65,7 @@
           </v-btn>
         </v-card-actions>
       </v-card>
+      <div v-view="loadEithers" id="bottom"></div>
     </div>
      <v-speed-dial
       v-model="fab"
@@ -109,24 +108,59 @@
 </template>
 
 <script>
-import axios from 'axios'
 import { mapState } from 'vuex'
+import axios from 'axios'
 
 export default {
   name: 'Eithers',
   mounted() {
     this.fetchEithers()
   },
+  updated() {
+    if (this.eithers.length < this.numOfEithers) {
+      setTimeout(() => {
+        this.loadEithers()
+      }, 1000)
+    }
+  },
   data() {
     return {
       eithers: [],
       fab: false,
+      isLoad: false,
+      from: 0,
+      eitherPerRQ: 3,
+      numOfEithers: 0
     }
   },
   methods: {
     fetchEithers() {
       axios.get(`${this.$store.state.api_server}/eithers/`)
-        .then(res => this.eithers = res.data)
+        .then(res => {
+          this.numOfEithers = res.data.length
+          this.eithers = res.data
+          this.isLoad = true
+        })
+    },
+    loadEithers(e) {
+      if (e.type === 'exit') {
+        return
+      }
+      if (e.type === 'progress') {
+        return
+      }    
+
+      if (this.eithers.length < this.numOfEithers) {
+        const checkBottom = document.querySelector('#bottom')
+        const bottom = checkBottom.getBoundingClientRect(checkBottom)
+        if (bottom.top <= (window.innerHeight || document.documentElement.clientWidth)) {
+          axios.get(`${this.$store.state.api_server}/eithers/${this.from}/${this.eitherPerRQ}`)
+            .then(res => {
+              this.eithers = [ ...this.eithers, ...res.data ]
+              this.from += this.eitherPerRQ
+            })
+        }
+      }
     },
     goToEither(id) {
       this.$router.push(`/eithers/${id}`)
@@ -144,11 +178,16 @@ export default {
       'users',
       'api_server'
     ])
-  }
+  },
+  
 }
 </script>
 
 <style scoped>
+  #bottom {
+    height: 50px;
+  }
+
   .v-speed-dial {
     position: fixed;
   }
@@ -159,7 +198,7 @@ export default {
 
   .or {
     position: absolute;
-    left: 43.1%;
+    left: 50%;
     top: 50%;
   }
 </style>
