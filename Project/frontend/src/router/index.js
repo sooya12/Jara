@@ -6,6 +6,7 @@ import NewArticle from '../components/Articles/NewArticle.vue'
 import ArticleDetail from '../components/Articles/ArticleDetail.vue'
 import SignIn from '../views/SignIn.vue'
 import SignUp from '../views/SignUp.vue'
+import Certification from '../components/Accounts/Certification.vue'
 import Profile from '../components/Accounts/Profile.vue'
 import User from '../components/Accounts/User.vue'
 import ChangeUserInfo from '../components/Accounts/ChangeUserInfo.vue'
@@ -100,7 +101,17 @@ Vue.use(VueRouter)
   {
     path: '/accounts/user',
     name: 'Profile',
-    component: Profile
+    component: Profile,
+    beforeEnter(to, from, next) {
+      if (Vue.$cookies.isKey('auth-token')) {
+        next()
+      } else { next({name: 'SignIn' }) }
+    }
+  },
+  {
+    path: '/accounts/certification',
+    name: 'Certification',
+    component: Certification
   },
   {
     path: '/accounts/:user_id',
