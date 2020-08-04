@@ -1,5 +1,6 @@
 package com.ssafy.jara.controller;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -62,5 +63,36 @@ public class EitherController {
 	@GetMapping("/")
 	private ResponseEntity<List<Either>> selectListEither() {
 		return new ResponseEntity<List<Either>>(eitherService.selectListEither(), HttpStatus.OK);
+	}
+	
+	@ApiOperation(value = "투표 리스트에서 인덱스 {s_idx}번 부터 {count}개의 투표 조회", response = String.class)
+	@GetMapping("/{s_idx}/{count}")
+	private ResponseEntity<List<Either>> selectListFromToEither(@PathVariable int s_idx, @PathVariable int count) {
+		List<Either> allList = eitherService.selectListEither();
+		int allLilstCnt = allList.size();
+		
+		System.out.println("allLilstCnt = " + allLilstCnt);
+		
+		List<Either> partialList = new ArrayList<Either>();
+		if (s_idx + count > allLilstCnt) {
+			for (int i = s_idx; i < allLilstCnt; i++) {
+				partialList.add(allList.get(i));
+			}
+		} else {
+			for (int i = s_idx; i < s_idx + count; i++) {
+				partialList.add(allList.get(i));
+			}
+		}
+		
+		int partialListCnt = partialList.size();
+		System.out.println("partialListCnt = " + partialListCnt);
+		
+		if (partialListCnt > 0) {
+			System.out.println("partialList = " + partialList);
+			return new ResponseEntity<List<Either>>(partialList, HttpStatus.OK);
+		} else {
+			System.out.println("투표 리스트가 존재하지 않음");
+			return new ResponseEntity<List<Either>>(partialList, HttpStatus.BAD_REQUEST);
+		}
 	}
 }
