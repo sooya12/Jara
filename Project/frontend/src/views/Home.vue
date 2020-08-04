@@ -194,12 +194,12 @@ export default {
       val
     },
     updateOrDelete(val, item) {
-      console.log(item)
       if (this.$store.state.userInfo.id == val.writer) {
         if (item == 0) { this.$router.push({ name: 'UpdateArticle', params: { article_id : val.id }}) }
         else { 
           const response = confirm('정말로 삭제 하시겠습니까?')
           if (response) { 
+            this.articles.splice(val, 1)
             axios.delete(`${this.$store.state.api_server}/articles/${val.id}`) 
           }
         }
