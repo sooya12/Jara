@@ -2,8 +2,6 @@ package com.ssafy.jara.service;
 
 import java.util.List;
 
-import org.springframework.web.bind.annotation.PathVariable;
-
 import com.ssafy.jara.dto.Either;
 
 public interface EitherService {

@@ -42,8 +42,6 @@ public class EitherServiceImpl implements EitherService {
 		List<Either> allList = eitherDao.selectListEither();
 		int allLilstCnt = allList.size();
 		
-		System.out.println("allLilstCnt = " + allLilstCnt);
-		
 		List<Either> partialList = new ArrayList<Either>();
 		if (s_idx + count > allLilstCnt) {
 			for (int i = s_idx; i < allLilstCnt; i++) {
