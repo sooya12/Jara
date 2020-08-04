@@ -39,7 +39,7 @@
           >OR</div>
           <v-row justify-space-around class="px-3 text-center white--text text-sm-h3 text-h6 font-weight-bold">
             <v-col cols="6" class="red darken-1 rounded">{{ either.choiceA }}</v-col>
-            <v-col cols="6" class="blue darken-1 rounded">{{ either.choiceB }}</v-col>
+            <v-col cols="6" class="blue darken-2 rounded">{{ either.choiceB }}</v-col>
           </v-row>
         </v-card-text>
         <v-card-actions>
@@ -67,7 +67,7 @@
       </v-card>
       <div v-if="(isLoad&&(eithers.length < numOfEithers))" v-view="loadEithers" id="bottom"></div>
     </div>
-     <v-speed-dial
+    <v-speed-dial
       v-model="fab"
       bottom
       right
@@ -168,7 +168,7 @@ export default {
       this.$vuetify.goTo(0)
     },
     createEither() {
-
+      this.$router.push('eithers/new')
     }
   },
   computed: {

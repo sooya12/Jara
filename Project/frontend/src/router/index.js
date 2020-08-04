@@ -15,6 +15,7 @@ import ChangePWD from '../components/Accounts/ChangePWD.vue'
 import Barters from '../views/Barters.vue'
 import Checks from '../views/Checks.vue'
 import Eithers from '../views/Eithers.vue'
+import NewEither from '../components/Eithers/NewEither.vue'
 import EitherDetail from '../components/Eithers/EitherDetail.vue'
 import Tips from '../views/Tips.vue'
 import TipsItemDetail from '../components/Tips/TipsItemDetail.vue'
@@ -157,6 +158,16 @@ Vue.use(VueRouter)
     path: '/eithers',
     name: 'Eithers',
     component: Eithers,
+    beforeEnter(to, from, next) {
+      if (Vue.$cookies.isKey('auth-token')) {
+        next()
+      } else { next({name: 'SignIn' }) }
+    }
+  },
+  {
+    path: '/eithers/new',
+    name: 'NewEither',
+    component: NewEither,
     beforeEnter(to, from, next) {
       if (Vue.$cookies.isKey('auth-token')) {
         next()
