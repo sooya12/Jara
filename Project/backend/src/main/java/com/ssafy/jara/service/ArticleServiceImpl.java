@@ -34,6 +34,11 @@ public class ArticleServiceImpl implements ArticleService {
 	public List<Article> selectListArticle(int user_id) {
 		return articleDao.selectListArticle(user_id);
 	};
+	
+	@Override
+	public List<Article> selectRangeListArticle(HashMap<String, Integer> hashMap) {
+		return articleDao.selectRangeListArticle(hashMap);
+	};
 
 	@Override
 	public Article selectArticle(int id) {
