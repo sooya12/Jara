@@ -9,4 +9,5 @@ public interface EitherService {
 	public Either selectEither(int id);
 	public int deleteEither(int id);
 	public List<Either> selectListEither();
+	public List<Either> selectPartialListEither(int s_idx, int count);
 }
