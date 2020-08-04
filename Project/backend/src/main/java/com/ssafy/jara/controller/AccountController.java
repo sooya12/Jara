@@ -90,6 +90,16 @@ public class AccountController extends HttpServlet {
 //				sendMail.setTo(account.getEmail());
 //				sendMail.send();
 				
+				MailHandler sendMail = new MailHandler(javaMailSender);
+				sendMail.setSubject("[이메일 인증]");
+				sendMail.setText(new StringBuffer().append("<h1>메일인증</h1>")
+						.append("자라에 가입해주셔서 감사합니다.<br>" +account.getEmail())
+						.append("<a href=http://i3a308.p.ssafy.io/>이메일 인증하기</a>").toString());
+
+				sendMail.setFrom("lcy00707@gmail.com","jara");
+				sendMail.setTo(account.getEmail());
+				sendMail.send();
+				
 				
 				return new ResponseEntity<String>("success", HttpStatus.OK);
 			}
@@ -175,22 +185,22 @@ public class AccountController extends HttpServlet {
 		return new ResponseEntity<String>("success",HttpStatus.OK);
 	}
 	
-	@ApiOperation(value = "이메일 보내기")
-	@GetMapping("email")
-	public ResponseEntity<Boolean> findEmail(@RequestParam String email) throws MessagingException, UnsupportedEncodingException{
-		
-		MailHandler sendMail = new MailHandler(javaMailSender);
-		sendMail.setSubject("[이메일 인증]");
-		sendMail.setText(new StringBuffer().append("<h1>메일인증</h1>")
-				.append("자라에 가입해주셔서 감사합니다.<br>" +email)
-				.append("<a href=http://i3a308.p.ssafy.io/>이메일 인증하기</a>").toString());
-
-		sendMail.setFrom("lcy00707@gmail.com","jara");
-		sendMail.setTo(email);
-		sendMail.send();
-		
-		return new ResponseEntity<Boolean>(accountService.findEmail(email) > 0 , HttpStatus.OK);
-	}
+//	@ApiOperation(value = "이메일 보내기")
+//	@GetMapping("email")
+//	public ResponseEntity<Boolean> findEmail(@RequestParam String email) throws MessagingException, UnsupportedEncodingException{
+//		
+//		MailHandler sendMail = new MailHandler(javaMailSender);
+//		sendMail.setSubject("[이메일 인증]");
+//		sendMail.setText(new StringBuffer().append("<h1>메일인증</h1>")
+//				.append("자라에 가입해주셔서 감사합니다.<br>" +email)
+//				.append("<a href=http://i3a308.p.ssafy.io/>이메일 인증하기</a>").toString());
+//
+//		sendMail.setFrom("lcy00707@gmail.com","jara");
+//		sendMail.setTo(email);
+//		sendMail.send();
+//		
+//		return new ResponseEntity<Boolean>(accountService.findEmail(email) > 0 , HttpStatus.OK);
+//	}
 	
 //	@ApiOperation(value = "전체 팔로우 조회하기")
 //	@GetMapping("follow")
