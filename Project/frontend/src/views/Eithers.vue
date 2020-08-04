@@ -65,7 +65,7 @@
           </v-btn>
         </v-card-actions>
       </v-card>
-      <div v-view="loadEithers" id="bottom"></div>
+      <div v-if="(isLoad&&(eithers.length < numOfEithers))" v-view="loadEithers" id="bottom"></div>
     </div>
      <v-speed-dial
       v-model="fab"
@@ -129,7 +129,7 @@ export default {
       fab: false,
       isLoad: false,
       from: 0,
-      eitherPerRQ: 3,
+      eitherPerRQ: 5,
       numOfEithers: 0
     }
   },
@@ -138,7 +138,6 @@ export default {
       axios.get(`${this.$store.state.api_server}/eithers/`)
         .then(res => {
           this.numOfEithers = res.data.length
-          this.eithers = res.data
           this.isLoad = true
         })
     },
