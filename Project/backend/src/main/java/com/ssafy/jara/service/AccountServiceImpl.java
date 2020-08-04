@@ -36,7 +36,17 @@ public class AccountServiceImpl implements AccountService {
 	public int duplicateCheck(Account account) {
 		return accountDao.duplicateCheck(account);
 	}
-
+	
+	@Override
+	public int changeCode(String email) {
+		return accountDao.changeCode(email);
+	}
+	
+	@Override
+	public int findCode(String email) {
+		return accountDao.findCode(email);
+	}
+	
 	@Override
 	public int changePassword(Account account) {
 		return accountDao.changePassword(account);

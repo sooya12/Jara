@@ -30,11 +30,25 @@
 		WHERE nickname=#{nickname} or email=#{email}
 	</select>
 	
+	<!-- 인증 코드 변경하기 -->
+	<update id="changeCode">
+		UPDATE user
+		SET code=round(rand()*1000000)
+		WHERE email=#{email}
+	</update>
+	
+	<!-- 인증 코드 이메일로 찾기 -->
+	<select id="findCode" resultType="java.lang.Integer">
+		SELECT code
+		FROM user
+		WHERE email=#{email}
+	</select>
+	
 	<!-- 비밀번호 변경하기 -->
 	<update id="changePassword">
 		UPDATE user
 		SET password=#{password}
-		WHERE email=#{email}
+		WHERE code=#{code}
 	</update>
 	
 	<!-- 회원 정보 조회 -->
