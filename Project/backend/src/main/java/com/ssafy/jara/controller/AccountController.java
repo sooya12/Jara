@@ -175,12 +175,12 @@ public class AccountController extends HttpServlet {
 		
 		System.out.println(account.getScrapTipList());
 		
-//		for (int i = 0; i < account.getScrapTipList().size(); i++) {
-//			Tip tip = account.getScrapTipList().get(i);
-//			
-//			tip.setComments(tipCommentService.selectTipComments(tip.getId()));
-//			tip.setLikeAccounts(tipService.selectTipLikeAccounts(tip.getId()));
-//		}
+		for (int i = 0; i < account.getScrapTipList().size(); i++) {
+			Tip tip = account.getScrapTipList().get(i);
+			
+			tip.setComments(tipCommentService.selectTipComments(tip.getId()));
+			tip.setLikeAccounts(tipService.selectTipLikeAccounts(tip.getId()));
+		}
 		
 		System.out.println(account.getId()+"+"+account.getNickname());
 		if(account.equals(null) || account.getId()==0) {
