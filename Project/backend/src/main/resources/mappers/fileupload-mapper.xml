@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ssafy.jara.common.dao.fileupload.FileUploadDao">
+   
+   <!-- Article 파일 등록 -->
+   <insert id="insertArticleFile" parameterType="com.ssafy.jara.common.dto.fileupload.ArticleFileUpload">
+      INSERT INTO article_file (article_id, origianl_file_name, stored_file_name)
+      VALUES (#{article_id}, #{origianl_file_name}, #{stored_file_name});
+   </insert>
+   
+   <!-- Tip 파일 등록 -->
+   <insert id="insertTipFile" parameterType="com.ssafy.jara.common.dto.fileupload.TipFileUpload">
+      INSERT INTO article_file (tip_id, origianl_file_name, stored_file_name)
+      VALUES (#{tip_id}, #{origianl_file_name}, #{stored_file_name});
+   </insert>
+   
+   <!-- Barter 파일 등록 -->
+   <insert id="insertBarterFile" parameterType="com.ssafy.jara.common.dto.fileupload.BarterFileUpload">
+      INSERT INTO article_file (item_id, origianl_file_name, stored_file_name)
+      VALUES (#{item_id}, #{origianl_file_name}, #{stored_file_name});
+   </insert>
+   
+   
+</mapper>
