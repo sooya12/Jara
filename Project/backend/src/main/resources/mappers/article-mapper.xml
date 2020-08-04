@@ -83,6 +83,7 @@
 		WHERE article_id=#{article_id} AND user_id=#{user_id}
 	</select>
 	
+	<!-- 게시글 좋아요 수 조회 -->
 	<select id="selectArticleLikes" resultType="java.lang.Integer">
 		SELECT count(*)
 		FROM article_like

@@ -18,6 +18,9 @@ public class Account {
 	
 	private double x;
 	private double y;
+	
+	private List<Article> myArticleList;	// 작성한 게시글 목록
+	private List<Tip> scrapTipList;			// 스크랩한 팁 목록 
 
 	
 	public Account() {}
@@ -133,6 +136,22 @@ public class Account {
 
 	public void setLocation(String location) {
 		this.location = location;
+	}
+	
+	public List<Article> getMyArticleList() {
+		return myArticleList;
+	}
+
+	public void setMyArticleList(List<Article> myArticleList) {
+		this.myArticleList = myArticleList;
+	}
+
+	public List<Tip> getScrapTipList() {
+		return scrapTipList;
+	}
+
+	public void setScrapTipList(List<Tip> scrapTipList) {
+		this.scrapTipList = scrapTipList;
 	}
 
 	@Override
