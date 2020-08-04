@@ -28,7 +28,7 @@ public class EitherController {
 	EitherService eitherService;
 	
 	@ApiOperation(value = "새로운 투표 등록", response = String.class)
-	@PostMapping("/")
+	@PostMapping("")
 	private ResponseEntity<String> insertEither(@RequestBody Either either) {
 		if (eitherService.insertEither(either) > 0) {
 			return new ResponseEntity<String>("success", HttpStatus.OK);

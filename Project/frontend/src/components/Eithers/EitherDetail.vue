@@ -1,18 +1,133 @@
 <template>
-  <v-container>
-    {{ either.question }}
+  <v-container fluid>
+    <div class="mt-5 text-right">
+      <v-chip
+        v-if="either.status==0"
+        color="green"
+        text-color="white"
+      >
+        진행중
+        <v-icon right>mdi-forum-outline</v-icon>
+      </v-chip>
+      <v-chip
+        v-else
+        color="grey"
+        text-color="white"
+      >
+        완료
+        <v-icon right>mdi-checkbox-multiple-marked</v-icon>
+      </v-chip>
+    </div>
+    <div class="d-flex justify-space-between align-center">
+      <div>
+        <v-btn text class="pa-0 font-weight-bold text-sm-h5 text-h6" @click="goToUser" x-large><v-icon x-large>mdi-account-circle</v-icon>{{ users[either.writer] }}</v-btn>
+      </div>
+      <div class="grey--text d-flex align-center">
+        <div>{{ either.created_at }}</div>
+        <v-menu offset-y>
+          <template v-slot:activator="{ on, attrs }">
+            <v-btn
+              icon
+              v-bind="attrs"
+              v-on="on"
+            >
+              <v-icon>mdi-dots-horizontal</v-icon>
+            </v-btn>
+          </template>
+          <v-list>
+            <v-list-item
+              v-for="(menu, idx) in menuItems"
+              :key="idx"
+              @click="completeOrDelete(idx)"
+            >
+              <v-list-item-title>{{ menu.title }}</v-list-item-title>
+            </v-list-item>
+          </v-list>
+        </v-menu>
+      </div>
+    </div>
+    <div class="mt-5 ml-5 text-h6">{{ either.question }}</div>
+    <v-row justify-space-around class="mt-5 px-5 text-center white--text text-sm-h3 text-h6 font-weight-bold">
+      <v-col class="red darken-1" id="A">{{ either.choiceA }}</v-col>
+      <v-col class="blue darken-2" id="B">{{ either.choiceB }}</v-col>
+    </v-row>
+    <div class="text-center mt-5">
+      <v-btn text x-large class="font-weight-bold text-h6">결과보기<v-icon color="deep-purple">mdi-align-vertical-bottom</v-icon></v-btn>
+    </div>
+    <v-divider class="my-5"></v-divider>
+    <div class="text-sm-h6 text-subtitle-2">댓글</div>
+    <v-form v-model="isValid" class="mt-5">
+      <v-row>
+        <v-col cols="3">
+          <v-select
+            :items="choices"
+            :rules="[choiceRules.required]"
+            item-text="text"
+            item-value="value"
+            outlined
+            color="green darken-2"
+            item-color="green darken-2"
+            v-model="commentData.choice"
+          ></v-select>
+        </v-col>
+      </v-row>
+      <div class="d-flex">
+        <v-textarea
+          v-model="commentData.contents"
+          label="댓글을 남겨주세요."
+          color="green darken-1"
+          auto-grow
+          outlined
+          rows="1"
+          row-height="15"
+          :rules="[commentRules.min]"
+        ></v-textarea>
+        <div>
+          <v-btn v-if="!isUpdate" @click="addComment" text class="mt-3 font-weight-bold" :disabled="!isValid" color="green darken-1">등록</v-btn>
+          <v-btn v-else @click="updateComment" text class="mt-3 font-weight-bold" :disabled="!isValid" color="teal">수정</v-btn>
+        </div>
+      </div>
+    </v-form>
+    <EitherComment :comments="comments" @updateOrDelete="updateOrDelete"/>
   </v-container>
 </template>
 
 <script>
 import { mapState } from 'vuex'
 import axios from 'axios'
+import EitherComment from '../Eithers/EitherComment.vue'
 
 export default {
   name: 'EitherDetail',
+  props: {
+    EitherComment
+  },
   data() {
     return {
       either: null,
+      isValid: false,
+      isUpdate: false,
+      choices: [
+        { text: '', value: 0 },
+        { text: '', value: 1 },
+      ],
+      menuItems: [
+        {title: '완료'},
+        {title: '삭제'},
+      ],
+      commentData: {
+        writer: this.$store.state.userInfo.id,
+        contents: '',
+        either_id: this.$route.params.either_id,
+        choice: null
+      },
+      commentRules : {
+        min: v => v.trim().length > 0 || '유효한 입력이 아닙니다.'
+      },
+      choiceRules: {
+        required: value => value!=null || '선택지를 선택해주세요.'
+      },
+      comments: null,
     }
   },
   computed: {
@@ -28,12 +143,87 @@ export default {
   methods: {
     fetchEither() {
       axios.get(`${this.$store.state.api_server}/eithers/${this.$route.params.either_id}`)
-        .then(res => this.either = res.data)
-    }
+        .then(res => {
+          this.either = res.data
+          this.choices[0].text = res.data.choiceA
+          this.choices[1].text = res.data.choiceB
+        })
+    },
+    completeOrDelete(val) {
+      if (this.$store.state.userInfo.id == this.either.writer) {
+        if (val == 0) { 
+          if (this.either.status == 1) {
+            alert('이미 완료된 투표입니다.')
+          } 
+          else {
+            this.either.status = 1
+            axios.put(`${this.$store.state.api_server}/eithers/${this.either.id}`)
+              .then(() => alert('완료하였습니다.'))
+          }
+        }
+        else { 
+          const response = confirm('정말로 삭제 하시겠습니까?')
+          if (response) { 
+            axios.delete(`${this.$store.state.api_server}/eithers/${this.either.id}`)
+              .then(() => this.$router.push('/eithers'))
+          }
+        }
+      } else { alert('작성자만 사용할 수 있어요.') }
+    },
+    goToUser() {
+      this.$router.push(`/accounts/${this.either.writer}`)
+    },
+    addComment() {
+      axios.post(`${this.$store.state.api_server}/eithers/${this.either.id}/comments`, this.commentData)
+        .then(res => {
+          this.comments.unshift(res.data)
+          this.commentData.contents = ''
+          alert('댓글이 성공적으로 작성되었습니다.')
+        })
+    },
+    updateOrDelete(comment, item, index) {
+      if (item === 0) {
+        if (this.$store.state.userInfo.id===comment.writer) {
+          this.isUpdate = true
+          this.$vuetify.goTo(0)
+          this.commentData = comment
+        } else { alert('작성자만 사용할 수 있어요.')}
+      }
+      else if (item === 1) {
+        if (this.$store.state.userInfo.id===comment.writer) {
+          if (confirm('정말로 삭제하시겠습니까?')) {
+            axios.delete(`${this.$store.state.api_server}/eithers/${this.either.id}/comments/${comment.id}`)
+              .then(() => this.comments.splice(index,1))
+          }
+        } else { alert('작성자만 사용할 수 있어요.')}
+      }
+    },
+    updateComment() {
+      axios.put(`${this.$store.state.api_server}/eithers/${this.either.id}/comments/${this.commentData.id}`, this.commentData)
+        .then(() => {
+          this.isUpdate = false
+          this.commentData = {
+            contents: '',
+            writer: this.$store.state.userInfo.id
+          }
+        })
+    },
   },
 }
 </script>
 
-<style>
+<style scoped>
+  #or {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+  }
 
+  #A:hover {
+    cursor: pointer;
+  }
+
+  #B:hover {
+    cursor: pointer;
+  }
 </style>

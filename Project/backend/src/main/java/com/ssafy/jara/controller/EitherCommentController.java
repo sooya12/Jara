@@ -29,7 +29,7 @@ public class EitherCommentController {
 	EitherCommentService eitherCommentService;
 	
 	@ApiOperation(value = "투표 새로운 댓글 등록", response = String.class)
-	@PostMapping("/{either_id}/comments/")
+	@PostMapping("/{either_id}/comments")
 	private ResponseEntity<String> insertEitherComment(@PathVariable int either_id, @RequestBody EitherComment eitherComment) {
 		if (eitherCommentService.insertEitherComment(eitherComment) > 0) {
 			return new ResponseEntity<String>("success", HttpStatus.OK);
