@@ -67,23 +67,8 @@ public class EitherController {
 	
 	@ApiOperation(value = "투표 리스트에서 인덱스 {s_idx}번 부터 {count}개의 투표 조회", response = String.class)
 	@GetMapping("/{s_idx}/{count}")
-	private ResponseEntity<List<Either>> selectListFromToEither(@PathVariable int s_idx, @PathVariable int count) {
-		List<Either> allList = eitherService.selectListEither();
-		int allLilstCnt = allList.size();
-		
-		System.out.println("allLilstCnt = " + allLilstCnt);
-		
-		List<Either> partialList = new ArrayList<Either>();
-		if (s_idx + count > allLilstCnt) {
-			for (int i = s_idx; i < allLilstCnt; i++) {
-				partialList.add(allList.get(i));
-			}
-		} else {
-			for (int i = s_idx; i < s_idx + count; i++) {
-				partialList.add(allList.get(i));
-			}
-		}
-		
+	private ResponseEntity<List<Either>> selectPartialListEither(@PathVariable int s_idx, @PathVariable int count) {
+		List<Either> partialList = eitherService.selectPartialListEither(s_idx, count);
 		int partialListCnt = partialList.size();
 		System.out.println("partialListCnt = " + partialListCnt);
 		

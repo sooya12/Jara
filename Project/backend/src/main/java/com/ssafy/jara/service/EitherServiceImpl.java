@@ -1,5 +1,6 @@
 package com.ssafy.jara.service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,5 +35,26 @@ public class EitherServiceImpl implements EitherService {
 	@Override
 	public List<Either> selectListEither() {
 		return eitherDao.selectListEither();
+	}
+
+	@Override
+	public List<Either> selectPartialListEither(int s_idx, int count) {
+		List<Either> allList = eitherDao.selectListEither();
+		int allLilstCnt = allList.size();
+		
+		System.out.println("allLilstCnt = " + allLilstCnt);
+		
+		List<Either> partialList = new ArrayList<Either>();
+		if (s_idx + count > allLilstCnt) {
+			for (int i = s_idx; i < allLilstCnt; i++) {
+				partialList.add(allList.get(i));
+			}
+		} else {
+			for (int i = s_idx; i < s_idx + count; i++) {
+				partialList.add(allList.get(i));
+			}
+		}
+		
+		return partialList;
 	}
 }

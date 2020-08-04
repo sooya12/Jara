@@ -2,6 +2,8 @@ package com.ssafy.jara.service;
 
 import java.util.List;
 
+import org.springframework.web.bind.annotation.PathVariable;
+
 import com.ssafy.jara.dto.Either;
 
 public interface EitherService {
@@ -9,4 +11,5 @@ public interface EitherService {
 	public Either selectEither(int id);
 	public int deleteEither(int id);
 	public List<Either> selectListEither();
+	public List<Either> selectPartialListEither(int s_idx, int count);
 }
