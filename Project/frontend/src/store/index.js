@@ -2,10 +2,12 @@ import Vue from 'vue'
 import Vuex from 'vuex'
 import router from '../router'
 import VueCookies from 'vue-cookies'
+import checkView from 'vue-check-view'
 import Axios from 'axios'
 
 Vue.use(Vuex)
 Vue.use(VueCookies)
+Vue.use(checkView)
 
 
 export default new Vuex.Store({

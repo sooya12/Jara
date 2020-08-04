@@ -1,17 +1,11 @@
 package com.ssafy.jara.controller;
 
 import java.io.UnsupportedEncodingException;
-import java.util.Date;
 import java.util.HashMap;
-import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-import javax.mail.Message;
 import javax.mail.MessagingException;
-import javax.mail.internet.AddressException;
-import javax.mail.internet.InternetAddress;
-import javax.mail.internet.MimeMessage;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -19,10 +13,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
-import org.springframework.mail.javamail.MimeMessageHelper;
-import org.springframework.scheduling.annotation.Async;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -31,16 +22,19 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.servlet.ModelAndView;
 
 import com.ssafy.jara.common.service.jwt.JwtService;
 import com.ssafy.jara.dto.Account;
+import com.ssafy.jara.dto.Article;
 import com.ssafy.jara.dto.Follow;
-import com.ssafy.jara.dto.Location;
+import com.ssafy.jara.dto.Tip;
 import com.ssafy.jara.handler.MailHandler;
 import com.ssafy.jara.service.AccountService;
+import com.ssafy.jara.service.ArticleCommentService;
+import com.ssafy.jara.service.ArticleService;
+import com.ssafy.jara.service.TipCommentService;
+import com.ssafy.jara.service.TipService;
 
 import io.swagger.annotations.ApiOperation;
 
@@ -53,6 +47,18 @@ public class AccountController extends HttpServlet {
 
 	@Autowired
 	private AccountService accountService;
+	
+	@Autowired
+	private ArticleService articleService;
+	
+	@Autowired
+	private ArticleCommentService articleCommentService;
+	
+	@Autowired
+	private TipService tipService;
+	
+	@Autowired
+	private TipCommentService tipCommentService;
 	
 	@Autowired
     private JwtService jwtService;
@@ -89,6 +95,16 @@ public class AccountController extends HttpServlet {
 //				sendMail.setFrom("lcy00707@gmail.com","jara");
 //				sendMail.setTo(account.getEmail());
 //				sendMail.send();
+				
+				MailHandler sendMail = new MailHandler(javaMailSender);
+				sendMail.setSubject("[이메일 인증]");
+				sendMail.setText(new StringBuffer().append("<h1>메일인증</h1>")
+						.append("자라에 가입해주셔서 감사합니다.<br>" +account.getEmail())
+						.append("<a href=http://i3a308.p.ssafy.io/>이메일 인증하기</a>").toString());
+
+				sendMail.setFrom("lcy00707@gmail.com","jara");
+				sendMail.setTo(account.getEmail());
+				sendMail.send();
 				
 				
 				return new ResponseEntity<String>("success", HttpStatus.OK);
@@ -146,6 +162,26 @@ public class AccountController extends HttpServlet {
 		account.setX(accountService.findX(account.getLocation()));
 		account.setY(accountService.findY(account.getLocation()));
 		
+		account.setMyArticleList(articleService.selectListMyArticle(id));
+		
+		for (int i = 0; i < account.getMyArticleList().size(); i++) {
+			Article article = account.getMyArticleList().get(i);
+			
+			article.setComments(articleCommentService.selectArticleComments(article.getId())); // 전체 댓글 조회
+			article.setLikeAccounts(articleService.selectArticleLikeAccount(article.getId())); // 전체 좋아요 사용자 조회
+		}
+		
+		account.setScrapTipList(tipService.selectListTipScrap(id));
+		
+		System.out.println(account.getScrapTipList());
+		
+		for (int i = 0; i < account.getScrapTipList().size(); i++) {
+			Tip tip = account.getScrapTipList().get(i);
+			
+			tip.setComments(tipCommentService.selectTipComments(tip.getId()));
+			tip.setLikeAccounts(tipService.selectTipLikeAccounts(tip.getId()));
+		}
+		
 		System.out.println(account.getId()+"+"+account.getNickname());
 		if(account.equals(null) || account.getId()==0) {
 			return new ResponseEntity(HttpStatus.NO_CONTENT);
@@ -175,22 +211,22 @@ public class AccountController extends HttpServlet {
 		return new ResponseEntity<String>("success",HttpStatus.OK);
 	}
 	
-	@ApiOperation(value = "이메일 보내기")
-	@GetMapping("email")
-	public ResponseEntity<Boolean> findEmail(@RequestParam String email) throws MessagingException, UnsupportedEncodingException{
-		
-		MailHandler sendMail = new MailHandler(javaMailSender);
-		sendMail.setSubject("[이메일 인증]");
-		sendMail.setText(new StringBuffer().append("<h1>메일인증</h1>")
-				.append("자라에 가입해주셔서 감사합니다.<br>" +email)
-				.append("<a href=http://i3a308.p.ssafy.io/>이메일 인증하기</a>").toString());
-
-		sendMail.setFrom("lcy00707@gmail.com","jara");
-		sendMail.setTo(email);
-		sendMail.send();
-		
-		return new ResponseEntity<Boolean>(accountService.findEmail(email) > 0 , HttpStatus.OK);
-	}
+//	@ApiOperation(value = "이메일 보내기")
+//	@GetMapping("email")
+//	public ResponseEntity<Boolean> findEmail(@RequestParam String email) throws MessagingException, UnsupportedEncodingException{
+//		
+//		MailHandler sendMail = new MailHandler(javaMailSender);
+//		sendMail.setSubject("[이메일 인증]");
+//		sendMail.setText(new StringBuffer().append("<h1>메일인증</h1>")
+//				.append("자라에 가입해주셔서 감사합니다.<br>" +email)
+//				.append("<a href=http://i3a308.p.ssafy.io/>이메일 인증하기</a>").toString());
+//
+//		sendMail.setFrom("lcy00707@gmail.com","jara");
+//		sendMail.setTo(email);
+//		sendMail.send();
+//		
+//		return new ResponseEntity<Boolean>(accountService.findEmail(email) > 0 , HttpStatus.OK);
+//	}
 	
 //	@ApiOperation(value = "전체 팔로우 조회하기")
 //	@GetMapping("follow")

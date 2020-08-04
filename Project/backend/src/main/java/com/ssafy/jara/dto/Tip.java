@@ -1,24 +1,28 @@
 package com.ssafy.jara.dto;
 
 import java.util.Date;
+import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 
 public class Tip {
 
-	private int id;				// 번호	tip pk
-	private int writer;			// 작성자	account fk
-	private String title;		// 제목
-	private String contents;	// 내용
-	private int tag_id;			// 태그	tag fk
+	private int id;						// 번호	tip pk
+	private int writer;					// 작성자	account fk
+	private String title;				// 제목
+	private String contents;			// 내용
+	private int tag_id;					// 태그	tag fk
 	
 	@JsonFormat(pattern="yyyy-MM-dd HH:mm", timezone = "Asia/Seoul")
-	private Date created_at;	// 작성일
+	private Date created_at;			// 작성일
 	
 	@JsonFormat(pattern="yyyy-MM-dd HH:mm", timezone = "Asia/Seoul")
-	private Date updated_at;	// 수정일
-	private int hits;			// 조회수
-	private int likes;			// 좋아요 수 
+	private Date updated_at;			// 수정일
+	private int hits;					// 조회수
+	private int likes;					// 좋아요 수 
+	
+	private List<TipComment> comments;	// 댓글 목록
+	private List<Integer> likeAccounts;	// 좋아요 사용자 목록
 	
 	public Tip() {} 
 	
@@ -105,6 +109,22 @@ public class Tip {
 
 	public void setLikes(int likes) {
 		this.likes = likes;
+	}
+	
+	public List<TipComment> getComments() {
+		return comments;
+	}
+
+	public void setComments(List<TipComment> comments) {
+		this.comments = comments;
+	}
+
+	public List<Integer> getLikeAccounts() {
+		return likeAccounts;
+	}
+
+	public void setLikeAccounts(List<Integer> likeAccounts) {
+		this.likeAccounts = likeAccounts;
 	}
 
 	@Override

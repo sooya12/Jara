@@ -84,7 +84,7 @@
       </v-app-bar>
 
     <v-navigation-drawer
-      v-model="isDrawer"
+      :value="isDrawer"
       temporary
       app
     >
@@ -234,10 +234,10 @@ import { mapState, mapGetters, mapMutations, mapActions } from 'vuex'
 
 export default {
   name: 'App',
-  mounted() {
+  created() {
     this.$store.dispatch('getUsers')
     if (this.$route.path != "/") {this.$store.commit('SET_ENTRANCE', false)}
-    if (this.$store.state.authToken&&this.$store.state.userInfo == null) {this.$store.dispatch('getUser')}
+    if (this.$store.state.authToken&&this.$store.state.userInfo==null) {this.$store.dispatch('getUser')}
   },
   computed: {
     ...mapState([

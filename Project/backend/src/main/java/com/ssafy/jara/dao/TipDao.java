@@ -30,11 +30,15 @@ public interface TipDao {
 	
 	public int insertTipLike(HashMap<String, Integer> hashMap);
 	
-	public int selectTipLikesCount(int tip_id);
+	public List<Integer> selectTipLikeAccounts(int tip_id);
 	
 	public int selectTipLike(HashMap<String, Integer> hashMap);
 	
 	public int deleteTipLike(HashMap<String, Integer> hashMap);
 	
 	public int deleteTipLikes(int tip_id);
+	
+	public int insertTipScrap(HashMap<String, Integer> hashMap);
+	
+	public List<Tip> selectListTipScrap(int user_id);
 }
