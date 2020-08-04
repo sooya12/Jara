@@ -20,6 +20,11 @@ public class AccountServiceImpl implements AccountService {
 	public int insertAccount(Account account) {
 		return accountDao.insertAccount(account);
 	}
+	
+	@Override
+	public int changeStatus(int code) {
+		return accountDao.changeStatus(code);
+	}
 
 	@Override
 	public Account selectAccount(Account account) {
@@ -115,5 +120,7 @@ public class AccountServiceImpl implements AccountService {
 	public List<Location> findAllLocation() {
 		return accountDao.findAllLocation();
 	}
+
+
 	
 }

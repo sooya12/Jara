@@ -1,15 +1,26 @@
 package com.ssafy.jara.controller;
 
 import java.io.UnsupportedEncodingException;
+import java.security.InvalidAlgorithmParameterException;
+import java.security.InvalidKeyException;
+import java.security.Key;
+import java.security.NoSuchAlgorithmException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.crypto.BadPaddingException;
+import javax.crypto.Cipher;
+import javax.crypto.IllegalBlockSizeException;
+import javax.crypto.NoSuchPaddingException;
+import javax.crypto.spec.IvParameterSpec;
+import javax.crypto.spec.SecretKeySpec;
 import javax.mail.MessagingException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.codec.binary.Base64;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -22,13 +33,16 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.ssafy.jara.common.service.jwt.JwtService;
 import com.ssafy.jara.dto.Account;
 import com.ssafy.jara.dto.Article;
 import com.ssafy.jara.dto.Follow;
 import com.ssafy.jara.dto.Tip;
+import com.ssafy.jara.encryption.Encryption;
 import com.ssafy.jara.handler.MailHandler;
 import com.ssafy.jara.service.AccountService;
 import com.ssafy.jara.service.ArticleCommentService;
@@ -37,6 +51,13 @@ import com.ssafy.jara.service.TipCommentService;
 import com.ssafy.jara.service.TipService;
 
 import io.swagger.annotations.ApiOperation;
+
+import java.security.KeyPair;
+import java.security.PrivateKey;
+import java.security.PublicKey;
+
+
+
 
 @CrossOrigin(origins = { "*" }, maxAge = 6000)
 @RestController
@@ -65,53 +86,71 @@ public class AccountController extends HttpServlet {
 	
 	@Autowired
 	JavaMailSender javaMailSender;
-	
-
-//	@Async
-//	public void sendMail(String email) {
-//		SimpleMailMessage simpleMessage = new SimpleMailMessage();
-//		simpleMessage.setFrom("lcy00707@gmail.com"); 
-//		simpleMessage.setTo(email);
-//		simpleMessage.setSubject("이메일 인증");
-//		simpleMessage.setText("인증번호: 123456");
-//		javaMailSender.send(simpleMessage);
-//	}
 
 
 	@ApiOperation(value = "닉네임과 이메일 중복 체크하여 회원가입 처리", response = String.class)
 	@PostMapping("signup")
-	private ResponseEntity<String> signupAccount(@RequestBody Account account) throws MessagingException, UnsupportedEncodingException {
+	private ResponseEntity<String> signupAccount(@RequestBody Account account) throws MessagingException, UnsupportedEncodingException, InvalidKeyException, NoSuchAlgorithmException, NoSuchPaddingException, InvalidAlgorithmParameterException, IllegalBlockSizeException, BadPaddingException {
 
 		if (accountService.duplicateCheck(account) < 1) {
+			
 			if (accountService.insertAccount(account) > 0) {
-//				sendMail(account.getEmail());
+
+//				KeyPair keyPair = Encryption.genRSAKeyPair();
+//
+//		        PublicKey publicKey = keyPair.getPublic();
+//		        PrivateKey privateKey = keyPair.getPrivate();
+//
+//		        String plainText = account.getEmail(); // 암호화 할 문자열
+//		        
+//		        // Base64 인코딩된 암호화 문자열 입니다.
+//		        String encrypted = Encryption.encryptRSA(plainText, publicKey);
+//		        System.out.println("encrypted : " + encrypted); // 암호화 된 문자열
+
+				// 6자리 인증코드 
+				Account reaccount = accountService.findAccount(account.getId());
 				
-				//-5
-//				MailHandler sendMail = new MailHandler(javaMailSender);
-//				sendMail.setSubject("[이메일 인증]");
-//				sendMail.setText(new StringBuffer().append("<h1>메일인증</h1>")
-//						.append("자라에 가입해주셔서 감사합니다.<br>" +account.getEmail())
-//						.append("' target='_blenk'>이메일 인증 확인</a>").toString());
-//				sendMail.setFrom("lcy00707@gmail.com","jara");
-//				sendMail.setTo(account.getEmail());
-//				sendMail.send();
+//				System.out.println("code : "+reaccount.getCode());
+//				System.out.println("nickname : "+reaccount.getNickname());
 				
 				MailHandler sendMail = new MailHandler(javaMailSender);
 				sendMail.setSubject("[이메일 인증]");
 				sendMail.setText(new StringBuffer().append("<h1>메일인증</h1>")
-						.append("자라에 가입해주셔서 감사합니다.<br>" +account.getEmail())
-						.append("<a href=http://i3a308.p.ssafy.io/>이메일 인증하기</a>").toString());
+						.append("자라에 가입해주셔서 감사합니다.<br>인증번호 : " +reaccount.getCode()+"<br>")
+						//.append("<a href='http://localhost:8081/accounts/certification?email="+account.getEmail()+"'>이메일 인증하기</a>").toString());
+						.append("<a href='http://localhost:8081/accounts/certification'>이메일 인증하기</a>").toString());
 
 				sendMail.setFrom("lcy00707@gmail.com","jara");
 				sendMail.setTo(account.getEmail());
 				sendMail.send();
 				
-				
+
 				return new ResponseEntity<String>("success", HttpStatus.OK);
 			}
 			return new ResponseEntity<String>("fail", HttpStatus.NO_CONTENT);
 		}
 		return new ResponseEntity<String>("fail", HttpStatus.NO_CONTENT);
+	}
+	
+	
+	
+	@ApiOperation(value = "회원가입 시 이메일 인증", response = String.class)
+	@PostMapping("certification")
+	private ResponseEntity<String> certification(@RequestBody int code) {	
+//		KeyPair keyPair = Encryption.genRSAKeyPair();
+//        PrivateKey privateKey = keyPair.getPrivate();
+//        
+//		// 여기서 복호화
+//		String decrypted = Encryption.decryptRSA(encrypted, privateKey);
+//        System.out.println("decrypted : " + decrypted);
+
+
+		if(accountService.changeStatus(code)>0) {
+
+			return new ResponseEntity<String>("success", HttpStatus.OK);
+		}
+		
+		return new ResponseEntity<String>("fail", HttpStatus.NO_CONTENT); //
 	}
 	
 //	@ApiOperation(value = "이메일과 비밀번호로 로그인 처리", response = Account.class)
@@ -173,7 +212,7 @@ public class AccountController extends HttpServlet {
 		
 		account.setScrapTipList(tipService.selectListTipScrap(id));
 		
-		System.out.println(account.getScrapTipList());
+//		System.out.println(account.getScrapTipList());
 		
 		for (int i = 0; i < account.getScrapTipList().size(); i++) {
 			Tip tip = account.getScrapTipList().get(i);
@@ -211,20 +250,10 @@ public class AccountController extends HttpServlet {
 		return new ResponseEntity<String>("success",HttpStatus.OK);
 	}
 	
-//	@ApiOperation(value = "이메일 보내기")
+//	@ApiOperation(value = "인증 이메일 확인 (status 0->1)")
 //	@GetMapping("email")
 //	public ResponseEntity<Boolean> findEmail(@RequestParam String email) throws MessagingException, UnsupportedEncodingException{
-//		
-//		MailHandler sendMail = new MailHandler(javaMailSender);
-//		sendMail.setSubject("[이메일 인증]");
-//		sendMail.setText(new StringBuffer().append("<h1>메일인증</h1>")
-//				.append("자라에 가입해주셔서 감사합니다.<br>" +email)
-//				.append("<a href=http://i3a308.p.ssafy.io/>이메일 인증하기</a>").toString());
 //
-//		sendMail.setFrom("lcy00707@gmail.com","jara");
-//		sendMail.setTo(email);
-//		sendMail.send();
-//		
 //		return new ResponseEntity<Boolean>(accountService.findEmail(email) > 0 , HttpStatus.OK);
 //	}
 	

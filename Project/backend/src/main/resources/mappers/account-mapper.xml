@@ -4,16 +4,23 @@
 	
 
 	<!-- 회원가입 -->
-	<insert id="insertAccount">
-		INSERT INTO user (nickname, email, password, sex,birthday, location)
-		VALUES(#{nickname}, #{email}, #{password},#{sex}, #{birthday}, #{location})
+	<insert id="insertAccount" useGeneratedKeys="true" keyProperty="id">
+		INSERT INTO user (nickname, email, password, sex,birthday, location, status, code)
+		VALUES(#{nickname}, #{email}, #{password},#{sex}, #{birthday}, #{location} ,0, round(rand()*1000000))
 	</insert>
+	
+	<!-- 회원가입 가능 상태로 만들기 -->
+	<update id="changeStatus">
+		UPDATE user
+		SET status=1
+		WHERE code=#{code}
+	</update>
 	
 	<!-- 로그인 -->
 	<select id="selectAccount" resultType="com.ssafy.jara.dto.Account">
 		SELECT *
 		FROM user
-		WHERE email=#{email} and password=#{password}
+		WHERE email=#{email} and password=#{password} and status = 1;
 	</select>
 	
 	<!-- 닉네임(uid) / 이메일(email) 중복 체크 -->
