@@ -43,10 +43,10 @@ public class ArticleController {
 	@ApiOperation(value = "게시글 등록", response = Integer.class)
 	@PostMapping("")
 	private ResponseEntity<Integer> insertArticle(@RequestBody Article article) throws IOException {
-		String token = "AAAAY1-4pBQ:APA91bEfaIPl9xYtoNk2mR3ICt1K6fMyV_blqGMGsu3KMblVkzZK3UQUDgtUVqgNFyYJN2wWbbAmdQjL-wE6dTX3BUuVFoUMsDs_4rPNOrg4KHS5TwjUA_iHwnncAZT3dcz2YJE4YiWL";
+//		String token = "AAAAY1-4pBQ:APA91bEfaIPl9xYtoNk2mR3ICt1K6fMyV_blqGMGsu3KMblVkzZK3UQUDgtUVqgNFyYJN2wWbbAmdQjL-wE6dTX3BUuVFoUMsDs_4rPNOrg4KHS5TwjUA_iHwnncAZT3dcz2YJE4YiWL";
 		
 		if(articleService.insertArticle(article) > 0) {
-			fcmService.sendMessageTo(token, "알림", "새로운 게시글 등록");
+//			fcmService.sendMessageTo(token, "알림", "새로운 게시글 등록");
 			return new ResponseEntity<Integer>(article.getId(), HttpStatus.OK);
 		}
 		
