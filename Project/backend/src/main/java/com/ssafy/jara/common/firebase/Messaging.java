@@ -24,8 +24,8 @@ public class Messaging {
 	private static final String MESSAGING_SCOPE = "https://www.googleapis.com/auth/firebase.messaging";
 	private static final String[] SCOPES = { MESSAGING_SCOPE };
 
-	private static final String TITLE = "새로운 알림이 도착!";
-	private static final String BODY = "새로운 게시물/팁이 등록되었어요! 어서 가보세요!";
+	private static final String TITLE = "새로운 알림이 도착";
+	private static final String BODY = "새로운 게시물/팁이 등록되었습니다";
 	public static final String MESSAGE_KEY = "message";
 	
 	private static final String GOOGLE_APPLICATION_CREDENTIALS = "jara-fcm-firebase-adminsdk-68twq-d0e84cbd44.json";
@@ -194,7 +194,8 @@ public class Messaging {
 
 		JsonObject jMessage = new JsonObject();
 		jMessage.add("notification", jNotification);
-		jMessage.addProperty("topic", "news");
+//		jMessage.addProperty("topic", "news");
+		jMessage.addProperty("token", "AIzaSyCezlkXNPrJs9Ch7Wvd05adOkFRfocV2sY");
 
 		JsonObject jFcm = new JsonObject();
 		jFcm.add(MESSAGE_KEY, jMessage);
@@ -229,6 +230,8 @@ public class Messaging {
 	}
 
 	public static void main(String[] args) throws IOException {
+		String[] input = new String[] {"common-message"};
+		
 		if (args.length == 1 && args[0].equals("common-message")) {
 			sendCommonMessage();
 		} else if (args.length == 1 && args[0].equals("override-message")) {
