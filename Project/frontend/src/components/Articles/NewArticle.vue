@@ -5,7 +5,7 @@
       <div class="ml-2 font-weight-bold">{{ userInfo.nickname }}</div>
       <v-btn fixed bottom right fab color="green lighten-1" @click="createArticle" small dark><v-icon>mdi-pencil</v-icon></v-btn>
     </div>
-    <v-img v-if="file.length > 0" :src="file"></v-img>
+    <v-img v-if="file != null" :src="imageURL"></v-img>
     <v-textarea
       v-model="article.contents"
       append-outer-icon="mdi-head-dots-horizontal"
@@ -18,6 +18,7 @@
       autofocus
     ></v-textarea>
     <v-file-input
+      @change="image"
       v-model="file"
       placeholder="사진을 첨부해 주세요."
       color="green darken-2"
@@ -50,10 +51,14 @@ export default {
         contents: '',
         writer: this.$store.state.userInfo.id,
       },
-      file: [],
+      file: null,
+      imageURL: ''
     }
   },
   methods: {
+    image() {
+      this.imageURL = URL.createObjectURL(this.file)
+    },
     createArticle() {
       if (this.$route.path == '/main/new') {
         axios.post(`${this.$store.state.api_server}/articles`, this.article)
