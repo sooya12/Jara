@@ -1,6 +1,8 @@
 package com.ssafy.jara.controller;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -15,6 +17,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.ssafy.jara.dto.Either;
+import com.ssafy.jara.dto.EitherChoice;
+import com.ssafy.jara.dto.EitherComment;
+import com.ssafy.jara.service.EitherCommentService;
 import com.ssafy.jara.service.EitherService;
 
 import io.swagger.annotations.ApiOperation;
@@ -26,6 +31,9 @@ public class EitherController {
 	
 	@Autowired
 	EitherService eitherService;
+	
+	@Autowired
+	EitherCommentService eitherCommentService;
 	
 	@ApiOperation(value = "새로운 투표 등록", response = String.class)
 	@PostMapping("")
@@ -47,7 +55,7 @@ public class EitherController {
 			return new ResponseEntity<Either>(new Either(), HttpStatus.BAD_REQUEST);
 		}
 	}
-	
+
 	@ApiOperation(value = "투표 삭제", response = String.class)
 	@DeleteMapping("/{id}")
 	private ResponseEntity<String> deleteEither(@PathVariable int id) {
@@ -74,6 +82,16 @@ public class EitherController {
 		} else {
 			System.out.println("투표 리스트가 존재하지 않음");
 			return new ResponseEntity<List<Either>>(partialList, HttpStatus.BAD_REQUEST);
+		}
+	}
+	
+	@ApiOperation(value = "선택지 투표", response = String.class)
+	@PostMapping("/{either_id}/pick")
+	private ResponseEntity<String> pickEither(@PathVariable int either_id, @RequestBody EitherChoice eitherChoice) {
+		if (eitherService.pickEither(eitherChoice) > 0) {
+			return new ResponseEntity<String>("success", HttpStatus.OK);
+		} else {
+			return new ResponseEntity<String>("fail", HttpStatus.BAD_REQUEST);
 		}
 	}
 }
