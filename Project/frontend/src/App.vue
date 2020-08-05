@@ -238,6 +238,7 @@ export default {
     this.$store.dispatch('getUsers')
     if (this.$route.path != "/") {this.$store.commit('SET_ENTRANCE', false)}
     if (this.$store.state.authToken&&this.$store.state.userInfo==null) {this.$store.dispatch('getUser')}
+    if (this.$store.state.authToken) {this.$store.commit('SET_ENTRANCE', false)}
   },
   computed: {
     ...mapState([
@@ -250,7 +251,8 @@ export default {
       'api_server',
       'reportData',
       'nickNameRules',
-      'contentsRules'
+      'contentsRules',
+      'entrance'
     ]),
     ...mapGetters([
       'isLoggedIn',
