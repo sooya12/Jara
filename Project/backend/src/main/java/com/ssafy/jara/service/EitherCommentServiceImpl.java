@@ -36,4 +36,10 @@ public class EitherCommentServiceImpl implements EitherCommentService {
 		System.out.println("either_id=" + either_id);
 		return eitherCommentDao.selectListEitherComment(either_id);
 	}
+	
+	@Override
+	public EitherComment selectEitherComment(int id) {
+		System.out.println("id=" + id);
+		return eitherCommentDao.selectEitherComment(id);
+	}
 }

@@ -30,11 +30,12 @@ public class EitherCommentController {
 	
 	@ApiOperation(value = "투표 새로운 댓글 등록", response = String.class)
 	@PostMapping("/{either_id}/comments")
-	private ResponseEntity<String> insertEitherComment(@PathVariable int either_id, @RequestBody EitherComment eitherComment) {
-		if (eitherCommentService.insertEitherComment(eitherComment) > 0) {
-			return new ResponseEntity<String>("success", HttpStatus.OK);
+	private ResponseEntity<EitherComment> insertEitherComment(@PathVariable int either_id, @RequestBody EitherComment eitherComment) {
+		int ret = eitherCommentService.insertEitherComment(eitherComment);
+		if (ret > 0) {
+			return new ResponseEntity<EitherComment>(eitherCommentService.selectEitherComment(eitherComment.getId()), HttpStatus.OK);
 		} else {
-			return new ResponseEntity<String>("fail", HttpStatus.INTERNAL_SERVER_ERROR);
+			return new ResponseEntity<EitherComment>(HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}
 	

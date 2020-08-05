@@ -18,19 +18,15 @@ public class FileUploadServiceImpl implements FileUploadService{
 	@Autowired
 	FileUploadDao fileUploadDao;
 
-	// C:\Users\multicampus\Desktop\SSAFY\Project\Sub PJT III\s03p13a308\Project\backend\src\main\resources
-	String fileUploadRealPath = 
-			"C:" + File.separator + "Users" + File.separator + "multicampus" + File.separator + "Desktop" + File.separator + 
-			"SSAFY" + File.separator + "Project" + File.separator + "Sub PJT III" + File.separator + 
-			"s03p13a308" + File.separator + "Project" + File.separator + "backend" + File.separator + 
-			"src" + File.separator + "main" + File.separator + "resources";
+	// C:\Users\multicampus\Desktop
+	String fileUploadRealPath = "C:" + File.separator + "Users" + File.separator + "multicampus" + File.separator + "Desktop";
 	
 	// AWS
 	// /home/ubuntu
 //	String fileUploadRealPath = 
 //			File.separator + "home" + File.separator + "ubuntu";
 	
-	String uploadFolder = "imageUpload";
+	String uploadFolder = "jara_img_upload";
 	
 	@Override
 	public int fileUpload(int id, MultipartFile file, String boardType) throws Exception{
@@ -62,21 +58,21 @@ public class FileUploadServiceImpl implements FileUploadService{
 				ArticleFileUpload articleFileUpload = new ArticleFileUpload();
 				articleFileUpload.setArticle_id(id);
 				articleFileUpload.setOrigianl_file_name(originalFileName);
-				articleFileUpload.setStored_file_name("" + uuid);
+				articleFileUpload.setStored_file_name("" + savingFileName);
 				fileUploadDao.insertArticleFile(articleFileUpload);
 				break;
 			case "tip":
 				TipFileUpload tipFileUpload = new TipFileUpload();
 				tipFileUpload.setTip_id(id);
 				tipFileUpload.setOrigianl_file_name(originalFileName);
-				tipFileUpload.setStored_file_name("" + uuid);
+				tipFileUpload.setStored_file_name("" + savingFileName);
 				fileUploadDao.insertTipFile(tipFileUpload);
 				break;
 			case "barter":
 				BarterFileUpload barterFileUpload = new BarterFileUpload();
 				barterFileUpload.setItem_id(id);
 				barterFileUpload.setOrigianl_file_name(originalFileName);
-				barterFileUpload.setStored_file_name("" + uuid);
+				barterFileUpload.setStored_file_name("" + savingFileName);
 				fileUploadDao.insertBarterFile(barterFileUpload);
 				break;
 			}

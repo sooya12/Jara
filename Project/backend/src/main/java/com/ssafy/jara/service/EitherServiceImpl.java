@@ -57,20 +57,25 @@ public class EitherServiceImpl implements EitherService {
 		return partialList;
 	}
 	
+	@Override
 	public int pickEither(EitherChoice eitherChoice) {
 		System.out.println("eitherChoice=" + eitherChoice);
 		return eitherDao.pickEither(eitherChoice);
 	}
 	
+	@Override
 	public List<EitherChoice> selectEitherPickList(int either_id) {
 		System.out.println("either_id=" + either_id);
 		return eitherDao.selectEitherPickList(either_id);
 	}
 	
+	@Override
 	public List<Integer> selectChoiceAList(int either_id) {
 		System.out.println("either_id=" + either_id);
 		return eitherDao.selectChoiceAList(either_id);
 	}
+	
+	@Override
 	public List<Integer> selectChoiceBList(int either_id) {
 		System.out.println("either_id=" + either_id);
 		return eitherDao.selectChoiceBList(either_id);
