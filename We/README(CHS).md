@@ -286,3 +286,216 @@ public class Messaging {
 
 -----
 
+
+
+### :feet: 20.08.05
+
+##### Firebase Clude Messaging을 구현하기 위해 다시 도전
+
+###### pom.xml
+
+```bash
+<!-- Firebase -->
+<dependency>
+	<groupId>com.google.firebase</groupId>
+	<artifactId>firebase-admin</artifactId>
+	<version>6.8.1</version>
+</dependency>
+		
+<!-- OKHttp 3 -->
+<dependency>
+	<groupId>com.squareup.okhttp3</groupId>
+	<artifactId>okhttp</artifactId>
+	<version>4.2.2</version>
+</dependency>
+
+```
+
+
+
+###### FcmMessage.java
+
+```b
+package com.ssafy.jara.common.firebase;
+
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.Setter;
+
+@AllArgsConstructor
+@Getter
+@Setter
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
+public class FcmMessage {
+
+	private boolean validate_only;
+	private Message message;
+	
+	public FcmMessage() {}
+	
+	public FcmMessage(boolean validate_only, Message message) {
+		this.validate_only = validate_only;
+		this.message = message;
+	}
+	
+	@AllArgsConstructor
+	@Getter
+	@Setter
+	public static class Message {
+		private Notification notification;
+		private String token;
+		
+		public Message() {}
+		
+		public Message(Notification notification, String token) {
+			this.notification = notification;
+			this.token = token;
+		}
+	}
+	
+	@AllArgsConstructor
+	@Getter
+	@Setter
+	public static class Notification {
+		private String title;
+		private String body;
+		private String image;
+		
+		public Notification() {}
+		
+		public Notification(String title, String body, String image) {
+			this.title = title;
+			this.body = body;
+			this.image = image;
+		}
+	}
+
+}
+```
+
+
+
+###### FcmService.java
+
+```b
+package com.ssafy.jara.common.firebase;
+
+import java.io.IOException;
+import java.util.List;
+
+import org.springframework.core.io.ClassPathResource;
+import org.springframework.http.HttpHeaders;
+import org.springframework.stereotype.Component;
+
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.auth.oauth2.GoogleCredentials;
+import com.google.gson.JsonObject;
+import com.ssafy.jara.common.firebase.FcmMessage.Message;
+import com.ssafy.jara.common.firebase.FcmMessage.Notification;
+
+import lombok.RequiredArgsConstructor;
+import okhttp3.MediaType;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.RequestBody;
+import okhttp3.Response;
+
+
+@Component
+@RequiredArgsConstructor
+public class FcmService {
+	
+	public final String API_URL = "https://fcm.googleapis.com/v1/projects/jara-fcm/messages:send";
+	
+	public void sendMessageTo(String targetToken, String title, String body) throws IOException {
+//		String message = makeMessage(targetToken, title, body);
+		
+		JsonObject jNotification = new JsonObject();
+		jNotification.addProperty("title", title);
+		jNotification.addProperty("body", body);
+
+		JsonObject jMessage = new JsonObject();
+		jMessage.add("notification", jNotification);
+//		jMessage.addProperty("topic", "news");
+		jMessage.addProperty("token", targetToken);
+
+		JsonObject jFcm = new JsonObject();
+		jFcm.add("message", jMessage);
+		
+		System.out.println(jFcm);
+		
+		OkHttpClient client = new OkHttpClient();
+//		RequestBody requestBody = RequestBody.create(message, MediaType.get("application/json; charset=utf-8"));
+		RequestBody requestBody = RequestBody.create(jFcm.toString(), MediaType.get("application/json; charset=utf-8"));
+		
+		Request request = new Request.Builder()
+									.url(API_URL)
+									.post((okhttp3.RequestBody) requestBody)
+									.addHeader(HttpHeaders.AUTHORIZATION, "Bearer " + getAccessToken())
+									.addHeader(HttpHeaders.CONTENT_TYPE, "application/json; UTF-8")
+									.build();
+		
+		Response response = client.newCall(request).execute();
+		
+		System.out.println(response.body().string());
+	}
+	
+	private String makeMessage(String targetToken, String title, String body) throws JsonProcessingException {
+		ObjectMapper objectMapper = new ObjectMapper();
+		
+//		FcmMessage fcmMessage = FcmMessage.builder()
+//									.message(FcmMessage.Message.builder()
+//									.token(targetToken)
+//									.notification(FcmMessage.Notification.builder()
+//										.title(title)
+//										.body(body)
+//										.image(null)
+//										.build()
+//									)
+//									.build()
+//									)
+//									.validate_only(false)
+//									.build();
+		
+		Notification notification = new Notification(title, body, null);
+		Message message = new Message(notification, targetToken);
+		FcmMessage fcmMessage = new FcmMessage(true, message); 
+		
+		return objectMapper.writeValueAsString(fcmMessage);
+	}
+
+	private String getAccessToken() throws IOException {
+		String GOOGLE_APPLICATION_CREDENTIALS = "jara-fcm-firebase-adminsdk-68twq-d0e84cbd44.json";
+		
+		// GoogleCredentials : GoogleApi 사용을 위한 oauth2를 이용해 인증한 대상을 나타내는 객체
+		GoogleCredentials googleCredentials = GoogleCredentials.fromStream(new ClassPathResource(GOOGLE_APPLICATION_CREDENTIALS).getInputStream()) // json 객체의 인스턴스를 얻음
+				.createScoped(List.of("https://www.googleapis.com/auth/cloud-platform")); // 인증하는 서버에서 필요로 하는 권한 지정
+		
+		googleCredentials.refreshIfExpired(); // AccessToken 생성
+		
+		return googleCredentials.getAccessToken().getTokenValue(); // getAccessToken()으로 토큰을 받아옴 / getTokenValue()로 토큰을 얻음
+	}
+}
+```
+
+
+
+##### AticleController에서 sendMessageTo()를 호출하여 메시지를 보내보았으나, 토큰이 denied 되어서 실패
+
+
+
+##### Tips 댓글 등록 시, DB에 등록하고 해당 댓글 객체 프론트로 전송
+
+##### Tips 상세 조회 시, 좋아하는 user_id 목록 및 댓글 목록 추가 전송
+
+##### Tips 좋아요 기능 구현 변경
+
+
+
+##### 비록 FCM을 구현하지 못하였지만, Lombok에 대해서 알게 되었다.
+
+-----
+
