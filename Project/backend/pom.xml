@@ -160,18 +160,18 @@
 		</dependency>
 
 		<!-- Firebase -->
-		<dependency>
+		<!-- <dependency>
 			<groupId>com.google.firebase</groupId>
 			<artifactId>firebase-admin</artifactId>
 			<version>6.8.1</version>
-		</dependency>
+		</dependency> -->
 		
 		<!-- OKHttp 3 -->
-		<dependency>
+		<!-- <dependency>
 			<groupId>com.squareup.okhttp3</groupId>
 			<artifactId>okhttp</artifactId>
 			<version>4.2.2</version>
-		</dependency>
+		</dependency> -->
 		
 		<!-- end -->
 	</dependencies>

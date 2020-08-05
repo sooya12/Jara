@@ -60,17 +60,17 @@ public class EitherController {
 	private ResponseEntity<Map<String, Object>> selectEither(@PathVariable int id) {
 		Either either = eitherService.selectEither(id);
 		List<EitherComment> eitherComments = eitherCommentService.selectListEitherComment(id);
-		List<EitherChoice> eitherChoices = eitherService.selectEitherPickList(id);
+		List<Integer> choiceA = eitherService.selectChoiceAList(id);
+		List<Integer> choiceB = eitherService.selectChoiceBList(id);
 		
 		Map<String, Object> resultMap = new HashMap<>();
 		resultMap.put("either", either);
+		resultMap.put("choiceA", choiceA);
+		resultMap.put("choiceB", choiceB);
 		resultMap.put("eitherComments", eitherComments);
-		resultMap.put("eitherChoices", eitherChoices);
 		if (either != null) {
-//			return new ResponseEntity<Either>(either, HttpStatus.OK);
 			return new ResponseEntity<Map<String, Object>>(resultMap, HttpStatus.OK);
 		} else {
-//			return new ResponseEntity<Either>(new Either(), HttpStatus.BAD_REQUEST);
 			return new ResponseEntity<Map<String, Object>>(resultMap, HttpStatus.BAD_REQUEST);
 		}
 	}
