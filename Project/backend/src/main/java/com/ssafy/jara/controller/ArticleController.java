@@ -45,25 +45,6 @@ public class ArticleController {
 		return new ResponseEntity<Integer>(0, HttpStatus.INTERNAL_SERVER_ERROR);
 	}
 	
-//	@ApiOperation(value = "전체 게시글 조회", response = List.class)
-//	@GetMapping("")
-//	private ResponseEntity<List<Article>> selectListTotalArticle() {
-//		return new ResponseEntity<List<Article>>(articleService.selectListTotalArticle(), HttpStatus.OK);
-//	}
-	
-//	@ApiOperation(value = "사용자가 작성한 전체 게시글 및 댓글 조회", response = List.class)
-//	@GetMapping("/writer/{user_id}")
-//	private ResponseEntity<List<Article>> selectListMyArticle(@PathVariable("user_id") int user_id) {
-//		List<Article> articleList = articleService.selectListArticle(user_id);
-//		
-//		for (int i = 0; i < articleList.size(); i++) {
-//			Article article = articleList.get(i);
-//			article.setComments(articleCommentService.selectArticleComments(article.getId()));
-//		}
-//		
-//		return new ResponseEntity<List<Article>>(articleList, HttpStatus.OK);
-//	}
-	
 	@ApiOperation(value = "사용자가 작성한 전체 게시글 및 사용자가 팔로우하는 다른 사용자의 전체 게시글 및 댓글, 좋아요 사용자 조회", response = List.class)
 	@GetMapping("")
 	private ResponseEntity<List<Article>> selectListArticle(@RequestParam int user_id) {
@@ -146,16 +127,6 @@ public class ArticleController {
 		
 		return new ResponseEntity<String>("fail", HttpStatus.BAD_REQUEST);
 	}
-	
-//	@ApiOperation(value = "사용자의 해당 게시글 좋아요 여부 확인", response = Boolean.class)
-//	@GetMapping("/{id}/like/{user_id}")
-//	private ResponseEntity<Boolean> checkArticleLike(@PathVariable("id") int article_id, @PathVariable("user_id") int user_id) {
-//		HashMap<String, Integer> hashMap = new HashMap<String, Integer>();
-//		hashMap.put("article_id", article_id);
-//		hashMap.put("user_id", user_id);
-//		
-//		return new ResponseEntity<Boolean>(articleService.selectArticleLike(hashMap) > 0, HttpStatus.OK);
-//	}
 	
 	@ApiOperation(value = "게시글 좋아요 등록", response = String.class)
 	@PostMapping("/{id}/like")
