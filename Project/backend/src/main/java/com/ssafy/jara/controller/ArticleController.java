@@ -1,5 +1,6 @@
 package com.ssafy.jara.controller;
 
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 
@@ -17,6 +18,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.ssafy.jara.common.firebase.FcmMessage;
+import com.ssafy.jara.common.firebase.FcmService;
 import com.ssafy.jara.dto.Article;
 import com.ssafy.jara.service.ArticleCommentService;
 import com.ssafy.jara.service.ArticleService;
@@ -34,11 +37,16 @@ public class ArticleController {
 	@Autowired
 	ArticleCommentService articleCommentService;
 	
+	@Autowired
+	FcmService fcmService;
+	
 	@ApiOperation(value = "게시글 등록", response = Integer.class)
 	@PostMapping("")
-	private ResponseEntity<Integer> insertArticle(@RequestBody Article article) {
+	private ResponseEntity<Integer> insertArticle(@RequestBody Article article) throws IOException {
+		String token = "AAAAY1-4pBQ:APA91bEfaIPl9xYtoNk2mR3ICt1K6fMyV_blqGMGsu3KMblVkzZK3UQUDgtUVqgNFyYJN2wWbbAmdQjL-wE6dTX3BUuVFoUMsDs_4rPNOrg4KHS5TwjUA_iHwnncAZT3dcz2YJE4YiWL";
 		
 		if(articleService.insertArticle(article) > 0) {
+			fcmService.sendMessageTo(token, "알림", "새로운 게시글 등록");
 			return new ResponseEntity<Integer>(article.getId(), HttpStatus.OK);
 		}
 		

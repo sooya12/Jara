@@ -114,7 +114,6 @@
 		    <scope>provided</scope>
 		</dependency>
 
-
 		<!-- Logging -->
 		<dependency>
 			<groupId>org.slf4j</groupId>
@@ -160,10 +159,18 @@
 			<version>1.4.7</version>
 		</dependency>
 
+		<!-- Firebase -->
 		<dependency>
 			<groupId>com.google.firebase</groupId>
 			<artifactId>firebase-admin</artifactId>
 			<version>6.8.1</version>
+		</dependency>
+		
+		<!-- OKHttp 3 -->
+		<dependency>
+			<groupId>com.squareup.okhttp3</groupId>
+			<artifactId>okhttp</artifactId>
+			<version>4.2.2</version>
 		</dependency>
 		
 		<!-- end -->
