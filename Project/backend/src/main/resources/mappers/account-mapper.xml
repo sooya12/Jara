@@ -6,7 +6,7 @@
 	<!-- 회원가입 -->
 	<insert id="insertAccount" useGeneratedKeys="true" keyProperty="id">
 		INSERT INTO user (nickname, email, password, sex,birthday, location, status, code)
-		VALUES(#{nickname}, #{email}, #{password},#{sex}, #{birthday}, #{location} ,0, round(rand()*1000000))
+		VALUES(#{nickname}, #{email}, #{password},#{sex}, #{birthday}, #{location} ,0, LEFT(MD5(RAND()), 10))
 	</insert>
 	
 	<!-- 회원가입 가능 상태로 만들기 -->
@@ -33,12 +33,12 @@
 	<!-- 인증 코드 변경하기 -->
 	<update id="changeCode">
 		UPDATE user
-		SET code=round(rand()*1000000)
+		SET code=LEFT(MD5(RAND()), 10)
 		WHERE email=#{email}
 	</update>
 	
 	<!-- 인증 코드 이메일로 찾기 -->
-	<select id="findCode" resultType="java.lang.Integer">
+	<select id="findCode" resultType="java.lang.String">
 		SELECT code
 		FROM user
 		WHERE email=#{email}
@@ -68,7 +68,7 @@
 	<!-- 회원 정보 수정 -->
 	<update id="updateAccount">
 		UPDATE user SET
-		email=#{email}, nickname=#{nickname}, password=#{password}, 
+		nickname=#{nickname}, password=#{password}, 
 		sex=#{sex}, birthday=#{birthday}, location=#{location}, bio=#{bio}
 		WHERE id=#{id}
 	</update>

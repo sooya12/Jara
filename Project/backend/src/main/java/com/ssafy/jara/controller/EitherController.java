@@ -1,6 +1,8 @@
 package com.ssafy.jara.controller;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -15,6 +17,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.ssafy.jara.dto.Either;
+import com.ssafy.jara.dto.EitherChoice;
+import com.ssafy.jara.dto.EitherComment;
+import com.ssafy.jara.service.EitherCommentService;
 import com.ssafy.jara.service.EitherService;
 
 import io.swagger.annotations.ApiOperation;
@@ -27,6 +32,9 @@ public class EitherController {
 	@Autowired
 	EitherService eitherService;
 	
+	@Autowired
+	EitherCommentService eitherCommentService;
+	
 	@ApiOperation(value = "새로운 투표 등록", response = String.class)
 	@PostMapping("")
 	private ResponseEntity<String> insertEither(@RequestBody Either either) {
@@ -37,14 +45,33 @@ public class EitherController {
 		}
 	}
 	
+//	@ApiOperation(value = "해당 투표 조회", response = String.class)
+//	@GetMapping("/{id}")
+//	private ResponseEntity<Either> selectEither(@PathVariable int id) {
+//		Either either = eitherService.selectEither(id);
+//		if (either != null) {
+//			return new ResponseEntity<Either>(either, HttpStatus.OK);
+//		} else {
+//			return new ResponseEntity<Either>(new Either(), HttpStatus.BAD_REQUEST);
+//		}
+//	}
 	@ApiOperation(value = "해당 투표 조회", response = String.class)
 	@GetMapping("/{id}")
-	private ResponseEntity<Either> selectEither(@PathVariable int id) {
+	private ResponseEntity<Map<String, Object>> selectEither(@PathVariable int id) {
 		Either either = eitherService.selectEither(id);
+		List<EitherComment> eitherComments = eitherCommentService.selectListEitherComment(id);
+		List<EitherChoice> eitherChoices = eitherService.selectEitherPickList(id);
+		
+		Map<String, Object> resultMap = new HashMap<>();
+		resultMap.put("either", either);
+		resultMap.put("eitherComments", eitherComments);
+		resultMap.put("eitherChoices", eitherChoices);
 		if (either != null) {
-			return new ResponseEntity<Either>(either, HttpStatus.OK);
+//			return new ResponseEntity<Either>(either, HttpStatus.OK);
+			return new ResponseEntity<Map<String, Object>>(resultMap, HttpStatus.OK);
 		} else {
-			return new ResponseEntity<Either>(new Either(), HttpStatus.BAD_REQUEST);
+//			return new ResponseEntity<Either>(new Either(), HttpStatus.BAD_REQUEST);
+			return new ResponseEntity<Map<String, Object>>(resultMap, HttpStatus.BAD_REQUEST);
 		}
 	}
 	
@@ -75,5 +102,21 @@ public class EitherController {
 			System.out.println("투표 리스트가 존재하지 않음");
 			return new ResponseEntity<List<Either>>(partialList, HttpStatus.BAD_REQUEST);
 		}
+	}
+	
+	@ApiOperation(value = "선택지 투표", response = String.class)
+	@PostMapping("/{either_id}/pick")
+	private ResponseEntity<String> insertPickEither(@PathVariable int either_id, @RequestBody EitherChoice eitherChoice) {
+		if (eitherService.pickEither(eitherChoice) > 0) {
+			return new ResponseEntity<String>("success", HttpStatus.OK);
+		} else {
+			return new ResponseEntity<String>("fail", HttpStatus.BAD_REQUEST);
+		}
+	}
+	
+	@ApiOperation(value = "해당하는 투표의 투표 현황 조회", response = String.class)
+	@GetMapping("/{either_id}/pick")
+	private ResponseEntity<List<EitherChoice>> selectEitherPickList(@PathVariable int either_id) {
+		return new ResponseEntity<List<EitherChoice>>(eitherService.selectEitherPickList(either_id), HttpStatus.OK);
 	}
 }

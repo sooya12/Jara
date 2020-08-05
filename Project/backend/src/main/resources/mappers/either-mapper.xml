@@ -12,19 +12,32 @@
    <select id="selectEither" parameterType="int" resultType="com.ssafy.jara.dto.Either">
       SELECT *
       FROM either
-      WHERE id=#{id}
+      WHERE id=#{id};
    </select>
    
    <!-- 투표 삭제 -->
    <delete id="deleteEither" parameterType="int">
       DELETE FROM either
-      WHERE id=#{id}
+      WHERE id=#{id};
    </delete>
    
    <!-- 전체 투표 조회 -->
    <select id="selectListEither" resultType="com.ssafy.jara.dto.Either">
       SELECT *
       FROM either
+      ORDER BY id DESC;
    </select>
    
+   <!-- 선택지 투표 -->
+   <insert id="pickEither" parameterType="com.ssafy.jara.dto.EitherChoice">
+      INSERT INTO either (either_id, pick)
+      VALUES (#{either_id}, #{pick});
+   </insert>
+   
+   <!-- 해당하는 투표의 투표 현황 조회 -->
+   <select id="selectEitherPickList" resultType="com.ssafy.jara.dto.Either">
+      SELECT *
+      FROM either_choice
+      ORDER BY id DESC;
+   </select>
 </mapper>
