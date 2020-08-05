@@ -3,16 +3,20 @@
     <div class="mt-5" v-if="comments.length > 0">
       <div v-for="(comment, index) in comments" :key="index">
         <v-chip
+          class="mt-2"
+          v-if="!comment.choice"
           color="red darken-1"
           text-color="white"
         >
-        choiceA
+        {{ either.choiceA }}
         </v-chip>
         <v-chip
+          class="mt-2"
+          v-else
           color="blue darken-2"
           text-color="white"
         >
-        choiceB
+        {{ either.choiceB }}
         </v-chip>
         <div class="d-flex justify-space-between align-center">
           <v-btn text x-large class="pa-0 font-weight-bold" @click="goToUser(comment.writer)"><v-icon class="mr-1">mdi-account-circle</v-icon>{{ users[comment.writer] }}</v-btn>
@@ -33,7 +37,7 @@
                 <v-list-item
                   v-for="(menu, idx) in menuItems"
                   :key="idx"
-                  @click="updateOrDeleteOrHide(comment, idx, index)"
+                  @click="updateOrDelete(comment, idx, index)"
                 >
                   <v-list-item-title>{{ menu.title }}</v-list-item-title>
                 </v-list-item>
@@ -62,6 +66,9 @@ export default {
   props: {
     comments: {
       type: Array,
+    },
+    either: {
+      type: Object
     }
   },
   data() {

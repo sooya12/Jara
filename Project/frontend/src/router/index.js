@@ -115,11 +115,6 @@ Vue.use(VueRouter)
     component: SignUpCertification
   },
   {
-    path: '/accounts/setnewpw',
-    name: 'ChangePWD',
-    component: ChangePWD
-  },
-  {
     path: '/accounts/:user_id',
     name: 'User',
     component: User,

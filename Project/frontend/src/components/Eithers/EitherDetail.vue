@@ -48,11 +48,62 @@
     </div>
     <div class="mt-5 ml-5 text-h6">{{ either.question }}</div>
     <v-row justify-space-around class="mt-5 px-5 text-center white--text text-sm-h3 text-h6 font-weight-bold">
-      <v-col class="red darken-1" id="A">{{ either.choiceA }}</v-col>
-      <v-col class="blue darken-2" id="B">{{ either.choiceB }}</v-col>
+      <v-col class="red darken-1 rounded" id="A">{{ either.choiceA }}</v-col>
+      <v-col class="blue darken-2 rounded" id="B">{{ either.choiceB }}</v-col>
     </v-row>
     <div class="text-center mt-5">
-      <v-btn text x-large class="font-weight-bold text-h6">결과보기<v-icon color="deep-purple">mdi-align-vertical-bottom</v-icon></v-btn>
+      <v-dialog
+        v-model="dialog"
+        width="500"
+      >
+        <template v-slot:activator="{ on, attrs }">
+          <v-btn
+            text
+            x-large
+            class="font-weight-bold text-h6"
+            v-bind="attrs"
+            v-on="on"
+          >결과보기<v-icon color="deep-purple">mdi-align-vertical-bottom</v-icon></v-btn>
+        </template>
+
+        <v-card>
+          <v-card-title class="headline grey lighten-2 font-weight-bold">
+            <v-icon x-large class="mr-2">mdi-alpha-q-circle</v-icon>{{ either.question }}
+          </v-card-title>
+
+          <v-card-text class="mt-5">
+            <div>참여자: {{ choiceA.length + choiceB.length }}명</div>
+            <div class="my-5 black--text font-weight-bold text-h6">
+              <v-chip
+                color="red darken-1"
+                text-color="white"
+              >{{ either.choiceA }}</v-chip>
+              {{ ((choiceA.length)/(choiceA.length+choiceB.length))*100 }}% {{ choiceA.length }}명
+            </div>
+            <div class="black--text font-weight-bold text-h6">
+              <v-chip
+                color="blue darken-2"
+                text-color="white"
+              >{{ either.choiceB }}</v-chip>
+              {{ ((choiceB.length)/(choiceA.length+choiceB.length))*100 }}% {{ choiceB.length }}명
+            </div>
+          </v-card-text>
+
+          <v-divider></v-divider>
+
+          <v-card-actions>
+            <v-spacer></v-spacer>
+            <v-btn
+              class="font-weight-bold"
+              color="deep-purple"
+              text
+              @click="dialog = false"
+            >
+              닫기
+            </v-btn>
+          </v-card-actions>
+        </v-card>
+      </v-dialog>
     </div>
     <v-divider class="my-5"></v-divider>
     <div class="text-sm-h6 text-subtitle-2">댓글</div>
@@ -102,7 +153,7 @@
         </div>
       </div>
     </v-form>
-    <EitherComment :comments="comments" @updateOrDelete="updateOrDelete"/>
+    <EitherComment :comments="comments" :either="either" @updateOrDelete="updateOrDelete"/>
   </v-container>
 </template>
 
@@ -113,12 +164,15 @@ import EitherComment from '../Eithers/EitherComment.vue'
 
 export default {
   name: 'EitherDetail',
-  props: {
+  components: {
     EitherComment
   },
   data() {
     return {
-      either: null,
+      either: {},
+      choiceA: [],
+      choiceB: [],
+      dialog: false,
       isValid: false,
       isUpdate: false,
       choices: [
@@ -141,7 +195,7 @@ export default {
       choiceRules: {
         required: value => value!=null || '선택지를 선택해주세요.'
       },
-      comments: null,
+      comments: [],
     }
   },
   computed: {
@@ -158,9 +212,12 @@ export default {
     fetchEither() {
       axios.get(`${this.$store.state.api_server}/eithers/${this.$route.params.either_id}`)
         .then(res => {
-          this.either = res.data
-          this.choices[0].text = res.data.choiceA
-          this.choices[1].text = res.data.choiceB
+          this.either = res.data.either
+          this.choices[0].text = res.data.either.choiceA
+          this.choices[1].text = res.data.either.choiceB
+          this.choiceA = res.data.choiceA
+          this.choiceB = res.data.choiceB
+          this.comments = res.data.eitherComments
         })
     },
     completeOrDelete(val) {
@@ -192,6 +249,7 @@ export default {
         .then(res => {
           this.comments.unshift(res.data)
           this.commentData.contents = ''
+          this.commentData.choice = null
           alert('댓글이 성공적으로 작성되었습니다.')
         })
     },

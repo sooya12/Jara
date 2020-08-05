@@ -1,6 +1,6 @@
 <template>
-  <v-container class="mt-5">
-    <div class="text-sm-h3 text-h6 font-weight-bold">JARA's Choice<v-icon x-large class="ml-2">mdi-checkbox-multiple-marked-outline</v-icon></div>
+  <v-container fluid class="mt-5">
+    <div class="text-sm-h3 text-h6 font-weight-bold ml-3">JARA's Choice<v-icon x-large class="ml-2">mdi-checkbox-multiple-marked-outline</v-icon></div>
     <div class="mt-10">
 
       <v-card
@@ -197,7 +197,7 @@ export default {
 
   .or {
     position: absolute;
-    left: 50%;
+    left: 43%;
     top: 50%;
   }
 </style>
