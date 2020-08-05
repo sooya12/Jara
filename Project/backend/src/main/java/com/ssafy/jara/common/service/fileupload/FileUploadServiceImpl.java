@@ -18,7 +18,7 @@ public class FileUploadServiceImpl implements FileUploadService{
 	@Autowired
 	FileUploadDao fileUploadDao;
 
-	// C:\Users\multicampus\Desktop\imageUpload
+	// C:\Users\multicampus\Desktop
 	String fileUploadRealPath = "C:" + File.separator + "Users" + File.separator + "multicampus" + File.separator + "Desktop";
 	
 	// AWS
