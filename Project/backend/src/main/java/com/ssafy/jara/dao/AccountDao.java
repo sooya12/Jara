@@ -19,9 +19,9 @@ public interface AccountDao {
 	
 	public int duplicateCheck(Account account);
 	
-	public String changeCode(String email);
+	public int changeCode(String email);
 	
-	public int findCode(String email);
+	public String findCode(String email);
 	
 	public int changePassword(Account account);
 	
