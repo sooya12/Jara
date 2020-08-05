@@ -14,24 +14,6 @@ import com.ssafy.jara.common.service.fileupload.FileUploadService;
 
 import io.swagger.annotations.ApiOperation;
 
-//@Controller
-//public class FileUploadController {
-//	
-//	@Autowired
-//	FileUploadService fileUploadService;
-//	
-//	@GetMapping("/fileupload")
-//	public String goFileUploadPage() {
-//		return "fileUpload";
-//	}
-//	
-//	@PostMapping(value = "/fileupload")
-//	@ResponseBody
-//	public int fileUpload(String message, MultipartFile file) throws Exception{
-//		return fileUploadService.fileUpload(message, file);
-//	}
-//}
-
 @CrossOrigin(origins = { "*" }, maxAge = 6000)
 @RestController
 @RequestMapping("/fileupload")
