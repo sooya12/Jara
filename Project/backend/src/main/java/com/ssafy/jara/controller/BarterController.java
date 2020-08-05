@@ -31,11 +31,11 @@ public class BarterController {
 	
 	@ApiOperation(value = "새로운 물물교환 등록", response = String.class)
 	@PostMapping("/")
-	private ResponseEntity<String> insertBarter(@RequestBody Barter barter) {
+	private ResponseEntity<Integer> insertBarter(@RequestBody Barter barter) {
 		if (barterService.insertBarter(barter) > 0) {
-			return new ResponseEntity<String>("success", HttpStatus.OK);
+			return new ResponseEntity<Integer>(barter.getId(), HttpStatus.OK);
 		} else {
-			return new ResponseEntity<String>("fail", HttpStatus.INTERNAL_SERVER_ERROR);
+			return new ResponseEntity<Integer>(0, HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}
 	

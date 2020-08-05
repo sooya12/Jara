@@ -36,12 +36,12 @@ public class TipController {
 	
 	@ApiOperation(value = "팁 등록", response = String.class)
 	@PostMapping("")
-	private ResponseEntity<String> insertTip(@RequestBody Tip tip) {
+	private ResponseEntity<Integer> insertTip(@RequestBody Tip tip) {
 		if(tipService.insertTip(tip) > 0) {
-			return new ResponseEntity<String>("success", HttpStatus.OK);
+			return new ResponseEntity<Integer>(tip.getId(), HttpStatus.OK);
 		} 
 		
-		return new ResponseEntity<String>("fail", HttpStatus.INTERNAL_SERVER_ERROR);
+		return new ResponseEntity<Integer>(0, HttpStatus.INTERNAL_SERVER_ERROR);
 	}
 	
 	@ApiOperation(value = "전체 팁 조회", response = List.class)
