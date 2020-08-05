@@ -12,8 +12,6 @@ public interface ArticleDao {
 	
 	public int insertArticle(Article article);
 	
-	public List<Article> selectListTotalArticle();
-	
 	public List<Article> selectListMyArticle(int writer);
 	
 	public List<Article> selectListArticle(int writer);
