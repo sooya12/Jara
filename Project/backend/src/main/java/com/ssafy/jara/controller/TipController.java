@@ -93,7 +93,11 @@ public class TipController {
 	@ApiOperation(value = "해당 팁 조회", response = Tip.class)
 	@GetMapping("/{id}")
 	private ResponseEntity<Tip> selectTip(@PathVariable("id") int id) {
-		return new ResponseEntity<Tip>(tipService.selectTip(id), HttpStatus.OK);
+		Tip tip = tipService.selectTip(id);
+		tip.setComments(tipCommentService.selectTipComments(id));
+		tip.setLikeAccounts(tipService.selectTipLikeAccounts(id));
+		
+		return new ResponseEntity<Tip>(tip, HttpStatus.OK);
 	}
 	
 	@ApiOperation(value = "팁 제목/내용 수정", response = String.class)
