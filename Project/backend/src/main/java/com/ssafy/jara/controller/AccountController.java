@@ -110,13 +110,13 @@ public class AccountController extends HttpServlet {
 //				System.out.println("nickname : "+reaccount.getNickname());
 
 				MailHandler sendMail = new MailHandler(javaMailSender);
-				sendMail.setSubject("[이메일 인증]");
+				sendMail.setSubject("[회원가입 이메일 인증]");
 				sendMail.setText(new StringBuffer().append("<h1>메일인증</h1>")
 						.append("자라에 가입해주셔서 감사합니다.<br>인증번호 : " + reaccount.getCode() + "<br>")
 //						 .append("<a href='http://localhost:8081/accounts/certification'>이메일 인증하기</a>").toString());
 						.append("<a href='http://i3a308.p.ssafy.io/accounts/certification'>이메일 인증하기</a>").toString());
 
-				sendMail.setFrom("lcy00707@gmail.com", "jara");
+				sendMail.setFrom("jaraauth@gmail.com", "JARA");
 				sendMail.setTo(account.getEmail());
 				sendMail.send();
 
@@ -181,13 +181,13 @@ public class AccountController extends HttpServlet {
 		System.out.println(ncode);
 
 		MailHandler sendMail = new MailHandler(javaMailSender);
-		sendMail.setSubject("[이메일 인증]");
+		sendMail.setSubject("[비밀번호 변경 이메일 인증]");
 		sendMail.setText(new StringBuffer().append("<h1>메일인증</h1>")
 				.append("<br>인증번호 : " + ncode + "<br>")
 				.append("<a href='http://i3a308.p.ssafy.io/accounts/setnewpw'>비밀번호 변경하기</a>").toString());
 //				.append("<a href='http://localhost:8081/accounts/setnewpw'>비밀번호 변경하기</a>").toString());
 
-		sendMail.setFrom("lcy00707@gmail.com", "jara");
+		sendMail.setFrom("jaraauth@gmail.com", "JARA");
 		sendMail.setTo(email);
 		sendMail.send();
 
@@ -202,6 +202,7 @@ public class AccountController extends HttpServlet {
 
 		return new ResponseEntity<String>("fail", HttpStatus.NO_CONTENT);
 	}
+	
 
 	@ApiOperation(value = "회원넘버로 회원 정보 조회하기")
 	@GetMapping("{id}")
