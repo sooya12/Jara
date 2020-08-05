@@ -26,7 +26,7 @@
 		SELECT *
 		FROM either_comment
 		WHERE either_id=#{either_id}
-		ORDER BY created_at;
+		ORDER BY created_at DESC;
 	</select>
    
 	<!-- 해당하는 투표의 댓글 조회 -->
