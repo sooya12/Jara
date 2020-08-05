@@ -58,7 +58,7 @@
     <div class="text-sm-h6 text-subtitle-2">댓글</div>
     <v-form v-model="isValid" class="mt-5">
       <v-row>
-        <v-col cols="3">
+        <v-col cols="6" class="py-0">
           <v-select
             :items="choices"
             :rules="[choiceRules.required]"
@@ -71,7 +71,21 @@
           ></v-select>
         </v-col>
       </v-row>
-      <div class="d-flex">
+      <v-chip
+        v-if="commentData.choice==0"
+        color="red darken-1"
+        text-color="white"
+      >
+      {{ either.choiceA }}
+      </v-chip>
+      <v-chip
+        v-else-if="commentData.choice==1"
+        color="blue darken-2"
+        text-color="white"
+      >
+      {{ either.choiceB }}
+      </v-chip>
+      <div class="d-flex mt-2">
         <v-textarea
           v-model="commentData.contents"
           label="댓글을 남겨주세요."

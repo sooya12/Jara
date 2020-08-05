@@ -28,7 +28,7 @@ public class AccountServiceImpl implements AccountService {
 
 	@Override
 	public Account selectAccount(Account account) {
-		System.out.println("SERVICE : " + account.getEmail() + " " + account.getPassword());
+//		System.out.println("SERVICE : " + account.getEmail() + " " + account.getPassword());
 		return accountDao.selectAccount(account);
 	}
 
@@ -74,13 +74,13 @@ public class AccountServiceImpl implements AccountService {
 	
 	@Override
 	public int insertFollow(Follow follow) {
-		System.out.println("팔로우 상태 : "+follow.isStatus());
+//		System.out.println("팔로우 상태 : "+follow.isStatus());
 		return accountDao.insertFollow(follow);
 	}
 	
 	@Override
 	public int approveFollow(Follow follow) {
-		System.out.println("팔로우 상태 : "+follow.isStatus());
+//		System.out.println("팔로우 상태 : "+follow.isStatus());
 		return accountDao.approveFollow(follow);
 	}
 

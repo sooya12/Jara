@@ -117,7 +117,7 @@ public class AccountController extends HttpServlet {
 						// .append("<a
 						// href='http://localhost:8081/accounts/certification?email="+account.getEmail()+"'>이메일
 						// 인증하기</a>").toString());
-						.append("<a href='http://localhost:8081/accounts/certification'>이메일 인증하기</a>").toString());
+						.append("<a href='http://i3a308.p.ssafy.io/accounts/certification'>이메일 인증하기</a>").toString());
 
 				sendMail.setFrom("lcy00707@gmail.com", "jara");
 				sendMail.setTo(account.getEmail());
@@ -187,7 +187,7 @@ public class AccountController extends HttpServlet {
 		sendMail.setSubject("[이메일 인증]");
 		sendMail.setText(new StringBuffer().append("<h1>메일인증</h1>")
 				.append("<br>인증번호 : " + ncode + "<br>")
-				.append("<a href='http://localhost:8081/accounts/setnewpw'>비밀번호 변경하기</a>").toString());
+				.append("<a href='http://i3a308.p.ssafy.io/accounts/setnewpw'>비밀번호 변경하기</a>").toString());
 
 		sendMail.setFrom("lcy00707@gmail.com", "jara");
 		sendMail.setTo(email);
