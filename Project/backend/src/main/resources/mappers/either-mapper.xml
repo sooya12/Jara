@@ -45,13 +45,13 @@
    <select id="selectChoiceAList" resultType="int">
       SELECT user_id
       FROM either_choice
-      WHERE pick=0;
+      WHERE pick=0 AND either_id=#{either_id};
    </select>
    
    <!-- 해당하는 투표의 B선택지를 선택한 user_id 리스트 조회 -->
    <select id="selectChoiceBList" resultType="int">
       SELECT user_id
       FROM either_choice
-      WHERE pick=1;
+      WHERE pick=1 AND either_id=#{either_id};
    </select>
 </mapper>
