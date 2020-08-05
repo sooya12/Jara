@@ -30,14 +30,17 @@ public class TipCommentController {
 	
 	@ApiOperation(value = "팁 댓글 등록", response = String.class)
 	@PostMapping("/{tip_id}/comments")
-	private ResponseEntity<String> insertTipComment(@PathVariable("tip_id") int tip_id, @RequestBody TipComment tipComment) {
+	private ResponseEntity<TipComment> insertTipComment(@PathVariable("tip_id") int tip_id, @RequestBody TipComment tipComment) {
 		tipComment.setTip_id(tip_id);
 		
+		TipComment resultTipComment = new TipComment();
+		
 		if(tipCommentService.insertTipComment(tipComment) > 0) {
-			return new ResponseEntity<String>("success", HttpStatus.OK);
+			resultTipComment = tipCommentService.selectTipComment(tipComment.getId());
+			return new ResponseEntity<TipComment>(resultTipComment, HttpStatus.OK);
 		}
 		
-		return new ResponseEntity<String>("fail", HttpStatus.INTERNAL_SERVER_ERROR);
+		return new ResponseEntity<TipComment>(resultTipComment, HttpStatus.INTERNAL_SERVER_ERROR);
 	}
 	
 	@ApiOperation(value = "팁 전체 댓글 조회", response = List.class)

@@ -3,7 +3,7 @@
 <mapper namespace="com.ssafy.jara.dao.TipDao">
 	
 	<!-- 팁 등록 -->
-	<insert id="insertTip">
+	<insert id="insertTip" useGeneratedKeys="true" keyProperty="id">
 		INSERT INTO tip (writer, title, contents, tag_id)
 		VALUES (#{writer}, #{title}, #{contents}, #{tag_id})
 	</insert>
