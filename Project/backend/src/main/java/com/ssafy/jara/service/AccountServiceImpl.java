@@ -22,7 +22,7 @@ public class AccountServiceImpl implements AccountService {
 	}
 	
 	@Override
-	public int changeStatus(int code) {
+	public int changeStatus(String code) {
 		return accountDao.changeStatus(code);
 	}
 
@@ -38,7 +38,7 @@ public class AccountServiceImpl implements AccountService {
 	}
 	
 	@Override
-	public int changeCode(String email) {
+	public String changeCode(String email) {
 		return accountDao.changeCode(email);
 	}
 	

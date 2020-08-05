@@ -13,7 +13,7 @@ public class Account {
 	private String location;	// 주소
 	private String bio;			// 소개글
 	private boolean status;		// 회원가입 시 :0, 로그인 가능 : 1
-	private int code;			// 6자리 인증번호
+	private String code;			// 6자리 인증번호
 	
 	private List<Integer> followerList;
 	private List<Integer> followingList;
@@ -28,7 +28,7 @@ public class Account {
 	public Account() {}
 
 	public Account(int id, String nickname, String email, String password, boolean sex, Date birthday, String location,
-			String bio, boolean status, int code, List<Integer> followerList, List<Integer> followingList, double x,
+			String bio, boolean status, String code, List<Integer> followerList, List<Integer> followingList, double x,
 			double y, List<Article> myArticleList, List<Tip> scrapTipList) {
 		super();
 		this.id = id;
@@ -51,11 +51,11 @@ public class Account {
 
 
 
-	public int getCode() {
+	public String getCode() {
 		return code;
 	}
 
-	public void setCode(int code) {
+	public void setCode(String code) {
 		this.code = code;
 	}
 

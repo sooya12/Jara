@@ -13,13 +13,13 @@ public interface AccountDao {
 	
 	public int insertAccount(Account account);
 	
-	public int changeStatus(int code);
+	public int changeStatus(String code);
 	
 	public Account selectAccount(Account account);
 	
 	public int duplicateCheck(Account account);
 	
-	public int changeCode(String email);
+	public String changeCode(String email);
 	
 	public int findCode(String email);
 	
