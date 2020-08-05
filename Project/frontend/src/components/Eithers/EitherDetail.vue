@@ -47,9 +47,15 @@
       </div>
     </div>
     <div class="mt-5 ml-5 text-h6">{{ either.question }}</div>
-    <v-row justify-space-around class="mt-5 px-5 text-center white--text text-sm-h3 text-h6 font-weight-bold">
-      <v-col class="red darken-1 rounded" id="A">{{ either.choiceA }}</v-col>
-      <v-col class="blue darken-2 rounded" id="B">{{ either.choiceB }}</v-col>
+    <v-row v-if="!isVoted" justify-space-around class="mt-5 px-5 text-center white--text text-sm-h3 text-h6 font-weight-bold">
+      <v-col @click="pick(0)" class="red darken-1 rounded" id="A">{{ either.choiceA }}</v-col>
+      <v-col @click="pick(1)" class="blue darken-2 rounded" id="B">{{ either.choiceB }}</v-col>
+    </v-row>
+    <v-row v-else justify-space-around class="mt-5 px-5 text-center white--text text-sm-h3 text-h6 font-weight-bold">
+      <v-col v-if="choiceA.includes(userInfo.id)" class="red darken-4 rounded">{{ either.choiceA }}<v-icon class="ml-2" x-large>mdi-check-bold</v-icon></v-col>
+      <v-col v-else class="red darken-1 rounded">{{ either.choiceA }}</v-col>
+      <v-col v-if="choiceB.includes(userInfo.id)" class="blue darken-4 rounded">{{ either.choiceB }}<v-icon class="ml-2" x-large>mdi-check-bold</v-icon></v-col>
+      <v-col v-else class="blue darken-2 rounded">{{ either.choiceB }}</v-col>
     </v-row>
     <div class="text-center mt-5">
       <v-dialog
@@ -175,6 +181,12 @@ export default {
       dialog: false,
       isValid: false,
       isUpdate: false,
+      isVoted: false,
+      pickData: {
+        either_id: this.$route.params.either_id,
+        user_id: this.$store.state.userInfo.id,
+        pick: ''
+      },
       choices: [
         { text: '', value: 0 },
         { text: '', value: 1 },
@@ -218,7 +230,21 @@ export default {
           this.choiceA = res.data.choiceA
           this.choiceB = res.data.choiceB
           this.comments = res.data.eitherComments
+          if (this.choiceA.includes(this.$store.state.userInfo.id) || this.choiceB.includes(this.$store.state.userInfo.id)) {
+            this.isVoted = true
+          }
         })
+    },
+    pick(v) {
+      if (this.either.status == 0) {
+        this.pickData.pick = v
+        axios.post(`${this.$store.state.api_server}/eithers/${this.$route.params.either_id}/pick`, this.pickData)
+          .then(() => {
+            this.isVoted = true
+            if (v == 0) {this.choiceA.push(this.$store.state.userInfo.id)}
+            else {this.choiceB.push(this.$store.state.userInfo.id)}
+          })
+      } else {alert('이미 종료된 투표입니다.')}
     },
     completeOrDelete(val) {
       if (this.$store.state.userInfo.id == this.either.writer) {
@@ -293,9 +319,11 @@ export default {
 
   #A:hover {
     cursor: pointer;
+    opacity: 0.8;
   }
 
   #B:hover {
     cursor: pointer;
+    opacity: 0.8;
   }
 </style>
