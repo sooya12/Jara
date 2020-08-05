@@ -12,4 +12,5 @@ public interface EitherService {
 	public List<Either> selectListEither();
 	public List<Either> selectPartialListEither(int s_idx, int count);
 	public int pickEither(EitherChoice eitherChoice);
+	public List<EitherChoice> selectEitherPickList(int either_id);
 }

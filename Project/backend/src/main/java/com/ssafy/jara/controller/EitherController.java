@@ -45,17 +45,36 @@ public class EitherController {
 		}
 	}
 	
+//	@ApiOperation(value = "해당 투표 조회", response = String.class)
+//	@GetMapping("/{id}")
+//	private ResponseEntity<Either> selectEither(@PathVariable int id) {
+//		Either either = eitherService.selectEither(id);
+//		if (either != null) {
+//			return new ResponseEntity<Either>(either, HttpStatus.OK);
+//		} else {
+//			return new ResponseEntity<Either>(new Either(), HttpStatus.BAD_REQUEST);
+//		}
+//	}
 	@ApiOperation(value = "해당 투표 조회", response = String.class)
 	@GetMapping("/{id}")
-	private ResponseEntity<Either> selectEither(@PathVariable int id) {
+	private ResponseEntity<Map<String, Object>> selectEither(@PathVariable int id) {
 		Either either = eitherService.selectEither(id);
+		List<EitherComment> eitherComments = eitherCommentService.selectListEitherComment(id);
+		List<EitherChoice> eitherChoices = eitherService.selectEitherPickList(id);
+		
+		Map<String, Object> resultMap = new HashMap<>();
+		resultMap.put("either", either);
+		resultMap.put("eitherComments", eitherComments);
+		resultMap.put("eitherChoices", eitherChoices);
 		if (either != null) {
-			return new ResponseEntity<Either>(either, HttpStatus.OK);
+//			return new ResponseEntity<Either>(either, HttpStatus.OK);
+			return new ResponseEntity<Map<String, Object>>(resultMap, HttpStatus.OK);
 		} else {
-			return new ResponseEntity<Either>(new Either(), HttpStatus.BAD_REQUEST);
+//			return new ResponseEntity<Either>(new Either(), HttpStatus.BAD_REQUEST);
+			return new ResponseEntity<Map<String, Object>>(resultMap, HttpStatus.BAD_REQUEST);
 		}
 	}
-
+	
 	@ApiOperation(value = "투표 삭제", response = String.class)
 	@DeleteMapping("/{id}")
 	private ResponseEntity<String> deleteEither(@PathVariable int id) {
@@ -87,11 +106,17 @@ public class EitherController {
 	
 	@ApiOperation(value = "선택지 투표", response = String.class)
 	@PostMapping("/{either_id}/pick")
-	private ResponseEntity<String> pickEither(@PathVariable int either_id, @RequestBody EitherChoice eitherChoice) {
+	private ResponseEntity<String> insertPickEither(@PathVariable int either_id, @RequestBody EitherChoice eitherChoice) {
 		if (eitherService.pickEither(eitherChoice) > 0) {
 			return new ResponseEntity<String>("success", HttpStatus.OK);
 		} else {
 			return new ResponseEntity<String>("fail", HttpStatus.BAD_REQUEST);
 		}
+	}
+	
+	@ApiOperation(value = "해당하는 투표의 투표 현황 조회", response = String.class)
+	@GetMapping("/{either_id}/pick")
+	private ResponseEntity<List<EitherChoice>> selectEitherPickList(@PathVariable int either_id) {
+		return new ResponseEntity<List<EitherChoice>>(eitherService.selectEitherPickList(either_id), HttpStatus.OK);
 	}
 }

@@ -14,4 +14,5 @@ public interface EitherDao {
 	public int deleteEither(int id);
 	public List<Either> selectListEither();
 	public int pickEither(EitherChoice eitherChoice);
+	public List<EitherChoice> selectEitherPickList(int either_id);
 }

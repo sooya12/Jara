@@ -33,4 +33,11 @@
       INSERT INTO either (either_id, pick)
       VALUES (#{either_id}, #{pick});
    </insert>
+   
+   <!-- 해당하는 투표의 투표 현황 조회 -->
+   <select id="selectEitherPickList" resultType="com.ssafy.jara.dto.Either">
+      SELECT *
+      FROM either_choice
+      ORDER BY id DESC;
+   </select>
 </mapper>
