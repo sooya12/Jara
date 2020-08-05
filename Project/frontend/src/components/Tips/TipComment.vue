@@ -3,13 +3,27 @@
     <v-layout column>
         <v-card flat style='padding:0' class='comments'>
           <v-card-title class="grey--text pb-1">
-            {{ comment.writer }} 
-            <div class="my-2">
-              <v-btn @click="deleteComment" style="text-align : left;" depressed small color="error">삭제</v-btn>
+            {{ comment.writer }} · <span v-if="!comment.updated_at">{{comment.created_at | filterCreated}}</span>
+            <span v-else>{{comment.updated_at | filterCreated}} <p style="font-size: x-small; display: inline-block; margin: 0;">(수정됨)</p></span>
+            <v-spacer></v-spacer>
+            <div class="my-2 text-right">
+              <v-btn @click="flagComment" text small color="primary">수정</v-btn>
             </div>
-            · {{comment.created_at | filterCreated}}
+            <div class="my-2 text-right">
+              <v-btn @click="deleteComment" text small color="error">삭제</v-btn>
+            </div>
           </v-card-title>
-          <v-card-text class='pt-0 pb-0'> {{ comment.contents }} </v-card-text>
+          <v-card-text v-if="!isChange" class='pt-0 pb-0'> {{ comment.contents }} </v-card-text>
+          <v-card-text v-if="isChange" class='pt-0 pb-0'>
+            <v-text-field
+              ref="contents"
+              v-model="change_comment.contents"
+              label="Content"
+              placeholder="수정할 댓글을 입력해 주세요."
+              required
+              @keyup.enter="updateComment"
+            ></v-text-field>
+          </v-card-text>
           <v-card-actions class='pr-3'>
             <!-- <v-btn small flat><v-icon left dark class='mr-2'>favorite_border</v-icon> 좋아요({{c.net_votes}})</v-btn> -->
             <v-spacer></v-spacer>
@@ -32,7 +46,14 @@ export default {
   },
   data() {
     return {
-      commentId: null
+      commentId: null,
+      isChange: false,
+      change_comment : {
+        id: null,
+        contents: '',
+        writer: this.$store.state.userInfo.id,
+        tip_id: this.$route.params.tip_id
+      },
     }
   },
   methods: {
@@ -40,6 +61,25 @@ export default {
       this.commentId = this.comment.id
       if (this.commentId) {
         this.$emit('find_commentId',this.commentId)
+      }
+    },
+    flagComment() {
+      if (this.isChange) {
+        this.change_comment.contents = ''
+        this.change_comment.id = null
+        this.isChange = false
+      } else {
+        this.change_comment.contents = this.comment.contents
+        this.change_comment.id = this.comment.id
+        this.isChange = true
+      }
+    },
+    updateComment() {
+      if (this.comment.contents != this.change_comment) {
+        this.$emit('change_comment', this.change_comment)
+        this.isChange = false
+      } else {
+        alert('수정 된 내용이 없습니다.')
       }
     }
   },

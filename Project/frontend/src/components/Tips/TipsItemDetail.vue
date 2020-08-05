@@ -51,7 +51,7 @@
               </v-card-text>
               <v-card-text>
                 <template>
-                  <a href='javascript:false' class='tag'>#{{ tip.tag_id }}</a>
+                  <v-chip href='javascript:false' class='tag'>#{{ tip.tag_id }}</v-chip>
                 </template>
               </v-card-text>
             </v-card>
@@ -81,6 +81,7 @@
                 <!-- <Comments :comments='comments'></Comments>  // 여기 포인트 -->
                 <TipComment
                   @find_commentId="deleteComment"
+                  @change_comment="updateComment"
                   v-for="comment in tip.comments"
                   :key="comment.id"
                   :comment="comment"
@@ -171,6 +172,15 @@ export default {
         })
         .catch(err => {
           console.log(err.message)
+        })
+    },
+    updateComment(changeComment) {
+      axios.put(`${this.$store.state.api_server}/tips/${this.tip.id}/comments/${changeComment.id}`,changeComment)
+        .then(() => {
+          this.tip.comments.splice(this.tip.comments.findIndex(x => x.id === changeComment.id), 1, changeComment)
+        })
+        .catch(err => {
+          console.log(err)
         })
     }
   },
