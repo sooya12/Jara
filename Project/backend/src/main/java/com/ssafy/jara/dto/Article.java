@@ -16,22 +16,19 @@ public class Article {
 	
 	@JsonFormat(pattern="yyyy-MM-dd HH:mm", timezone = "Asia/Seoul")
 	private Date updated_at;				// 수정일
-//	private int likes;						// 좋아요 수
 	private int shares;						// 공유 수
 	private List<ArticleComment> comments; 	// 댓글 목록
 	private List<Integer> likeAccounts;		// 좋아요 사용자 목록
 	
 	public Article() {}
 
-	public Article(int id, int writer, String contents, Date created_at, Date updated_at,
-			/* int likes, */ int shares, List<ArticleComment> comments, List<Integer> likeAccounts) {
+	public Article(int id, int writer, String contents, Date created_at, Date updated_at, int shares, List<ArticleComment> comments, List<Integer> likeAccounts) {
 		super();
 		this.id = id;
 		this.writer = writer;
 		this.contents = contents;
 		this.created_at = created_at;
 		this.updated_at = updated_at;
-		/* this.likes = likes; */
 		this.shares = shares;
 		this.comments = comments;
 		this.likeAccounts = likeAccounts;
@@ -77,12 +74,6 @@ public class Article {
 		this.updated_at = updated_at;
 	}
 
-	/*
-	 * public int getLikes() { return likes; }
-	 * 
-	 * public void setLikes(int likes) { this.likes = likes; }
-	 */
-	
 	public int getShares() {
 		return shares;
 	}
@@ -110,7 +101,7 @@ public class Article {
 	@Override
 	public String toString() {
 		return "Article [id=" + id + ", writer=" + writer + ", contents=" + contents + ", created_at=" + created_at
-				+ ", updated_at=" + updated_at + /* ",  likes=" + likes + */ ", shares="  + shares + "]";
+				+ ", updated_at=" + updated_at + ", shares="  + shares + "]";
 	}
 	
 }
