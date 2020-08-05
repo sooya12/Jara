@@ -30,9 +30,7 @@ public class TipCommentController {
 	
 	@ApiOperation(value = "팁 댓글 등록", response = String.class)
 	@PostMapping("/{tip_id}/comments")
-	private ResponseEntity<TipComment> insertTipComment(@PathVariable("tip_id") int tip_id, @RequestBody TipComment tipComment) {
-		tipComment.setTip_id(tip_id);
-		
+	private ResponseEntity<TipComment> insertTipComment(@RequestBody TipComment tipComment) {
 		if(tipCommentService.insertTipComment(tipComment) > 0) {
 			return new ResponseEntity<TipComment>(tipCommentService.selectTipComment(tipComment.getId()), HttpStatus.OK);
 		}
