@@ -68,7 +68,7 @@
 	<!-- 회원 정보 수정 -->
 	<update id="updateAccount">
 		UPDATE user SET
-		email=#{email}, nickname=#{nickname}, password=#{password}, 
+		nickname=#{nickname}, password=#{password}, 
 		sex=#{sex}, birthday=#{birthday}, location=#{location}, bio=#{bio}
 		WHERE id=#{id}
 	</update>
