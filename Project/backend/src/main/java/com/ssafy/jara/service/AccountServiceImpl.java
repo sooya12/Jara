@@ -38,12 +38,12 @@ public class AccountServiceImpl implements AccountService {
 	}
 	
 	@Override
-	public String changeCode(String email) {
+	public int changeCode(String email) {
 		return accountDao.changeCode(email);
 	}
 	
 	@Override
-	public int findCode(String email) {
+	public String findCode(String email) {
 		return accountDao.findCode(email);
 	}
 	

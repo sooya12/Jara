@@ -178,7 +178,7 @@ public class AccountController extends HttpServlet {
 
 		// 인증코드 변경하기
 		accountService.changeCode(email);
-		int ncode = accountService.findCode(email);
+		String ncode = accountService.findCode(email);
 		System.out.println(ncode);
 
 		MailHandler sendMail = new MailHandler(javaMailSender);
