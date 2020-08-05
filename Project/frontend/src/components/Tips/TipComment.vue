@@ -1,17 +1,13 @@
 <template>
-  <!-- <v-container>
-    <br>
-    <h3>댓글</h3>
-    <h4>{{ comment.contents }}</h4>
-    <h5>{{ comment.writer }}</h5>
-  </v-container> -->
   <v-container grid-list-xs>
     <v-layout column>
         <v-card flat style='padding:0' class='comments'>
           <v-card-title class="grey--text pb-1">
             {{ comment.writer }} 
-            <!-- <span class='reputation'>({{c.author_reputation | filterReputation}})</span>
-            · {{comment.created | filterCreated}} -->
+            <div class="my-2">
+              <v-btn @click="deleteComment" style="text-align : left;" depressed small color="error">삭제</v-btn>
+            </div>
+            · {{comment.created_at | filterCreated}}
           </v-card-title>
           <v-card-text class='pt-0 pb-0'> {{ comment.contents }} </v-card-text>
           <v-card-actions class='pr-3'>
@@ -25,12 +21,34 @@
 </template>
 
 <script>
+import { mapState } from 'vuex'
+
 export default {
   name: 'TipComments',
   props: {
     comment: {
       type: Object,
     }
+  },
+  data() {
+    return {
+      commentId: null
+    }
+  },
+  methods: {
+    deleteComment() {
+      this.commentId = this.comment.id
+      if (this.commentId) {
+        this.$emit('find_commentId',this.commentId)
+      }
+    }
+  },
+  computed: {
+    ...mapState([
+      'userInfo',
+      'users',
+      'api_server'
+    ])
   }
 }
 </script>

@@ -45,16 +45,6 @@ public class EitherController {
 		}
 	}
 	
-//	@ApiOperation(value = "해당 투표 조회", response = String.class)
-//	@GetMapping("/{id}")
-//	private ResponseEntity<Either> selectEither(@PathVariable int id) {
-//		Either either = eitherService.selectEither(id);
-//		if (either != null) {
-//			return new ResponseEntity<Either>(either, HttpStatus.OK);
-//		} else {
-//			return new ResponseEntity<Either>(new Either(), HttpStatus.BAD_REQUEST);
-//		}
-//	}
 	@ApiOperation(value = "해당 투표 조회", response = String.class)
 	@GetMapping("/{id}")
 	private ResponseEntity<Map<String, Object>> selectEither(@PathVariable int id) {
