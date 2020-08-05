@@ -6,7 +6,7 @@ import NewArticle from '../components/Articles/NewArticle.vue'
 import ArticleDetail from '../components/Articles/ArticleDetail.vue'
 import SignIn from '../views/SignIn.vue'
 import SignUp from '../views/SignUp.vue'
-import Certification from '../components/Accounts/Certification.vue'
+import SignUpCertification from '../components/Accounts/SignUpCertification.vue'
 import Profile from '../components/Accounts/Profile.vue'
 import User from '../components/Accounts/User.vue'
 import ChangeUserInfo from '../components/Accounts/ChangeUserInfo.vue'
@@ -95,9 +95,9 @@ Vue.use(VueRouter)
     component: ValidateEmail
   },
   {
-    path: '/accounts/pwd',
+    path: '/accounts/setnewpwd',
     name: 'ChangePWD',
-    component: ChangePWD
+    component: ChangePWD,
   },
   {
     path: '/accounts/user',
@@ -111,8 +111,13 @@ Vue.use(VueRouter)
   },
   {
     path: '/accounts/certification',
-    name: 'Certification',
-    component: Certification
+    name: 'SignUpCertification',
+    component: SignUpCertification
+  },
+  {
+    path: '/accounts/setnewpw',
+    name: 'ChangePWD',
+    component: ChangePWD
   },
   {
     path: '/accounts/:user_id',

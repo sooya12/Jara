@@ -35,8 +35,8 @@ export default {
       isValid: false,
       code: '',
       validationNumRules: {
-        required: v => !!v || '6자리 인증번호를 입력해주세요.',
-        max: val => (5 < val.length && val.length <= 6) || '인증번호는 6자리로 입력해 주세요.'
+        required: v => !!v || '10자리 인증번호를 입력해주세요.',
+        max: val => (9 < val.length && val.length <= 10) || '인증번호는 10자리로 입력해 주세요.'
       }
     }
   },

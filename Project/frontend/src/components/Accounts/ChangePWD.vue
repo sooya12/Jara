@@ -1,6 +1,15 @@
 <template>
   <v-container fluid mt-5>
     <v-form ref="form" v-model="isValid" class="px-3">  
+      <div class="font-weight-bold">이메일로 받은 인증번호<v-icon class="ml-1">mdi-email</v-icon></div>
+      <v-text-field
+        v-model="changePWDData.code"
+        :rules="[validationNumRules.required, validationNumRules.max]"
+        placeholder="인증번호를 입력해주세요."
+        outlined
+        color="green darken-2"
+        class="my-2"
+      ></v-text-field>
       <div class="font-weight-bold">변경하실 비밀번호<v-icon class="ml-1">mdi-lock</v-icon></div>
       <v-text-field
         v-model="changePWDData.password"
@@ -52,8 +61,10 @@ export default {
       showPWD: false,
       showConfirmPWD: false,
       changePWDData: {
+        code: '',
         password: '',
-        passwordConfirm: ''
+        passwordConfirm: '',
+        email: this.$route.params.email
       },
       passwordRules: {
         required: value => !!value || '변경하실 비밀번호를 입력해주세요.',
@@ -62,7 +73,11 @@ export default {
       passwordConfirmRules: {
         required: value => !!value || '입력하신 비밀번호를 한번 더 입력해주세요.',
         same: v => v == this.changePWDData.password || '비밀번호가 일치하지 않습니다.'
-      },  
+      },
+      validationNumRules: {
+        required: v => !!v || '10자리 인증번호를 입력해주세요.',
+        max: val => (9 < val.length && val.length <= 10) || '인증번호는 10자리로 입력해 주세요.'
+      }  
     }  
   },
   computed: {
@@ -72,13 +87,13 @@ export default {
   },
   methods: {
     updatePWD() {
-      axios.put('${this.$store.state.api_server}/accounts/pwd', this.changePWDData)
+      axios.put(`${this.$store.state.api_server}/accounts/setnewpw`, this.changePWDData)
         .then(() => {
           alert('비밀번호가 성공적으로 변경되었습니다.')
           this.$router.push('/accounts/signin')
         })
     }
-  }
+  },
 }
 </script>
 

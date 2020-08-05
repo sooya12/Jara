@@ -24,6 +24,7 @@
         :disabled="!isValid"
         color="green darken-1 white--text"
         @click="sendEmail"
+        :loading="loading"
       >인증</v-btn>
     </div>
   </v-container>
@@ -39,6 +40,8 @@ export default {
     return {
       isError: false,
       isValid: false,
+      loader: null,
+      loading: false,
       authData: {
         email: '',
       },
@@ -56,9 +59,18 @@ export default {
       this.$router.push('/')
     },
     sendEmail() {
-      axios.get(`${this.$store.state.api_server}/accounts/email`, this.authData)
+      this.loader = 'loading'
+      axios.post(`${this.$store.state.api_server}/accounts/changepw`, '', { params: { email: this.authData.email }})
         .then(() => alert('입력하신 이메일로 비밀번호 변경 인증 메일을 발송했습니다. 메일함을 확인해주세요.'))
         .catch(() => this.isError = !this.isError)
+    }
+  },
+  watch: {
+    loader() {
+      const l = this.loader
+      this[l] = !this[l]
+      setTimeout(() => (this[l] = false), 3000)
+      this.loader = null
     }
   },
   computed: {
