@@ -25,6 +25,7 @@
    <select id="selectListEither" resultType="com.ssafy.jara.dto.Either">
       SELECT *
       FROM either
+      ORDER BY id DESC
    </select>
    
 </mapper>
