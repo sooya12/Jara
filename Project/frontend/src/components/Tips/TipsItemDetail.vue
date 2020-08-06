@@ -176,8 +176,8 @@ export default {
     },
     updateComment(changeComment) {
       axios.put(`${this.$store.state.api_server}/tips/${this.tip.id}/comments/${changeComment.id}`,changeComment)
-        .then(() => {
-          this.tip.comments.splice(this.tip.comments.findIndex(x => x.id === changeComment.id), 1, changeComment)
+        .then(res => {
+          this.tip.comments.splice(this.tip.comments.findIndex(x => x.id === changeComment.id), 1, res.data)
         })
         .catch(err => {
           console.log(err)
