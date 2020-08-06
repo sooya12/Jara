@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
+import org.springframework.boot.web.servlet.ServletComponentScan;
 import org.springframework.context.annotation.Bean;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
@@ -51,16 +52,6 @@ public class JaraApplication implements WebMvcConfigurer {
                 .allowedMethods("*")
                 .allowedHeaders("*")
                 .exposedHeaders("jwt-auth-token");
-    }
-    
-    @Bean
-    public FilterRegistrationBean<XssEscapeServletFilter> getFilterRegistraionBean() {
-    	FilterRegistrationBean<XssEscapeServletFilter> registraionBean = new FilterRegistrationBean<XssEscapeServletFilter>();
-    	registraionBean.setFilter(new XssEscapeServletFilter());
-    	registraionBean.setOrder(1);
-    	registraionBean.addUrlPatterns("/");
-    	
-    	return registraionBean;
     }
     
 }
