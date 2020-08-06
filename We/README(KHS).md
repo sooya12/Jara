@@ -64,3 +64,19 @@
 
 :framed_picture: vue로 미리보기하는 방법을 드디어 깨달았다.
 
+
+
+# 2020.08.06 Day :four:
+
+### :computer:
+
+:bell: firebase를 이용한 알림센터 구현
+
+
+
+### :blonde_woman:
+
+:woman_facepalming: 하루 종일 firebase로 씨름했다. 이번 프로젝트를 하면서 Vue.js를 이용한 웹 프로젝트에 대해 블로그를 해보면 어떨까? 하는 생각이 들었다. 알림센터를 거의 다 구현하긴 했는데, 문제는 팔로우 요청 승인 / 거절 후 firebase에서 삭제하는 방법인데 어떻게 해야할 지 계속 고민해봐야겠다. 흠.
+
+
+
