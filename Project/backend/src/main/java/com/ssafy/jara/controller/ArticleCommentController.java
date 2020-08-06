@@ -1,6 +1,8 @@
 package com.ssafy.jara.controller;
 
+import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.TimeZone;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -14,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.ssafy.jara.dto.ArticleComment;
 import com.ssafy.jara.service.ArticleCommentService;
 
@@ -23,7 +26,7 @@ import io.swagger.annotations.ApiOperation;
 @RestController
 @RequestMapping("/articles")
 public class ArticleCommentController {
-
+	
 	@Autowired
 	ArticleCommentService articleCommentService;
 	
@@ -54,12 +57,17 @@ public class ArticleCommentController {
 	
 	@ApiOperation(value = "게시글 댓글 수정", response = String.class)
 	@PutMapping("/{article_id}/comments/{id}")
-	private ResponseEntity<Date> updateArticleComment(@RequestBody ArticleComment articleComment) {
+	private ResponseEntity<String> updateArticleComment(@RequestBody ArticleComment articleComment) {
 		if(articleCommentService.updateArticleComment(articleComment) > 0) {
-			return new ResponseEntity<Date>(articleCommentService.selectArticleComment(articleComment.getId()).getUpdated_at(), HttpStatus.OK);
+			
+			SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+			dateFormat.setTimeZone(TimeZone.getTimeZone("Asia/Seoul"));
+			Date date = articleCommentService.selectArticleComment(articleComment.getId()).getUpdated_at();
+
+			return new ResponseEntity<String>(dateFormat.format(date), HttpStatus.OK);
 		}
 		
-		return new ResponseEntity<Date>(HttpStatus.BAD_REQUEST);
+		return new ResponseEntity<String>(HttpStatus.BAD_REQUEST);
 	}
 	
 	@ApiOperation(value = "게시글 댓글 삭제", response = String.class)
