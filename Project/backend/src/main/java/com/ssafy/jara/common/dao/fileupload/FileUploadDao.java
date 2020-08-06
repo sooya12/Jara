@@ -13,5 +13,5 @@ public interface FileUploadDao {
 	public int insertBarterFile(BarterFileUpload barterFileUpload) throws Exception;
 	public String selectArticleFileName(int article_id);
 	public String selectTipFileName(int tip_id);
-	public String selectBarterFileName(int barter_id);
+	public String selectBarterFileName(int item_id);
 }

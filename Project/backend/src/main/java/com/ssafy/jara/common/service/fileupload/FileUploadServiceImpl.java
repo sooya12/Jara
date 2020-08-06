@@ -94,7 +94,7 @@ public class FileUploadServiceImpl implements FileUploadService{
 	}
 
 	@Override
-	public String selectBarterFileName(int barter_id) {
-		return fileUploadDao.selectBarterFileName(barter_id);
+	public String selectBarterFileName(int item_id) {
+		return fileUploadDao.selectBarterFileName(item_id);
 	}
 }

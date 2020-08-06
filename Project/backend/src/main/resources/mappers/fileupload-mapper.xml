@@ -37,7 +37,7 @@
    <!-- barter_id에 해당하는 barter의 이미지 파일 이름 조회 -->
    <select id="selectBarterFileName" resultType="String">
       SELECT stored_file_name
-      FROM barter_file
-      WHERE barter_id=#{barter_id};
+      FROM item_file
+      WHERE item_id=#{item_id};
    </select>
 </mapper>

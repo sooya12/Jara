@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.ssafy.jara.common.service.fileupload.FileUploadService;
 import com.ssafy.jara.dto.Barter;
 import com.ssafy.jara.service.BarterService;
 
@@ -28,6 +29,9 @@ public class BarterController {
 	
 	@Autowired
 	BarterService barterService;
+	
+	@Autowired
+	FileUploadService fileUploadService;
 	
 	@ApiOperation(value = "새로운 물물교환 등록", response = String.class)
 	@PostMapping("/")
@@ -44,9 +48,10 @@ public class BarterController {
 	private ResponseEntity<Barter> selectBarter(@PathVariable int id) {
 		Barter barter = barterService.selectBarter(id);
 		if (barter != null) {
+			barter.setStored_file_name(fileUploadService.selectBarterFileName(id));
 			return new ResponseEntity<Barter>(barter, HttpStatus.OK);
 		} else {
-			return new ResponseEntity<Barter>(new Barter(), HttpStatus.BAD_REQUEST);
+			return new ResponseEntity<Barter>(HttpStatus.BAD_REQUEST);
 		}
 	}
 	
