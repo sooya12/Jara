@@ -94,7 +94,7 @@ public class AccountController extends HttpServlet {
 			String hashPassword = BCrypt.hashpw(account.getPassword(), BCrypt.gensalt());
 			account.setPassword(hashPassword);
 			
-			System.out.println("hashPassword : "+hashPassword);
+//			System.out.println("hashPassword : "+hashPassword);
 
 
 			if (accountService.insertAccount(account) > 0) {
@@ -118,10 +118,17 @@ public class AccountController extends HttpServlet {
 //				System.out.println("nickname : "+reaccount.getNickname());
 
 				MailHandler sendMail = new MailHandler(javaMailSender);
-				sendMail.setSubject("[회원가입 이메일 인증]");
-				sendMail.setText(new StringBuffer().append("<h1>메일인증</h1>")
-						.append("자라에 가입해주셔서 감사합니다.<br>인증번호 : " + reaccount.getCode() + "<br>")
-						 .append("<a href='http://localhost:8081/accounts/certification'>이메일 인증하기</a>").toString());
+				sendMail.setSubject("[JARA 회원가입 사용자 인증]");
+				sendMail.setText(new StringBuffer()
+						.append("<center><h1 style='background-color:#388E3C; color:white;'>JARA 메일 인증 안내입니다</h1><br>" + 
+								"<p>JARA를 이용해 주셔서 진심으로 감사합니다.<br>아래의 인증코드를 입력하시면 가입이 정상적으로 완료됩니다.</p><br>" + 
+								"<h2 style='background-color:#e6e6e6; color:black;'>")
+						.append("인증코드 : <b>" + reaccount.getCode() + "<br></h2>")
+//						.append("<button type='button' onclick = 'location.href = 'http://localhost:3030/accounts/certification' ' " + 
+//								"style='border: none;color: white;padding: 15px 32px;text-align: center;text-decoration: none; display: inline-block;font-size: 16px;margin: 4px 2px;cursor: pointer;background-color:#388E3C;'>인증하러가기</button></center>").toString());
+
+						
+						 .append("<a href='http://localhost:3030/accounts/certification'>이메일 인증하기</a></center>").toString());
 //						.append("<a href='http://i3a308.p.ssafy.io/accounts/certification'>이메일 인증하기</a>").toString());
 
 				sendMail.setFrom("jaraauth@gmail.com", "JARA");
@@ -195,11 +202,19 @@ public class AccountController extends HttpServlet {
 		System.out.println(ncode);
 
 		MailHandler sendMail = new MailHandler(javaMailSender);
-		sendMail.setSubject("[비밀번호 변경 이메일 인증]");
-		sendMail.setText(new StringBuffer().append("<h1>메일인증</h1>")
-				.append("<br>인증번호 : " + ncode + "<br>")
+		sendMail.setSubject("[JARA 비밀번호 변경 사용자 인증]");
+		sendMail.setText(new StringBuffer()
+				.append("<center><h1 style='background-color:#388E3C; color:white;'>JARA 메일 인증 안내입니다</h1><br>" + 
+						"<p>JARA를 이용해 주셔서 진심으로 감사합니다.<br>아래의 인증코드를 입력하시면 비밀번호 변경이 가능합니다.</p><br>" + 
+						"<h2 style='background-color:#e6e6e6; color:black;'>")
+				.append("인증코드 : <b>" + ncode + "</b><br></h2>")
+//				.append("<button type='button' onclick = 'location.href = 'http://localhost:3030/accounts/setnewpw' ' " + 
+//						"style='border: none;color: white;padding: 15px 32px;text-align: center;text-decoration: none; display: inline-block;font-size: 16px;margin: 4px 2px;cursor: pointer;background-color:#388E3C;'>인증하러가기</button></center>").toString());
+
+				
+				 .append("<a href='http://localhost:3030/accounts/certification'>이메일 인증하기</a></center>").toString());			
 //				.append("<a href='http://i3a308.p.ssafy.io/accounts/setnewpw'>비밀번호 변경하기</a>").toString());
-				 .append("<a href='http://localhost:8081/accounts/setnewpw'>비밀번호 변경하기</a>").toString());
+
 
 		sendMail.setFrom("jaraauth@gmail.com", "JARA");
 		sendMail.setTo(email);
@@ -210,6 +225,11 @@ public class AccountController extends HttpServlet {
 	@ApiOperation(value = "비밀번호 변경 처리", response = Account.class)
 	@PutMapping("setnewpw")
 	private ResponseEntity<String> setNewPassword(@RequestBody Account account) {
+		
+		// 비밀번호 암호화
+		String hashPassword = BCrypt.hashpw(account.getPassword(), BCrypt.gensalt());
+		account.setPassword(hashPassword);
+		
 		if (accountService.changePassword(account) > 0) {
 			return new ResponseEntity<String>("success", HttpStatus.OK);
 		}
