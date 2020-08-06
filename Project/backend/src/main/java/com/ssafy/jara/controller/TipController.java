@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.ssafy.jara.common.service.fileupload.FileUploadService;
 import com.ssafy.jara.dto.Tip;
 import com.ssafy.jara.service.TipCommentService;
 import com.ssafy.jara.service.TipService;
@@ -33,6 +34,9 @@ public class TipController {
 	
 	@Autowired
 	TipCommentService tipCommentService;
+	
+	@Autowired
+	FileUploadService fileUploadService;
 	
 	@ApiOperation(value = "팁 등록", response = String.class)
 	@PostMapping("")
@@ -96,6 +100,7 @@ public class TipController {
 		Tip tip = tipService.selectTip(id);
 		tip.setComments(tipCommentService.selectTipComments(id));
 		tip.setLikeAccounts(tipService.selectTipLikeAccounts(id));
+		tip.setStored_file_name(fileUploadService.selectBarterFileName(id));
 		
 		return new ResponseEntity<Tip>(tip, HttpStatus.OK);
 	}
