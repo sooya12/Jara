@@ -93,9 +93,74 @@
 
 
 
-## :pig2: 8월 5일 (수) 오늘 할 일 :droplet:
+## :pig2: 8월 5일 (수) 오늘 한 일 :droplet:
 
-* 인증 코드 값 변경
-* 로그인 기능 확인
-* 실시간 채팅
-* 알람 기능
+* user code 값 변경
+
+  > * 이전 - round(rand()*999999) : 6자리 숫자 랜덤 코드 
+  >
+  > * 현재 - left(md5(rand()),10) : 10자리 문자, 숫자 조합 랜덤 코드
+  >
+  > ![image-20200807005734481](C:\Users\multicampus\AppData\Roaming\Typora\typora-user-images\image-20200807005734481.png)
+
+* 이메일 삽질
+
+  > ![image-20200807005901844](C:\Users\multicampus\AppData\Roaming\Typora\typora-user-images\image-20200807005901844.png)
+  >
+  > * spring.mail.port 는 구글 stmp를 사용하기 위해서 고정된 포트번호로 예측됨
+  >
+  >   그런데 멀캠에 포트를 막아뒀는지 멀캠에서는 안되고 카페에서는 됨.. 
+  >
+  >   거의 4시간 정도를 삽질함
+  >
+  > * 아래주석 코드는 사용하지 않아도 작동함
+
+* 이메일 수신 html 변경
+
+  > ![image-20200807010215058](C:\Users\multicampus\AppData\Roaming\Typora\typora-user-images\image-20200807010215058.png)
+  >
+  > * button 부분이 안먹혀서 링크로 대체함 - 추후 디자인 작업이 필요할 예정
+  > * **추가 : 비밀번호 변경 api가 프론트에서 잘 못 매핑되어있음**
+
+* db에서 비밀번호 암호화 작업
+
+  > * /accounts 로 검색 시 타인의 계정에 접근하지 못하도록 암호화 설정
+  > * ![image-20200807010456508](C:\Users\multicampus\AppData\Roaming\Typora\typora-user-images\image-20200807010456508.png)
+  > * ![image-20200807010545719](C:\Users\multicampus\AppData\Roaming\Typora\typora-user-images\image-20200807010545719.png)
+  >
+  > ​        암호화 작업 : hashpw()
+  >
+  > * 복호화 작업이 아닌, 입력된 값과 암호화 된 코드를 비교하는 함수가 존재
+  >
+  > ​       그래서 mapper의 sql문에서 password 비교문 삭제
+  >
+  > ​       ![image-20200807010829019](C:\Users\multicampus\AppData\Roaming\Typora\typora-user-images\image-20200807010829019.png)
+  >
+  > ​        이런식으로 비교해서 로그인 컨트롤러 만듬
+  >
+  > * 비밀번호 변경시에도 암호화하여 db에 저장함
+
+
+
+## :pig2: 8월 7일 (금) 오늘 할 일 :eight_pointed_black_star:
+
+* 혜선님한테 /accounts/setnewpw 로 가는지 확인하기 -> 확인하고 빌드하기
+
+* 빌드 상태에서 이메일 되는지 확인하기
+
+* 현수 발표 도와주기
+
+* 프론트쪽에 버튼을 포함한 html 수정 요청
+
+* jaraauth@gmail.com
+
+  jara987654
+
+  wcdiwstdbdudicnv : 최신
+
+  발신 메일 서버 포트 = 587
+
+* stmp 블로그에 정리하기
+
+* 날씨 클론, 크론 2번 요청 -> 디비에 저장 (weather 테이블??
+
