@@ -20,9 +20,11 @@ public class Article {
 	private List<ArticleComment> comments; 	// 댓글 목록
 	private List<Integer> likeAccounts;		// 좋아요 사용자 목록
 	
+	private String stored_file_name;		// 저장된 이미지 파일 이름
+	
 	public Article() {}
 
-	public Article(int id, int writer, String contents, Date created_at, Date updated_at, int shares, List<ArticleComment> comments, List<Integer> likeAccounts) {
+	public Article(int id, int writer, String contents, Date created_at, Date updated_at, int shares, List<ArticleComment> comments, List<Integer> likeAccounts, String stored_file_name) {
 		super();
 		this.id = id;
 		this.writer = writer;
@@ -32,6 +34,7 @@ public class Article {
 		this.shares = shares;
 		this.comments = comments;
 		this.likeAccounts = likeAccounts;
+		this.stored_file_name = stored_file_name;
 	}
 
 	public int getId() {
@@ -98,10 +101,19 @@ public class Article {
 		this.likeAccounts = likeAccounts;
 	}
 
+	public String getStored_file_name() {
+		return stored_file_name;
+	}
+
+	public void setStored_file_name(String stored_file_name) {
+		this.stored_file_name = stored_file_name;
+	}
+
 	@Override
 	public String toString() {
 		return "Article [id=" + id + ", writer=" + writer + ", contents=" + contents + ", created_at=" + created_at
-				+ ", updated_at=" + updated_at + ", shares="  + shares + "]";
+				+ ", updated_at=" + updated_at + ", shares=" + shares + ", comments=" + comments + ", likeAccounts="
+				+ likeAccounts + ", stored_file_name=" + stored_file_name + "]";
 	}
-	
+
 }

@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.ssafy.jara.common.service.fileupload.FileUploadService;
 import com.ssafy.jara.dto.Article;
 import com.ssafy.jara.service.ArticleCommentService;
 import com.ssafy.jara.service.ArticleService;
@@ -34,6 +35,9 @@ public class ArticleController {
 	
 	@Autowired
 	ArticleCommentService articleCommentService;
+	
+	@Autowired
+	FileUploadService fileUploadService;
 	
 	@ApiOperation(value = "게시글 등록", response = Integer.class)
 	@PostMapping("")
@@ -86,6 +90,7 @@ public class ArticleController {
 		Article article = articleService.selectArticle(id);
 		article.setComments(articleCommentService.selectArticleComments(article.getId()));
 		article.setLikeAccounts(articleService.selectArticleLikeAccount(article.getId()));
+		article.setStored_file_name(fileUploadService.selectArticleFileName(id));
 		
 		return new ResponseEntity<Article>(article, HttpStatus.OK);
 	}
