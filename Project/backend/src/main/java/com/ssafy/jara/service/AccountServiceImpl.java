@@ -31,6 +31,11 @@ public class AccountServiceImpl implements AccountService {
 //		System.out.println("SERVICE : " + account.getEmail() + " " + account.getPassword());
 		return accountDao.selectAccount(account);
 	}
+	
+	@Override
+	public String findPassword(String email) {
+		return accountDao.findPassword(email);
+	}
 
 	@Override
 	public int duplicateCheck(Account account) {

@@ -6,7 +6,7 @@
 	<!-- 회원가입 -->
 	<insert id="insertAccount" useGeneratedKeys="true" keyProperty="id">
 		INSERT INTO user (nickname, email, password, sex,birthday, location, status, code)
-		VALUES(#{nickname}, #{email}, #{password},#{sex}, #{birthday}, #{location} ,0, LEFT(MD5(RAND()), 10))
+		VALUES(#{nickname}, #{email}, #{password} ,#{sex}, #{birthday}, #{location} ,0, LEFT(MD5(RAND()), 10))
 	</insert>
 	
 	<!-- 회원가입 가능 상태로 만들기 -->
@@ -20,7 +20,14 @@
 	<select id="selectAccount" resultType="com.ssafy.jara.dto.Account">
 		SELECT *
 		FROM user
-		WHERE email=#{email} and password=#{password} and status = 1;
+		WHERE email=#{email} <!-- and password=#{password} --> and status = 1;
+	</select>
+	
+	<!-- 이메일로 비밀번호 찾기(로그인 시) 비밀번호 암호화에 필요 -->
+	<select id="findPassword" resultType="java.lang.String">
+		SELECT password
+		FROM user
+		WHERE email=#{email}
 	</select>
 	
 	<!-- 닉네임(uid) / 이메일(email) 중복 체크 -->
