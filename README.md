@@ -266,6 +266,37 @@ sudo systemctl start nginx
 ```
 
 
+- Nginx 사용 명령어
+```
+// 시작
+sudo service nginx start
+sudo systemctl start nginx
+sudo /etc/init.d/nginx start
+
+// 재시작
+sudo service nginx restart
+sudo systemctl restart nginx
+sudo /etc/init.d/nginx restart
+
+// 중지
+sudo service nginx stop
+sudo systemctl stop nginx
+sudo /etc/init.d/nginx stop
+
+// 상태
+sudo service nginx status
+sudo systemctl status nginx
+
+// 설정 reload
+sudo service nginx reload
+sudo systemctl reload nginx
+sudo nginx -s reload
+
+// configuration file syntax check
+sudo nginx -t
+```
+
+
 #### :cd: Backend 배포 - Spring (STS)
 
 - 로컬에서 `pom.xml`에 플러그인 추가 (이미 추가한 상태라면 생략)
