@@ -1,5 +1,7 @@
 package com.ssafy.jara.controller;
 
+import java.util.Date;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -52,12 +54,12 @@ public class ArticleCommentController {
 	
 	@ApiOperation(value = "게시글 댓글 수정", response = String.class)
 	@PutMapping("/{article_id}/comments/{id}")
-	private ResponseEntity<String> updateArticleComment(@RequestBody ArticleComment articleComment) {
+	private ResponseEntity<Date> updateArticleComment(@RequestBody ArticleComment articleComment) {
 		if(articleCommentService.updateArticleComment(articleComment) > 0) {
-			return new ResponseEntity<String>("success", HttpStatus.OK);
+			return new ResponseEntity<Date>(articleCommentService.selectArticleComment(articleComment.getId()).getUpdated_at(), HttpStatus.OK);
 		}
 		
-		return new ResponseEntity<String>("fail", HttpStatus.BAD_REQUEST);
+		return new ResponseEntity<Date>(HttpStatus.BAD_REQUEST);
 	}
 	
 	@ApiOperation(value = "게시글 댓글 삭제", response = String.class)
