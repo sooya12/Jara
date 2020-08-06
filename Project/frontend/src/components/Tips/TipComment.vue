@@ -58,9 +58,14 @@ export default {
   },
   methods: {
     deleteComment() {
-      this.commentId = this.comment.id
-      if (this.commentId) {
-        this.$emit('find_commentId',this.commentId)
+      if (this.$store.state.userInfo.id == this.comment.writer){
+        this.commentId = this.comment.id
+        if (this.commentId) {
+          const response = confirm('정말로 삭제 하시겠습니까?')
+          if (response) {
+            this.$emit('find_commentId',this.commentId)    
+          }
+        }
       }
     },
     flagComment() {

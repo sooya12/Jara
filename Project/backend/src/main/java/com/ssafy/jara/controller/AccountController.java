@@ -20,6 +20,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.mindrot.jbcrypt.BCrypt;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -89,6 +90,12 @@ public class AccountController extends HttpServlet {
 			NoSuchPaddingException, InvalidAlgorithmParameterException, IllegalBlockSizeException, BadPaddingException {
 
 		if (accountService.duplicateCheck(account) < 1) {
+			// 비밀번호 암호화
+			String hashPassword = BCrypt.hashpw(account.getPassword(), BCrypt.gensalt());
+			account.setPassword(hashPassword);
+			
+			System.out.println("hashPassword : "+hashPassword);
+
 
 			if (accountService.insertAccount(account) > 0) {
 
@@ -103,6 +110,7 @@ public class AccountController extends HttpServlet {
 //		        String encrypted = Encryption.encryptRSA(plainText, publicKey);
 //		        System.out.println("encrypted : " + encrypted); // 암호화 된 문자열
 
+				
 				// 6자리 인증코드
 				Account reaccount = accountService.findAccount(account.getId());
 
@@ -113,8 +121,8 @@ public class AccountController extends HttpServlet {
 				sendMail.setSubject("[회원가입 이메일 인증]");
 				sendMail.setText(new StringBuffer().append("<h1>메일인증</h1>")
 						.append("자라에 가입해주셔서 감사합니다.<br>인증번호 : " + reaccount.getCode() + "<br>")
-//						 .append("<a href='http://localhost:8081/accounts/certification'>이메일 인증하기</a>").toString());
-						.append("<a href='http://i3a308.p.ssafy.io/accounts/certification'>이메일 인증하기</a>").toString());
+						 .append("<a href='http://localhost:8081/accounts/certification'>이메일 인증하기</a>").toString());
+//						.append("<a href='http://i3a308.p.ssafy.io/accounts/certification'>이메일 인증하기</a>").toString());
 
 				sendMail.setFrom("jaraauth@gmail.com", "JARA");
 				sendMail.setTo(account.getEmail());
@@ -160,7 +168,13 @@ public class AccountController extends HttpServlet {
 	@ApiOperation(value = "이메일과 비밀번호로 로그인 처리", response = Account.class)
 	@PostMapping("signin")
 	private ResponseEntity<Account> loginAccount(@RequestBody Account account, HttpServletResponse response) {
-		Account findAccount = accountService.selectAccount(account);
+		
+		Account findAccount =null;
+		
+		if(BCrypt.checkpw(account.getPassword(),accountService.findPassword(account.getEmail()))) { // 기존 비밀번호와 같음
+			findAccount = accountService.selectAccount(account); // 로그인
+		}
+		
 		System.out.println("findAccount=" + findAccount);
 		if (findAccount != null) {
 			String token = jwtService.create(findAccount);
@@ -184,8 +198,8 @@ public class AccountController extends HttpServlet {
 		sendMail.setSubject("[비밀번호 변경 이메일 인증]");
 		sendMail.setText(new StringBuffer().append("<h1>메일인증</h1>")
 				.append("<br>인증번호 : " + ncode + "<br>")
-				.append("<a href='http://i3a308.p.ssafy.io/accounts/setnewpw'>비밀번호 변경하기</a>").toString());
-				// .append("<a href='http://localhost:3030/accounts/setnewpw'>비밀번호 변경하기</a>").toString());
+//				.append("<a href='http://i3a308.p.ssafy.io/accounts/setnewpw'>비밀번호 변경하기</a>").toString());
+				 .append("<a href='http://localhost:8081/accounts/setnewpw'>비밀번호 변경하기</a>").toString());
 
 		sendMail.setFrom("jaraauth@gmail.com", "JARA");
 		sendMail.setTo(email);
