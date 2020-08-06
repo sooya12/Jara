@@ -499,3 +499,221 @@ public class FcmService {
 
 -----
 
+
+
+### :feet: 20.08.07
+
+##### Naver Lucy XSS Filter를 이용하여 XSS 보안 강화
+
+>src/main/resources/lucy-xss-servlet-filter-rule.xml
+
+```bash
+<?xml version="1.0" encoding="UTF-8"?>
+
+<config xmlns="http://www.navercorp.com/lucy-xss-servlet">
+    <defenders>
+        <!-- XssPreventer 등록 -->
+        <defender>
+            <name>xssPreventerDefender</name>
+            <class>com.navercorp.lucy.security.xss.servletfilter.defender.XssPreventerDefender</class>
+        </defender>
+
+        <!-- XssSaxFilter 등록 -->
+        <defender>
+            <name>xssSaxFilterDefender</name>
+            <class>com.navercorp.lucy.security.xss.servletfilter.defender.XssSaxFilterDefender</class>
+            <init-param>
+                <param-value>lucy-xss-sax.xml</param-value>   <!-- lucy-xss-filter의 sax용 설정파일 -->
+                <param-value>false</param-value>        <!-- 필터링된 코멘트를 남길지 여부, 성능 효율상 false 추천 -->
+            </init-param>
+        </defender>
+
+        <!-- XssFilter 등록 -->
+        <defender>
+            <name>xssFilterDefender</name>
+            <class>com.navercorp.lucy.security.xss.servletfilter.defender.XssFilterDefender</class>
+            <init-param>
+                <param-value>lucy-xss.xml</param-value>    <!-- lucy-xss-filter의 dom용 설정파일 -->
+                <param-value>false</param-value>         <!-- 필터링된 코멘트를 남길지 여부, 성능 효율상 false 추천 -->
+            </init-param>
+        </defender>
+    </defenders>
+
+    <!-- default defender 선언, 필터링 시 지정한 defender가 없으면 여기 정의된 default defender를 사용해 필터링 한다. -->
+    <default>
+        <defender>xssPreventerDefender</defender>
+    </default>
+
+</config>
+```
+
+>pom.xml
+
+```bash
+<!-- Lucy XSS Filter -->
+<dependency>
+	<groupId>com.navercorp.lucy</groupId>
+	<artifactId>lucy-xss-servlet</artifactId>
+	<version>2.0.0</version>
+</dependency>
+```
+
+
+
+##### 그러나 Lucy XSS Filter는 @RequestBody로 들어오는 JSON 객체를 필터링 해주지 않음. 그래서 따로 필터를 구현 - JsonFilter
+
+> com/ssafy/jara/config/FilterConfig.java
+
+```bash
+package com.ssafy.jara.config;
+
+import org.springframework.boot.web.servlet.FilterRegistrationBean;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
+
+import com.navercorp.lucy.security.xss.servletfilter.XssEscapeServletFilter;
+import com.ssafy.jara.filter.JsonFilter;
+
+@Configuration
+public class FilterConfig implements WebMvcConfigurer {
+
+	// Naver Lucy XSS Filter bean 등록
+	@Bean
+    public FilterRegistrationBean<XssEscapeServletFilter> getFilterRegistraionBean() {
+    	FilterRegistrationBean<XssEscapeServletFilter> registraionBean = new FilterRegistrationBean<XssEscapeServletFilter>();
+    	registraionBean.setFilter(new XssEscapeServletFilter());
+    	registraionBean.setOrder(1);
+    	registraionBean.addUrlPatterns("/*");
+    	
+    	return registraionBean;
+    }
+	
+	// Json XSS Filter bean 등록
+	@Bean
+	public FilterRegistrationBean<JsonFilter> getJsonFilterRegistrationBean() {
+		FilterRegistrationBean<JsonFilter> registrationBean = new FilterRegistrationBean<JsonFilter>(new JsonFilter());
+		registrationBean.setOrder(2);
+		registrationBean.addUrlPatterns("/*");
+		
+		return registrationBean;
+	}
+	
+}
+```
+
+>com/ssafy/jara/filter/JsonFilter.java
+>
+><script></script> , #{, #{}, ${, ${} 등 특정 문자열만 필터링 
+
+```bash
+package com.ssafy.jara.filter;
+
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
+import java.util.Arrays;
+
+import javax.servlet.FilterChain;
+import javax.servlet.ReadListener;
+import javax.servlet.ServletException;
+import javax.servlet.ServletInputStream;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletRequestWrapper;
+import javax.servlet.http.HttpServletResponse;
+
+import org.apache.commons.lang3.StringEscapeUtils;
+import org.springframework.web.filter.OncePerRequestFilter;
+
+public class JsonFilter extends OncePerRequestFilter {
+	
+	// Json value XSS Filter를 위한 필터링 값 리스트
+	public static ArrayList<String> checkList = new ArrayList<String>(Arrays.asList("<script>", "</script>", "#{", "#{}", "${", "${}"));   
+	
+	@Override
+	protected void doFilterInternal(
+		HttpServletRequest req, HttpServletResponse resp, FilterChain chain)
+		throws ServletException, IOException {
+
+		chain.doFilter(new SimpleXssFilterInternal(req), resp);
+	}
+	
+	public static class SimpleXssFilterInternal extends HttpServletRequestWrapper {
+		
+		private byte[] body;
+		
+		public SimpleXssFilterInternal(HttpServletRequest request) {
+			super(request);
+			
+			try {
+				InputStream is = request.getInputStream();
+				
+				if(is != null) {
+					StringBuffer sb = new StringBuffer();
+					
+					while(true) {
+						int data = is.read();
+						
+						if(data < 0) 
+							break;
+						
+						sb.append((char) data);
+					}
+					
+					String result = doWork(sb.toString());
+					
+					body = result.getBytes(StandardCharsets.UTF_8);
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+		
+		@Override
+		public ServletInputStream getInputStream() throws IOException {
+			ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(this.body);
+			
+			return new ServletInputStream() {
+				
+				@Override
+				public int read() throws IOException {
+					return byteArrayInputStream.read();
+				}
+				
+				@Override
+				public void setReadListener(ReadListener listener) {}
+				
+				@Override
+				public boolean isReady() {
+					return true;
+				}
+				
+				@Override
+				public boolean isFinished() {
+					return byteArrayInputStream.available() == 0;
+				}
+			};
+		}
+		
+		private String doWork(String input) {
+			
+			for (int i = 0; i < checkList.size(); i++) {
+				String s = checkList.get(i);
+				
+				if(input.indexOf(s) >= 0) {
+					input = input.replaceAll(s, StringEscapeUtils.escapeHtml4(s));
+				}
+			}
+			
+			return input;
+		}
+	}
+	
+}
+
+```
+
+-----
+
