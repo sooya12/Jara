@@ -20,5 +20,24 @@
       VALUES (#{item_id}, #{origianl_file_name}, #{stored_file_name});
    </insert>
    
+   <!-- article_id에 해당하는 article의 이미지 파일 이름 조회 -->
+   <select id="selectArticleFileName" resultType="String">
+      SELECT stored_file_name
+      FROM article_file
+      WHERE article_id=#{article_id};
+   </select>
    
+   <!-- tip_id에 해당하는 tip의 이미지 파일 이름 조회 -->
+   <select id="selectTipFileName" resultType="String">
+      SELECT stored_file_name
+      FROM tip_file
+      WHERE tip_id=#{tip_id};
+   </select>
+   
+   <!-- barter_id에 해당하는 barter의 이미지 파일 이름 조회 -->
+   <select id="selectBarterFileName" resultType="String">
+      SELECT stored_file_name
+      FROM barter_file
+      WHERE barter_id=#{barter_id};
+   </select>
 </mapper>

@@ -82,4 +82,19 @@ public class FileUploadServiceImpl implements FileUploadService{
 		
 		return ret;
 	}
+
+	@Override
+	public String selectArticleFileName(int article_id) {
+		return fileUploadDao.selectArticleFileName(article_id);
+	}
+
+	@Override
+	public String selectTipFileName(int tip_id) {
+		return fileUploadDao.selectTipFileName(tip_id);
+	}
+
+	@Override
+	public String selectBarterFileName(int barter_id) {
+		return fileUploadDao.selectBarterFileName(barter_id);
+	}
 }
