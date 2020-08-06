@@ -58,8 +58,9 @@ public class JaraApplication implements WebMvcConfigurer {
     	FilterRegistrationBean<XssEscapeServletFilter> registraionBean = new FilterRegistrationBean<XssEscapeServletFilter>();
     	registraionBean.setFilter(new XssEscapeServletFilter());
     	registraionBean.setOrder(1);
-    	registraionBean.addUrlPatterns("/write", "/restwrite");
+    	registraionBean.addUrlPatterns("/");
     	
     	return registraionBean;
     }
+    
 }
