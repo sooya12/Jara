@@ -14,7 +14,7 @@ Vue.use(firebase)
 
 export default new Vuex.Store({
   state: {
-    api_server: 'http://i3a308.p.ssafy.io:8081',
+    api_server: 'http://localhost:8081',
     authToken: VueCookies.get('auth-token'),
     entrance: true,
     drawer: false,

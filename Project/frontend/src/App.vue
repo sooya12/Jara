@@ -334,7 +334,7 @@ export default {
     },
     follow(rq, idx) {
       const followData = {
-        follow : rq.by,
+        follower : rq.follower,
         following : this.$store.state.userInfo.id
       }
       axios.put(`${this.$store.state.api_server}/accounts/follow`, followData)
