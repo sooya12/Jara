@@ -30,14 +30,12 @@ public class TipCommentController {
 	
 	@ApiOperation(value = "팁 댓글 등록", response = String.class)
 	@PostMapping("/{tip_id}/comments")
-	private ResponseEntity<String> insertTipComment(@PathVariable("tip_id") int tip_id, @RequestBody TipComment tipComment) {
-		tipComment.setTip_id(tip_id);
-		
+	private ResponseEntity<TipComment> insertTipComment(@RequestBody TipComment tipComment) {
 		if(tipCommentService.insertTipComment(tipComment) > 0) {
-			return new ResponseEntity<String>("success", HttpStatus.OK);
+			return new ResponseEntity<TipComment>(tipCommentService.selectTipComment(tipComment.getId()), HttpStatus.OK);
 		}
 		
-		return new ResponseEntity<String>("fail", HttpStatus.INTERNAL_SERVER_ERROR);
+		return new ResponseEntity<TipComment>(HttpStatus.INTERNAL_SERVER_ERROR);
 	}
 	
 	@ApiOperation(value = "팁 전체 댓글 조회", response = List.class)
@@ -54,12 +52,12 @@ public class TipCommentController {
 	
 	@ApiOperation(value = "팁 댓글 수정", response = String.class)
 	@PutMapping("/{tip_id}/comments/{id}")
-	private ResponseEntity<String> updateTipComment(@RequestBody TipComment tipComment) {
+	private ResponseEntity<TipComment> updateTipComment(@RequestBody TipComment tipComment) {
 		if(tipCommentService.updateTipComment(tipComment) > 0) {
-			return new ResponseEntity<String>("success", HttpStatus.OK);
+			return new ResponseEntity<TipComment>(tipCommentService.selectTipComment(tipComment.getId()), HttpStatus.OK);
 		}
 		
-		return new ResponseEntity<String>("fail", HttpStatus.BAD_REQUEST);
+		return new ResponseEntity<TipComment>(HttpStatus.BAD_REQUEST);
 	}
 	
 	@ApiOperation(value = "팁 댓글 삭제", response = String.class)

@@ -21,11 +21,6 @@ public class ArticleServiceImpl implements ArticleService {
 	}
 
 	@Override
-	public List<Article> selectListTotalArticle() {
-		return articleDao.selectListTotalArticle();
-	}
-
-	@Override
 	public List<Article> selectListMyArticle(int writer) {
 		return articleDao.selectListMyArticle(writer);
 	}
@@ -33,6 +28,11 @@ public class ArticleServiceImpl implements ArticleService {
 	@Override
 	public List<Article> selectListArticle(int user_id) {
 		return articleDao.selectListArticle(user_id);
+	};
+	
+	@Override
+	public List<Article> selectRangeListArticle(HashMap<String, Integer> hashMap) {
+		return articleDao.selectRangeListArticle(hashMap);
 	};
 
 	@Override

@@ -66,6 +66,11 @@ public class TipServiceImpl implements TipService {
 	public int insertTipLike(HashMap<String, Integer> hashMap) {
 		return tipDao.insertTipLike(hashMap);
 	}
+	
+	@Override
+	public List<Integer> selectTipLikeAccounts(int tip_id) {
+		return tipDao.selectTipLikeAccounts(tip_id);
+	};
 
 	@Override
 	public int selectTipLike(HashMap<String, Integer> hashMap) {
@@ -80,6 +85,16 @@ public class TipServiceImpl implements TipService {
 	@Override
 	public int deleteTipLikes(int tip_id) {
 		return tipDao.deleteTipLikes(tip_id);
+	}
+
+	@Override
+	public int insertTipScrap(HashMap<String, Integer> hashMap) {
+		return tipDao.insertTipScrap(hashMap);
+	}
+
+	@Override
+	public List<Tip> selectListTipScrap(int user_id) {
+		return tipDao.selectListTipScrap(user_id);
 	}
 
 }

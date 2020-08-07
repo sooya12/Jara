@@ -8,20 +8,9 @@
 		VALUES (#{writer}, #{contents})
 	</insert>
 	
-	<!-- 전체 게시글 조회 -->
-	<select id="selectListTotalArticle" resultType="com.ssafy.jara.dto.Article">
-		SELECT * <!-- , (SELECT count(*) 
-				   FROM article_like 
-				   WHERE article_id=article.id) AS likes -->
-		FROM article
-		ORDER BY created_at DESC
-	</select>
-	
 	<!-- 사용자가 작성한 전체 게시글 조회 -->
 	<select id="selectListMyArticle" resultType="com.ssafy.jara.dto.Article">
-		SELECT * <!-- , (SELECT count(*) 
-				   FROM article_like 
-				   WHERE article_id=article.id) AS likes -->
+		SELECT *
 		FROM article
 		WHERE writer=#{writer}
 		ORDER BY created_at DESC
@@ -30,9 +19,6 @@
 	<!-- 사용자가 작성한 전체 게시글 및 사용자가 팔로우하는 다른 사용자의 전체 게시글 -->
 	<select id="selectListArticle" resultType="com.ssafy.jara.dto.Article">
 		SELECT id, writer, contents, created_at, updated_at, shares
-			   <!-- , (SELECT count(*) 
-			    FROM article_like 
-			    WHERE article_id=article.id) AS likes -->
 		FROM article
 		WHERE writer=#{user_id} OR (writer IN (SELECT following 
 											   FROM follow 
@@ -40,11 +26,20 @@
 		ORDER BY created_at DESC
 	</select>
 	
+	<!-- 사용자가 작성한 전체 게시글 및 사용자가 팔로우하는 다른 사용자의 전체 게시글 idx부터 range만큼 가져오기 -->
+	<select id="selectRangeListArticle" resultType="com.ssafy.jara.dto.Article">
+		SELECT id, writer, contents, created_at, updated_at, shares
+		FROM article
+		WHERE writer=#{user_id} OR (writer IN (SELECT following 
+											   FROM follow 
+											   WHERE follower=#{user_id} AND status=1))
+		ORDER BY created_at DESC 
+		LIMIT #{s_idx}, #{count}
+	</select>
+	
 	<!-- 게시글 조회 -->
 	<select id="selectArticle" resultType="com.ssafy.jara.dto.Article">
-		SELECT * <!-- , (SELECT count(*) 
-				   FROM article_like 
-				   WHERE article_id=article.id) AS likes -->
+		SELECT *
 		FROM article
 		WHERE id=#{id}
 	</select>
@@ -83,6 +78,7 @@
 		WHERE article_id=#{article_id} AND user_id=#{user_id}
 	</select>
 	
+	<!-- 게시글 좋아요 수 조회 -->
 	<select id="selectArticleLikes" resultType="java.lang.Integer">
 		SELECT count(*)
 		FROM article_like

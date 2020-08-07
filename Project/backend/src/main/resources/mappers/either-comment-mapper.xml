@@ -1,32 +1,38 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.ssafy.jara.dao.EitherCommentDao">
+
+	<!-- 투표 댓글 등록 -->
+	<insert id="insertEitherComment" parameterType="com.ssafy.jara.dto.EitherComment"  useGeneratedKeys="true" keyProperty="id">
+		INSERT INTO either_comment (either_id, writer, choice, contents)
+		VALUES (#{either_id}, #{writer}, #{choice}, #{contents});
+	</insert>
+
+	<!-- 투표 댓글 수정 -->
+	<update id="updateEitherComment" parameterType="com.ssafy.jara.dto.EitherComment">
+		UPDATE either_comment
+		SET contents=#{contents}
+		WHERE id=#{id};
+	</update>
+
+	<!-- 투표 댓글 삭제 -->
+	<delete id="deleteEitherComment" parameterType="int">
+		DELETE FROM either_comment
+		WHERE id=#{id};
+	</delete>
    
-   <!-- 투표 댓글 등록 -->
-   <insert id="insertEitherComment" parameterType="com.ssafy.jara.dto.EitherComment">
-      INSERT INTO either_comment (either_id, writer, contents)
-      VALUES (#{either_id}, #{writer}, #{contents});
-   </insert>
+	<!-- 투표 전체 댓글 조회 -->
+	<select id="selectListEitherComment" resultType="com.ssafy.jara.dto.EitherComment">
+		SELECT *
+		FROM either_comment
+		WHERE either_id=#{either_id}
+		ORDER BY created_at DESC;
+	</select>
    
-   <!-- 투표 댓글 수정 -->
-   <update id="updateEitherComment" parameterType="com.ssafy.jara.dto.EitherComment">
-      UPDATE either_comment
-      SET contents=#{contents}
-      WHERE id=#{id};
-   </update>
-   
-   <!-- 투표 댓글 삭제 -->
-   <delete id="deleteEitherComment" parameterType="int">
-      DELETE FROM either_comment
-      WHERE id=#{id};
-   </delete>
-   
-   <!-- 투표 전체 댓글 조회 -->
-   <select id="selectListEitherComment" resultType="com.ssafy.jara.dto.EitherComment">
-      SELECT *
-      FROM either_comment
-      WHERE either_id=#{either_id}
-      ORDER BY created_at;
-   </select>
-   
+	<!-- 해당하는 투표의 댓글 조회 -->
+	<select id="selectEitherComment" resultType="com.ssafy.jara.dto.EitherComment">
+		SELECT *
+		FROM either_comment
+		WHERE id=#{id}
+	</select>
 </mapper>

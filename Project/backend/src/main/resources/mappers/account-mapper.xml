@@ -4,16 +4,30 @@
 	
 
 	<!-- 회원가입 -->
-	<insert id="insertAccount">
-		INSERT INTO user (nickname, email, password, sex,birthday, location)
-		VALUES(#{nickname}, #{email}, #{password},#{sex}, #{birthday}, #{location})
+	<insert id="insertAccount" useGeneratedKeys="true" keyProperty="id">
+		INSERT INTO user (nickname, email, password, sex,birthday, location, status, code)
+		VALUES(#{nickname}, #{email}, #{password} ,#{sex}, #{birthday}, #{location} ,0, LEFT(MD5(RAND()), 10))
 	</insert>
+	
+	<!-- 회원가입 가능 상태로 만들기 -->
+	<update id="changeStatus">
+		UPDATE user
+		SET status=1
+		WHERE code=#{code}
+	</update>
 	
 	<!-- 로그인 -->
 	<select id="selectAccount" resultType="com.ssafy.jara.dto.Account">
 		SELECT *
 		FROM user
-		WHERE email=#{email} and password=#{password}
+		WHERE email=#{email} <!-- and password=#{password} --> and status = 1;
+	</select>
+	
+	<!-- 이메일로 비밀번호 찾기(로그인 시) 비밀번호 암호화에 필요 -->
+	<select id="findPassword" resultType="java.lang.String">
+		SELECT password
+		FROM user
+		WHERE email=#{email}
 	</select>
 	
 	<!-- 닉네임(uid) / 이메일(email) 중복 체크 -->
@@ -23,11 +37,25 @@
 		WHERE nickname=#{nickname} or email=#{email}
 	</select>
 	
+	<!-- 인증 코드 변경하기 -->
+	<update id="changeCode">
+		UPDATE user
+		SET code=LEFT(MD5(RAND()), 10)
+		WHERE email=#{email}
+	</update>
+	
+	<!-- 인증 코드 이메일로 찾기 -->
+	<select id="findCode" resultType="java.lang.String">
+		SELECT code
+		FROM user
+		WHERE email=#{email}
+	</select>
+	
 	<!-- 비밀번호 변경하기 -->
 	<update id="changePassword">
 		UPDATE user
 		SET password=#{password}
-		WHERE email=#{email}
+		WHERE code=#{code}
 	</update>
 	
 	<!-- 회원 정보 조회 -->
@@ -47,7 +75,7 @@
 	<!-- 회원 정보 수정 -->
 	<update id="updateAccount">
 		UPDATE user SET
-		email=#{email}, nickname=#{nickname}, password=#{password}, 
+		nickname=#{nickname}, password=#{password}, 
 		sex=#{sex}, birthday=#{birthday}, location=#{location}, bio=#{bio}
 		WHERE id=#{id}
 	</update>

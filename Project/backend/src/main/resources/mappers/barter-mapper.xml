@@ -32,6 +32,7 @@
    <select id="selectListBarter" resultType="com.ssafy.jara.dto.Barter">
       SELECT *
       FROM item
+      ORDER BY created_at DESC;
    </select>
    
    <!-- 태그에 해당하는 전체 물물교환 조회 -->

@@ -4,8 +4,8 @@
    
    <!-- 물물교환 등록 -->
    <insert id="insertBarter" parameterType="com.ssafy.jara.dto.Barter">
-      INSERT INTO item (writer, title, price, contents, tag_id, status)
-      VALUES (#{writer}, #{title}, #{price}, #{contents}, #{tag_id}, #{status});
+      INSERT INTO item (writer, title, price, contents, tag_id)
+      VALUES (#{writer}, #{title}, #{price}, #{contents}, #{tag_id});
    </insert>
    
    <!-- 하나의 물물교환 조회 -->

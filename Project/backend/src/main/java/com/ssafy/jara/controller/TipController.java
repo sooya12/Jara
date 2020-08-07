@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.ssafy.jara.common.service.fileupload.FileUploadService;
 import com.ssafy.jara.dto.Tip;
 import com.ssafy.jara.service.TipCommentService;
 import com.ssafy.jara.service.TipService;
@@ -34,14 +35,17 @@ public class TipController {
 	@Autowired
 	TipCommentService tipCommentService;
 	
+	@Autowired
+	FileUploadService fileUploadService;
+	
 	@ApiOperation(value = "팁 등록", response = String.class)
 	@PostMapping("")
-	private ResponseEntity<String> insertTip(@RequestBody Tip tip) {
+	private ResponseEntity<Integer> insertTip(@RequestBody Tip tip) {
 		if(tipService.insertTip(tip) > 0) {
-			return new ResponseEntity<String>("success", HttpStatus.OK);
+			return new ResponseEntity<Integer>(tip.getId(), HttpStatus.OK);
 		} 
 		
-		return new ResponseEntity<String>("fail", HttpStatus.INTERNAL_SERVER_ERROR);
+		return new ResponseEntity<Integer>(0, HttpStatus.INTERNAL_SERVER_ERROR);
 	}
 	
 	@ApiOperation(value = "전체 팁 조회", response = List.class)
@@ -93,7 +97,12 @@ public class TipController {
 	@ApiOperation(value = "해당 팁 조회", response = Tip.class)
 	@GetMapping("/{id}")
 	private ResponseEntity<Tip> selectTip(@PathVariable("id") int id) {
-		return new ResponseEntity<Tip>(tipService.selectTip(id), HttpStatus.OK);
+		Tip tip = tipService.selectTip(id);
+		tip.setComments(tipCommentService.selectTipComments(id));
+		tip.setLikeAccounts(tipService.selectTipLikeAccounts(id));
+		tip.setStored_file_name(fileUploadService.selectBarterFileName(id));
+		
+		return new ResponseEntity<Tip>(tip, HttpStatus.OK);
 	}
 	
 	@ApiOperation(value = "팁 제목/내용 수정", response = String.class)
@@ -165,6 +174,20 @@ public class TipController {
 			
 			return new ResponseEntity<String>("fail", HttpStatus.INTERNAL_SERVER_ERROR);
 		}
+	}
+	
+	@ApiOperation(value = "팁 스크랩 등록", response = String.class)
+	@PostMapping("/{id}/scrap")
+	private ResponseEntity<String> insertTipScrap(@PathVariable("id") int tip_id, @RequestBody int user_id) {
+		HashMap<String, Integer> hashMap = new HashMap<>();
+		hashMap.put("tip_id", tip_id);
+		hashMap.put("user_id", user_id);
+		
+		if(tipService.insertTipScrap(hashMap) > 0) {
+			return new ResponseEntity<String>("success", HttpStatus.OK);
+		}
+		
+		return new ResponseEntity<String>("fail", HttpStatus.INTERNAL_SERVER_ERROR);
 	}
 	
 }

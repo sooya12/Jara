@@ -5,10 +5,14 @@ import java.util.Arrays;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.web.servlet.FilterRegistrationBean;
+import org.springframework.boot.web.servlet.ServletComponentScan;
+import org.springframework.context.annotation.Bean;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
+import com.navercorp.lucy.security.xss.servletfilter.XssEscapeServletFilter;
 import com.ssafy.jara.common.interceptor.JwtInterceptor;
 
 @SpringBootApplication
@@ -49,4 +53,5 @@ public class JaraApplication implements WebMvcConfigurer {
                 .allowedHeaders("*")
                 .exposedHeaders("jwt-auth-token");
     }
+    
 }

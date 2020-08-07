@@ -12,18 +12,24 @@ public class Account {
 	private Date birthday; 		// 생일
 	private String location;	// 주소
 	private String bio;			// 소개글
+	private boolean status;		// 회원가입 시 :0, 로그인 가능 : 1
+	private String code;			// 6자리 인증번호
 	
 	private List<Integer> followerList;
 	private List<Integer> followingList;
 	
 	private double x;
 	private double y;
+	
+	private List<Article> myArticleList;	// 작성한 게시글 목록
+	private List<Tip> scrapTipList;			// 스크랩한 팁 목록 
 
 	
 	public Account() {}
 
 	public Account(int id, String nickname, String email, String password, boolean sex, Date birthday, String location,
-			String bio, List<Integer> followerList, List<Integer> followingList, double x, double y) {
+			String bio, boolean status, String code, List<Integer> followerList, List<Integer> followingList, double x,
+			double y, List<Article> myArticleList, List<Tip> scrapTipList) {
 		super();
 		this.id = id;
 		this.nickname = nickname;
@@ -33,10 +39,32 @@ public class Account {
 		this.birthday = birthday;
 		this.location = location;
 		this.bio = bio;
+		this.status = status;
+		this.code = code;
 		this.followerList = followerList;
 		this.followingList = followingList;
 		this.x = x;
 		this.y = y;
+		this.myArticleList = myArticleList;
+		this.scrapTipList = scrapTipList;
+	}
+
+
+
+	public String getCode() {
+		return code;
+	}
+
+	public void setCode(String code) {
+		this.code = code;
+	}
+
+	public boolean isStatus() {
+		return status;
+	}
+
+	public void setStatus(boolean status) {
+		this.status = status;
 	}
 
 	public double getX() {
@@ -134,12 +162,29 @@ public class Account {
 	public void setLocation(String location) {
 		this.location = location;
 	}
+	
+	public List<Article> getMyArticleList() {
+		return myArticleList;
+	}
+
+	public void setMyArticleList(List<Article> myArticleList) {
+		this.myArticleList = myArticleList;
+	}
+
+	public List<Tip> getScrapTipList() {
+		return scrapTipList;
+	}
+
+	public void setScrapTipList(List<Tip> scrapTipList) {
+		this.scrapTipList = scrapTipList;
+	}
 
 	@Override
 	public String toString() {
 		return "Account [id=" + id + ", nickname=" + nickname + ", email=" + email + ", password=" + password + ", sex="
-				+ sex + ", birthday=" + birthday + ", location=" + location + ", bio=" + bio + ", followerList="
-				+ followerList + ", followingList=" + followingList + ", x=" + x + ", y=" + y + "]";
+				+ sex + ", birthday=" + birthday + ", location=" + location + ", bio=" + bio + ", status=" + status
+				+ ", code=" + code + ", followerList=" + followerList + ", followingList=" + followingList + ", x=" + x
+				+ ", y=" + y + ", myArticleList=" + myArticleList + ", scrapTipList=" + scrapTipList + "]";
 	}
 
 

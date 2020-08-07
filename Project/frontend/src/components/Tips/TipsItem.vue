@@ -20,14 +20,7 @@
         <div class="box">{{ tip.contents }}</div>
       </v-card-text>
 
-      <v-card-actions>
-        <v-btn
-          color="orange"
-          text
-        >
-          Share
-        </v-btn>
-
+      <v-card-actions style="width: 100%;">
         <v-btn
           color="orange"
           text
@@ -35,7 +28,14 @@
           :tip="tip"
         >
           Show
+        </v-btn>
+        <v-spacer></v-spacer>
+        <v-btn color="orange" icon>
+          <v-icon> mdi-share-variant </v-icon>
+        </v-btn>
 
+        <v-btn @click="scrapTip" color="orange" icon>
+          <v-icon>mdi-bookmark-multiple-outline</v-icon>
         </v-btn>
       </v-card-actions>
     </v-card>
@@ -43,7 +43,8 @@
 </template>
 
 <script>
-// const TIP_API_URL = 'http://localhost:8081/tips/'
+import axios from "axios"
+import { mapState } from 'vuex'
 
 export default {
   name: 'TipsItem',
@@ -60,8 +61,24 @@ export default {
   methods: {
     goTipDetail(t) {
       // console.log(t)
-      this.$router.push(`/tips/${t}`)
+      this.$router.push(`/tips/${t}`) // new -> t
+    },
+    scrapTip() {
+      axios.put(`${this.$store.state.api_server}/tips/${this.tip.id}/scrap`,{user_id: `${this.$route.params.user_id}`})
+        .then(res => {
+          console.log(res)
+        })
+        .catch(err => {
+          console.log(err)
+        })
     }
+  },
+  computed: {
+    ...mapState([
+      'api_server',
+      'users',
+      'userInfo'
+    ])
   }
 }
 </script>
