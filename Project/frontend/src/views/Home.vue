@@ -7,82 +7,74 @@
       <v-btn text class="grey--text font-weight-bold text-sm-h5 text-body1" @click="write">어떤 이야기를 공유해 볼까요?</v-btn>
     </div>
     <v-divider class="mt-5 mb-5"></v-divider>
-    <v-virtual-scroll
-      :items="articles"
-      :item-height="300"
-      height="1500"
-    >
-      <template v-slot="{ item }">
-        <v-list-item :key="item.id">
-
-          <v-list-item-content>
-            <v-card height="250">
-              <v-card-title>
+    <div>
+      <v-card v-for="item in articles" :key="item.id" class="my-5">
+        <v-card-title>
+          <v-btn
+            text
+            class="px-0 font-weight-bold text-sm-h6"
+            @click="goToUser(item.writer)"
+          >
+            <v-icon x-large>mdi-account-circle</v-icon>{{ users[item.writer] }}
+          </v-btn>
+          <div class="d-flex align-center ml-auto">
+            <v-card-subtitle>
+              {{ item.created_at }}
+            </v-card-subtitle>
+            <v-menu offset-y>
+              <template v-slot:activator="{ on, attrs }">
                 <v-btn
-                  text
-                  class="px-0 font-weight-bold text-sm-h6"
-                  @click="goToUser(item.writer)"
+                  icon
+                  v-bind="attrs"
+                  v-on="on"
                 >
-                  <v-icon x-large>mdi-account-circle</v-icon>{{ users[item.writer] }}
+                  <v-icon>mdi-dots-horizontal</v-icon>
                 </v-btn>
-                <div class="d-flex align-center ml-auto">
-                  <v-card-subtitle>
-                    {{ item.created_at }}
-                  </v-card-subtitle>
-                  <v-menu offset-y>
-                    <template v-slot:activator="{ on, attrs }">
-                      <v-btn
-                        icon
-                        v-bind="attrs"
-                        v-on="on"
-                      >
-                        <v-icon>mdi-dots-horizontal</v-icon>
-                      </v-btn>
-                    </template>
-                    <v-list>
-                      <v-list-item
-                        v-for="(menu, idx) in menuItems"
-                        :key="idx"
-                        @click="updateOrDelete(item, idx)"
-                      >
-                        <v-list-item-title>{{ menu.title }}</v-list-item-title>
-                      </v-list-item>
-                    </v-list>
-                  </v-menu>
-                </div>
-              </v-card-title>
-              <v-card-text class="text-subtitle-1 black--text mx-1">
-                {{ item.contents }}
-              </v-card-text>
-              <div class="mt-5 mx-3 d-sn-flex justify-sm-end d-flex justify-end align-center">
-                <div v-if="!isLike(item.likeAccounts)">
-                  <v-btn icon @click="like(item)">
-                    <v-icon>mdi-heart-outline</v-icon>
-                  </v-btn>
-                  {{ item.likeAccounts.length }}
-                </div>
-                <div v-else-if="item.likeAccounts.length==1&&isLike(item.likeAccounts)">
-                  <v-btn icon @click="dislike(item)"><v-icon color="red darken-1">mdi-account-heart</v-icon></v-btn>
-                  {{ userInfo.nickname }}님이 이 글을 좋아합니다.
-                </div>
-                <div v-else>
-                  <v-btn icon @click="dislike(item)"><v-icon color="red darken-1">mdi-account-heart</v-icon></v-btn>
-                  {{ userInfo.nickname }}님 외 {{ item.likeAccounts.length-1 }}명이 이 글을 좋아합니다.
-                </div>
-                <div>
-                  <v-btn icon @click="goToDetail(item.id)"><v-icon>mdi-comment-processing-outline</v-icon></v-btn>
-                  {{ item.comments.length }}
-                </div>
-                <div>
-                  <v-btn icon @click="share(item.id)"><v-icon color="teal">mdi-share-variant</v-icon></v-btn>
-                  {{ item.shares }}
-                </div>
-              </div>
-            </v-card>
-          </v-list-item-content>
-        </v-list-item>
-      </template>
-    </v-virtual-scroll>
+              </template>
+              <v-list>
+                <v-list-item
+                  v-for="(menu, idx) in menuItems"
+                  :key="idx"
+                  @click="updateOrDelete(item, idx)"
+                >
+                  <v-list-item-title>{{ menu.title }}</v-list-item-title>
+                </v-list-item>
+              </v-list>
+            </v-menu>
+          </div>
+        </v-card-title>
+        <v-card-text class="text-subtitle-1 black--text mx-1">
+          {{ item.contents }}
+        </v-card-text>
+        <v-card-actions>
+          <div class="mt-5 mx-3 d-flex ml-auto">
+            <div v-if="!isLike(item.likeAccounts)">
+              <v-btn icon @click="like(item)">
+                <v-icon>mdi-heart-outline</v-icon>
+              </v-btn>
+              {{ item.likeAccounts.length }}
+            </div>
+            <div v-else-if="item.likeAccounts.length==1&&isLike(item.likeAccounts)">
+              <v-btn icon @click="dislike(item)"><v-icon color="red darken-1">mdi-account-heart</v-icon></v-btn>
+              {{ userInfo.nickname }}님이 이 글을 좋아합니다.
+            </div>
+            <div v-else>
+              <v-btn icon @click="dislike(item)"><v-icon color="red darken-1">mdi-account-heart</v-icon></v-btn>
+              {{ userInfo.nickname }}님 외 {{ item.likeAccounts.length-1 }}명이 이 글을 좋아합니다.
+            </div>
+            <div>
+              <v-btn icon @click="goToDetail(item.id)"><v-icon>mdi-comment-processing-outline</v-icon></v-btn>
+              {{ item.comments.length }}
+            </div>
+            <div>
+              <v-btn icon @click="share(item.id)"><v-icon color="teal">mdi-share-variant</v-icon></v-btn>
+              {{ item.shares }}
+            </div>
+          </div>
+        </v-card-actions>
+      </v-card>
+      <div v-if="isLoad&&(articles.length < numOfArticles)" v-view="loadArticles" id="bottom"></div>
+    </div>
     <v-btn @click="scrollToTop" class="top" color="light-green" fab small dark>
       <v-icon>mdi-apple-keyboard-control</v-icon>
     </v-btn>
@@ -92,6 +84,7 @@
 <script>
 import { mapState, mapGetters } from 'vuex'
 import axios from 'axios'
+import firebase from 'firebase'
 
 export default {
   name: 'Home',
@@ -110,6 +103,7 @@ export default {
   },
   data() {
     return {
+      isLoad: false,
       date: `오늘은 ${this.$store.state.today.getMonth()+1}월 ${this.$store.state.today.getDate()}일`,
       day: `${this.$store.state.week[this.$store.state.today.getDay()]}요일 입니다.`,
       weather: '',
@@ -135,17 +129,43 @@ export default {
           color: 'blue-grey'
         }
       },
-      articles: null,
+      articles: [],
       menuItems: [
         { title: '수정' },
         { title: '삭제' }
       ],
+      from: 0,
+      articlePerRQ: 5,
+      numOfArticles: 0
     }
   },
   methods: {
+    loadArticles(e) {
+      if (e.type === 'exit') {
+        return
+      }
+      if (e.type === 'progress') {
+        return
+      }    
+
+      if (this.articles.length < this.numOfArticles) {
+        const checkBottom = document.querySelector('#bottom')
+        const bottom = checkBottom.getBoundingClientRect(checkBottom)
+        if (bottom.top <= (window.innerHeight || document.documentElement.clientWidth)) {
+          axios.get(`${this.$store.state.api_server}/articles/${this.from}/${this.articlePerRQ}`, { params: { user_id : this.$store.state.userInfo.id }})
+            .then(res => {
+              this.articles = [ ...this.articles, ...res.data ]
+              this.from += this.articlePerRQ
+            })
+        }
+      }
+    },
     fetchArticles() {
-      axios.get(`${this.$store.state.api_server}/articles`, { params: { user_id : this.$store.state.userInfo.id}} )
-        .then(res => this.articles = res.data)
+      axios.get(`${this.$store.state.api_server}/articles`, { params: { user_id : this.$store.state.userInfo.id }} )
+        .then(res => {
+          this.isLoad = true
+          this.numOfArticles = res.data.length
+        })
     },
     scrollToTop() {
       this.$vuetify.goTo(0)
@@ -154,6 +174,11 @@ export default {
       this.$router.push('/main/new')
     },
     like(val) {
+      const update = {}
+      update['like'] = 1
+      update['by'] = this.$store.state.userInfo.id
+      const key = firebase.database().ref(`liked/${val.writer}`).push(update).key
+      firebase.database().ref(`liked/${val.writer}/${key}`).update({'key': key})
       axios.post(`${this.$store.state.api_server}/articles/${val.id}/like`, '' , { params: { user_id : this.$store.state.userInfo.id}})
         .then(() => {
           val.likeAccounts.push(this.$store.state.userInfo.id)
@@ -175,12 +200,12 @@ export default {
       val
     },
     updateOrDelete(val, item) {
-      console.log(item)
       if (this.$store.state.userInfo.id == val.writer) {
         if (item == 0) { this.$router.push({ name: 'UpdateArticle', params: { article_id : val.id }}) }
         else { 
           const response = confirm('정말로 삭제 하시겠습니까?')
           if (response) { 
+            this.articles.splice(val, 1)
             axios.delete(`${this.$store.state.api_server}/articles/${val.id}`) 
           }
         }
@@ -194,7 +219,14 @@ export default {
   },
   mounted() {
     this.fetchArticles()
-  }
+  },  
+  updated() {
+    if (this.articles.length < this.numOfArticles) {
+      setTimeout(() => {
+        this.loadArticles('enter')
+      }, 1000)
+    }
+  },
 }
 </script>
 
@@ -203,5 +235,9 @@ export default {
     position: fixed;
     bottom: 3vh;
     right: 3vh;
+  }
+
+  #bottom {
+    height: 50px;
   }
 </style>

@@ -20,18 +20,38 @@ public class AccountServiceImpl implements AccountService {
 	public int insertAccount(Account account) {
 		return accountDao.insertAccount(account);
 	}
+	
+	@Override
+	public int changeStatus(String code) {
+		return accountDao.changeStatus(code);
+	}
 
 	@Override
 	public Account selectAccount(Account account) {
-		System.out.println("SERVICE : " + account.getEmail() + " " + account.getPassword());
+//		System.out.println("SERVICE : " + account.getEmail() + " " + account.getPassword());
 		return accountDao.selectAccount(account);
+	}
+	
+	@Override
+	public String findPassword(String email) {
+		return accountDao.findPassword(email);
 	}
 
 	@Override
 	public int duplicateCheck(Account account) {
 		return accountDao.duplicateCheck(account);
 	}
-
+	
+	@Override
+	public int changeCode(String email) {
+		return accountDao.changeCode(email);
+	}
+	
+	@Override
+	public String findCode(String email) {
+		return accountDao.findCode(email);
+	}
+	
 	@Override
 	public int changePassword(Account account) {
 		return accountDao.changePassword(account);
@@ -59,13 +79,13 @@ public class AccountServiceImpl implements AccountService {
 	
 	@Override
 	public int insertFollow(Follow follow) {
-		System.out.println("팔로우 상태 : "+follow.isStatus());
+//		System.out.println("팔로우 상태 : "+follow.isStatus());
 		return accountDao.insertFollow(follow);
 	}
 	
 	@Override
 	public int approveFollow(Follow follow) {
-		System.out.println("팔로우 상태 : "+follow.isStatus());
+//		System.out.println("팔로우 상태 : "+follow.isStatus());
 		return accountDao.approveFollow(follow);
 	}
 
@@ -115,5 +135,7 @@ public class AccountServiceImpl implements AccountService {
 	public List<Location> findAllLocation() {
 		return accountDao.findAllLocation();
 	}
+
+
 	
 }

@@ -3,7 +3,7 @@
 <mapper namespace="com.ssafy.jara.dao.TipDao">
 	
 	<!-- 팁 등록 -->
-	<insert id="insertTip">
+	<insert id="insertTip" useGeneratedKeys="true" keyProperty="id">
 		INSERT INTO tip (writer, title, contents, tag_id)
 		VALUES (#{writer}, #{title}, #{contents}, #{tag_id})
 	</insert>
@@ -79,6 +79,12 @@
 		VALUES (#{tip_id}, #{user_id})
 	</insert>
 	
+	<select id="selectTipLikeAccounts" resultType="java.lang.Integer">
+		SELECT user_id
+		FROM tip_like
+		WHERE tip_id=#{tip_id}
+	</select>
+	
 	<!-- 사용자의 해당 팁 좋아요 여부 확인 -->
 	<select id="selectTipLike" parameterType="java.util.HashMap" resultType="java.lang.Integer">
 		SELECT count(*)
@@ -99,5 +105,20 @@
 		FROM tip_like
 		WHERE tip_id=#{tip_id}
 	</delete>
+	
+	<!-- 팁 스크랩 등록 -->
+	<insert id="insertTipScrap">
+		INSERT INTO scrap
+		VALUES (#{tip_id}, #{user_id})
+	</insert>
+	
+	<!-- 사용자가 스크랩한 전체 팁 조회 -->
+	<select id="selectListTipScrap" resultType="com.ssafy.jara.dto.Tip">
+		SELECT *
+		FROM tip
+		WHERE id in (SELECT tip_id
+					 FROM scrap
+					 WHERE user_id=#{user_id})
+	</select>
 	
 </mapper>

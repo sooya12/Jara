@@ -8,6 +8,7 @@ public class EitherComment {
 	private int id;				// 투표 댓글 번호
 	private int either_id;		// 투표 번호
 	private int writer;			// 투표 댓글 작성자
+	private boolean choice;		// 댓글을 작성할 관련 선택지
 	private String contents;	// 투표 댓글 내용
 	
 	@JsonFormat(pattern="yyyy-MM-dd HH:mm", timezone = "Asia/Seoul")
@@ -15,15 +16,17 @@ public class EitherComment {
 	
 	@JsonFormat(pattern="yyyy-MM-dd HH:mm", timezone = "Asia/Seoul")
 	private Date updated_at;	// 투표 댓글 수정일
-	
+
 	public EitherComment() {
 		super();
 	}
-	public EitherComment(int id, int either_id, int writer, String contents, Date created_at, Date updated_at) {
+	public EitherComment(int id, int either_id, int writer, boolean choice, String contents, Date created_at,
+			Date updated_at) {
 		super();
 		this.id = id;
 		this.either_id = either_id;
 		this.writer = writer;
+		this.choice = choice;
 		this.contents = contents;
 		this.created_at = created_at;
 		this.updated_at = updated_at;
@@ -47,6 +50,12 @@ public class EitherComment {
 	public void setWriter(int writer) {
 		this.writer = writer;
 	}
+	public boolean isChoice() {
+		return choice;
+	}
+	public void setChoice(boolean choice) {
+		this.choice = choice;
+	}
 	public String getContents() {
 		return contents;
 	}
@@ -68,7 +77,7 @@ public class EitherComment {
 	
 	@Override
 	public String toString() {
-		return "EitherComment [id=" + id + ", either_id=" + either_id + ", writer=" + writer + ", contents=" + contents
-				+ ", created_at=" + created_at + ", updated_at=" + updated_at + "]";
+		return "EitherComment [id=" + id + ", either_id=" + either_id + ", writer=" + writer + ", choice=" + choice
+				+ ", contents=" + contents + ", created_at=" + created_at + ", updated_at=" + updated_at + "]";
 	}
 }

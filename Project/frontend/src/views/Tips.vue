@@ -9,17 +9,21 @@
           <v-text-field
             label="Search Tips..."
             v-model="search"
-            class="col-6"
+            class="col-12"
           >
           </v-text-field>
         </v-flex>
       </div>
       <div align="center" justify="center">
         <TipsItem
-          v-for="tip in tips"
-          :key="tip.id"
+          v-for="(tip, index) in calData"
+          :key="index"
           :tip="tip"
         />
+        <v-pagination
+          v-model="curPageNum"
+          :length="numOfPages">
+        </v-pagination>
       </div>
       <v-btn @click="write" style="position: fixed; bottom:3vh; right: 3vh" color="primary" fab small dark absolute bottom right>
         <v-icon>mdi-pencil</v-icon>
@@ -42,8 +46,7 @@ export default {
     return {
       tips: [],
       search: '',
-      searchTip: [],
-      tipPerPage: 2,
+      tipPerPage: 5,
       curPageNum: 1,
     }
   },
@@ -70,20 +73,19 @@ export default {
       return (this.startOffset + this.tipPerPage)
     },
     numOfPages() {
-      // return Math.ceil(this.tips.length / this.tipPerPage) // 여기 부분 살리기
-      return Math.ceil(15 / this.tipPerPage) // 나중에 지우기
+      return Math.ceil(this.tips.filter((tip) => {
+        return tip.title.toLowerCase().includes(this.search.toLowerCase())
+      }).slice(0).length / this.tipPerPage) // 여기 부분 살리기
     },
     calData() {
-      // this.searchTip = this.tips.filter((data) => {
-      //   return data.tag.toLowerCase().includes(this.search.toLowerCase())
-      // }).slice(0)
-      // return this.searchTip.slice(this.startOffset, this.endOffset)
-      return this.tips.slice(this.startOffset, this.endOffset)
+      return this.tips.filter((tip) => {
+        return tip.title.toLowerCase().includes(this.search.toLowerCase())
+      }).slice(this.startOffset, this.endOffset)
     },
     ...mapState([
       'api_server'
     ])
-  }
+  },
 }
 </script>
 

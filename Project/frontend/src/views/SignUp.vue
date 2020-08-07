@@ -227,6 +227,7 @@
               :disabled="!isValid"
               color="green darken-1 white--text"
               @click="signUp"
+              :loading="loading"
             >
               회원가입
             </v-btn>
@@ -365,6 +366,8 @@ export default {
       showPWD: false,
       showConfirmPWD: false,
       showCalendar: false,
+      loader: null,
+      loading: false,
       current: new Date().toISOString().substr(0, 10),
     }
   },
@@ -375,6 +378,7 @@ export default {
       this.isError = false
     },
     signUp() {
+      this.loader = 'loading'
       this.$vuetify.goTo(0)
       axios.post(`${this.$store.state.api_server}/accounts/signup`, this.signUpData)
         .then(() => {
@@ -389,7 +393,15 @@ export default {
     ...mapState([
       'api_server'
     ])
-  }
+  },
+  watch: {
+    loader() {
+      const l = this.loader
+      this[l] = !this[l]
+      setTimeout(() => (this[l] = false), 3000)
+      this.loader = null
+    }
+  },
 }
 </script>
 

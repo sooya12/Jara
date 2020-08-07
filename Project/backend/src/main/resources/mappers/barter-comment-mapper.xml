@@ -26,7 +26,7 @@
       SELECT *
       FROM item_comment
       WHERE item_id=#{item_id}
-      ORDER BY created_at;
+      ORDER BY created_at DESC;
    </select>
    
 </mapper>

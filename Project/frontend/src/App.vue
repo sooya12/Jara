@@ -40,7 +40,8 @@
       <v-btn @click="goToUser" icon v-if="isSearch"><v-icon>mdi-magnify</v-icon></v-btn>
       <v-menu offset-y :close-on-content-click="false">
         <template v-slot:activator="{ on, attrs }">
-          <v-btn 
+          <v-btn
+            @click="rq" 
             icon
             v-bind="attrs"
             v-on="on"
@@ -59,7 +60,7 @@
           background-color="lime"
           class="elevation-2"
           dark
-          :grow="grow"
+          grow
         >
           <v-tabs-slider></v-tabs-slider>
 
@@ -72,20 +73,34 @@
               flat
               tile
             >
-              <v-card-text>준비 중 입니다.</v-card-text>
+              <v-card-text v-for="(noti, idx) in requestData.notification" :key="idx">
+                <div v-if="Object.keys(noti).includes('like')"><v-icon color="red darken-1" class="mr-1">mdi-heart</v-icon>{{ users[noti.by] }}님이 회원님의 게시글을 좋아합니다.</div>
+                <div v-else><v-icon class="mr-1">mdi-chat-plus</v-icon>{{ users[noti.by] }}님이 회원님의 게시글에 댓글을 남겼습니다.</div> 
+                <v-divider class="mt-3"></v-divider>
+              </v-card-text>
             </v-card>
           </v-tab-item>
 
           <v-tab>요청</v-tab>
-          <v-tab-item><v-card><v-card-text>준비 중 입니다.</v-card-text></v-card></v-tab-item>
+          <v-tab-item>
+            <v-card>
+              <v-card-text v-for="(rq, idx) in requestData.request" :key="idx">
+                <div><v-icon class="mr-1">mdi-account-plus</v-icon>{{ users[rq.follower] }}님이 회원님을 팔로우하고 싶어합니다.</div>
+                <div class="mt-1 d-flex justify-end">
+                  <v-btn @click="follow(rq, idx)" color="blue darken-1" class="rounded-pill white--text font-weight-bold">수락<v-icon>mdi-account-check</v-icon></v-btn>
+                  <v-btn @click="unfollow(rq, idx)" color="grey" class="rounded-pill white--text font-weight-bold">거절<v-icon>mdi-account-remove</v-icon></v-btn>
+                </div>
+                <v-divider class="mt-3"></v-divider>
+              </v-card-text>
+            </v-card>
+          </v-tab-item>
         </v-tabs>
       </v-menu>
 
       </v-app-bar>
 
     <v-navigation-drawer
-      v-model="isDrawer"
-      absolute
+      :value="isDrawer"
       temporary
       app
     >
@@ -168,6 +183,8 @@
                     <div class="black--text font-weight-bold">신고할 유저의 닉네임</div>
                     <v-text-field
                       placeholder="닉네임을 입력해주세요."
+                      v-model="reportData.accused_nickname"
+                      :rules="[nickNameRules.required]"
                       outlined
                       color="green darken-2"
                       class="my-2"
@@ -175,6 +192,8 @@
                     <div class="black--text font-weight-bold">신고 사유</div>
                     <v-textarea
                       label="신고 사유를 입력해 주세요."
+                      v-model="reportData.contents"
+                      :rules="[contentsRules.required]"
                       color="green darken-1"
                       auto-grow
                       outlined
@@ -193,7 +212,7 @@
                   <v-btn
                     color="red darken-1"
                     text
-                    @click="dialog = false"
+                    @click="sendReport"
                     class="font-weight-bold"
                   >
                     신고
@@ -228,12 +247,16 @@
 
 <script>
 import { mapState, mapGetters, mapMutations, mapActions } from 'vuex'
+import axios from 'axios'
+import firebase from 'firebase'
+
 export default {
   name: 'App',
-  mounted() {
+  created() {
     this.$store.dispatch('getUsers')
     if (this.$route.path != "/") {this.$store.commit('SET_ENTRANCE', false)}
-    if (this.$store.state.authToken&&this.$store.state.userInfo == null) {this.$store.dispatch('getUser')}
+    if (this.$store.state.authToken&&this.$store.state.userInfo==null) {this.$store.dispatch('getUser')}
+    if (this.$store.state.authToken) {this.$store.commit('SET_ENTRANCE', false)}
   },
   computed: {
     ...mapState([
@@ -242,7 +265,13 @@ export default {
       'results',
       'authToken',
       'requested',
-      'dialog'
+      'dialog',
+      'api_server',
+      'reportData',
+      'nickNameRules',
+      'contentsRules',
+      'entrance',
+      'requestData'
     ]),
     ...mapGetters([
       'isLoggedIn',
@@ -254,6 +283,13 @@ export default {
     ]),
   },
   methods: {
+    rq() {
+      this.$store.commit('SET_ALARM', false)
+    },
+    ...mapMutations([
+      'SET_ALARM',
+      'SET_CHECK'
+    ]),
     ...mapActions([
       'signIn',
       'signOut',
@@ -268,9 +304,12 @@ export default {
       'goToTips',
       'goToProfile',
       'report',
+      'sendReport'
     ]),
     ...mapMutations([
       'SET_ENTRANCE',
+      'SET_DIALOG',
+      'SET_DEQUEST'
     ]),
     querySelections(v) {
       this.items = this.$store.state.results.filter(e => {
@@ -285,24 +324,31 @@ export default {
         this.$router.push(`/accounts/${this.searchWord}`)
         this.searchWord = null
       }
+    },
+    unfollow(rq, idx) {
+      axios.delete(`${this.$store.state.api_server}/accounts/follow`, { 'follower' : rq.by, 'following': this.$store.state.userInfo.id })
+        .then(() => {
+          this.$store.state.requestData.request.splice(idx, 1)
+          firebase.database().ref(`following/${this.$store.state.userInfo.id}/${rq.key}`).remove()
+        })
+    },
+    follow(rq, idx) {
+      const followData = {
+        follower : rq.follower,
+        following : this.$store.state.userInfo.id
+      }
+      axios.put(`${this.$store.state.api_server}/accounts/follow`, followData)
+        .then(() => {
+          alert('요청이 성공적으로 승인되었습니다.')
+          this.$store.commit('SET_DEQUEST', idx)
+          firebase.database().ref(`following/${this.$store.state.userInfo.id}/${rq.key}`).remove()
+        })
     }
   },
   data() {
     return {
       searched: null,
       searchWord: null,
-      dialog: false,
-      nickNameRules: {
-        required: value => value.trim().length > 0 || '닉네임을 입력해주세요.',
-      },
-      contentsRules : {
-        required: v => v.trim().length > 0 || '허위 신고는 제재당할 수 있습니다.'
-      },
-      reportData: {
-        nickname: '',
-        contents: '',
-        writer: this.$store.state.userInfo.id
-      },
     }
   },
   watch: {

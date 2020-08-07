@@ -23,6 +23,10 @@
 ## :floppy_disk: Install
 
 ```bash
+$ npm install --save vue-check-view
+```
+
+```bash
 $ yarn add vuex
 ```
 
@@ -37,6 +41,10 @@ $ vue add vue-router vuetify vue-cookies
 
 
 ### :cloud: i3a308.p.ssafy.io
+
+> ID : ssafy@ssafy.com
+>
+> PW : 12341234
 
 
 
@@ -204,16 +212,16 @@ $ git commit -m "| header | 설명"
 
 ## :computer: 프로젝트 배포
 
-#### Backend 배포 - Spring (STS)
+#### :cd: Nginx 설치 및 환경 설정 (이미 설치된 상태라면 생략)
 
-- AWS에 NGINX 설치 (이미 설치된 상태라면 생략)
+- AWS에 Nginx 설치
 ```
-sudo apt-get update				// 설치된 패키지들의 새로운 버전이 있는지 확인
-sudo apt-get upgrade			// apt-get udpate를 통해 최신 버전이 확인된 패키지들의 버전을 업그레이드
+sudo apt-get update             // 설치된 패키지들의 새로운 버전이 있는지 확인
+sudo apt-get upgrade            // apt-get udpate를 통해 최신 버전이 확인된 패키지들의 버전을 업그레이드
 sudo apt-get install nginx
 ```
 
-- AWS에서 NGINX 환경설정 (이미 설정한 상태라면 생략)
+- AWS에서 Nginx 환경설정
 ```
 // conf 파일 설정
 cd /etc/nginx/sites-available
@@ -229,9 +237,9 @@ server {
         # Frontend 설정
         root /var/www/html/dist;        # Front 빌드 파일 위치
 
-        index index.html index.htm;		# index 파일명
+        index index.html index.htm;     # index 파일명
 
-        server_name _;					# 서버 도메인
+        server_name _;                  # 서버 도메인
 
         location / {
                 try_files $uri $uri/ /index.html;
@@ -252,14 +260,46 @@ server {
 }
 ```
 
-- AWS에서 환경 설정 후 NGINX 시작 (이미 실행해둔 상태라면 생략)
+- AWS에서 환경 설정 후 Nginx 시작
 ```
 sudo service nginx start
-```
-또는
-```
+// 또는
 sudo systemctl start nginx
 ```
+
+
+- Nginx 사용 명령어
+```
+// 시작
+sudo service nginx start
+sudo systemctl start nginx
+sudo /etc/init.d/nginx start
+
+// 재시작
+sudo service nginx restart
+sudo systemctl restart nginx
+sudo /etc/init.d/nginx restart
+
+// 중지
+sudo service nginx stop
+sudo systemctl stop nginx
+sudo /etc/init.d/nginx stop
+
+// 상태
+sudo service nginx status
+sudo systemctl status nginx
+
+// 설정 reload
+sudo service nginx reload
+sudo systemctl reload nginx
+sudo nginx -s reload
+
+// configuration file syntax check
+sudo nginx -t
+```
+
+
+#### :cd: Backend 배포 - Spring (STS)
 
 - 로컬에서 `pom.xml`에 플러그인 추가 (이미 추가한 상태라면 생략)
 ```
@@ -281,44 +321,47 @@ sudo systemctl start nginx
 
 - 로컬에서 빌드
   - `프로젝트 오른쪽 버튼 클릭` → `Run as` → `Maven Build` → `Goals: assembly:assembly`
+  - 또는 `프로젝트 오른쪽 버튼 클릭` → `Run as` → `Maven Build` → `Goals: package`
+    - (assembly:assembly와 package의 차이는 좀 더 알아 봐야함.)
 
-- 로컬에서 .jar 파일 확인
-  - `s03p12a308\Project\backend\target` 폴더에 `JARA-0.0.1-SNAPSHOT.jar` 파일이 생성됐는지 확인
+- 로컬에서 target 폴더 확인
+  - `target` 폴더가 생성됐는지 확인
 
-- 로컬에 있는 .jar 파일을 push
-  - 빌드 파일이 .gitignore에 등록돼있기 때문에 `git add`를 할 때,  `git add -f [파일명]` 으로 target 폴더를 강제로 추가한 후에 커밋과 푸시를 해줘야함.
-
-- AWS에서 git clone 또는 git pull
-  - 경로 : /jara/s03p12a308
+- AWS에서 실행 중인 기존 Spring Boot 백그라운드 jar 중지 (이미 실행 중이 아니면 생략)
 ```
-// clone
-sudo git clone https://lab.ssafy.com/s03-webmobile2-sub2/s03p12a308.git
-// pull
-sudo git pull origin develop
+ps -ef | grep jar   // PID 확인
+                    // 이런식으로 나옴 ==>  root     16404 12253  0 20:01 pts/1    00:00:00 sudo nohup java -jar JARA-0.0.1-
+sudo kill [pid]	    // PID에 해당하는 프로세스 종료
+                    // ex) sudo kill 16404
+```
+
+- 로컬에서 target 폴더를 AWS로 전송
+    - `scp -i "[pem file]" -r "~~~\target" ubuntu@i3a308.p.ssafy.io:~/target`
+```
+#파일 전송시
+scp -i [pem file] [upload file] [user id]@[ec2 public IP]:~/[transfer address]
+#예시
+scp -i Desktop/amazon/juhyung.pem Desktop/pant.py ubuntu@~~~~:~/
+#폴더 전송시
+scp -i [pem file] -r [upload folder] [user id]@[ec2 public IP]:~/[transfer address]
+#예시
+scp -i Desktop/amazon/juhyung.pem -r Desktop/example ubuntu@~~~~:~/
 ```
 
 - AWS에서 .jar 파일이 있는 디렉토리로 이동
-    - `/JARA/s03p12a308/Project/backend/target`
+    - `cd ~/target`
 
 - AWS에서 .jar 파일 실행
 ```
-// 이렇게 배포하면 터미널을 종료했을 때 프로그램 역시 종료된다.
-sudo java -jar JARA-0.0.1-SNAPSHOT.jar
+sudo java -jar JARA-0.0.1-SNAPSHOT.jar  // 이렇게 배포하면 터미널을 종료했을 때 프로그램 역시 종료된다.
 ```
 ```
-// 이렇게 nohup 커맨드를 사용하면 ssh 접속이 끊긴 이후에도 백그라운드에서 jar가 계속 돌아간다.
-sudo nohup java -jar JARA-0.0.1-SNAPSHOT.jar &
+sudo nohup java -jar JARA-0.0.1-SNAPSHOT.jar &  // 이렇게 nohup 커맨드를 사용하면 ssh 접속이 끊긴 이후에도 백그라운드에서 jar가 계속 돌아간다.
 ```
 
-- AWS에 jdk (1.8) 설치 (.jar 파일을 실행할 때 java 명령어가 실행되지 않을 경우에 설치)
+- (참고) AWS에 jdk (1.8) 설치 (.jar 파일을 실행할 때 java 명령어가 실행되지 않을 경우에 설치)
 ```
 sudo apt-get install openjdk-8-jdk
-```
-
-- (참고) Spring Boot 백그라운드 jar 중지
-```
-ps -ef | grep jar	// PID 확인
-sudo kill [pid]		// PID에 해당하는 프로세스 종료
 ```
 
 - (참고) nginx 재부팅
@@ -332,8 +375,7 @@ sudo reboot
 ```
 
 
-
-#### Frontend 배포 - Vue.js (VS Code)
+#### :cd: Frontend 배포 - Vue.js (VS Code)
 
 - AWS 서버 접속
 ```
@@ -345,23 +387,22 @@ ssh -i [pem 파일] ubuntu@i3a308.p.ssafy.io
 npm run build
 ```
 
-- 로컬에서 dist 디렉토리 확인
-  - 빌드 후에 dist 디렉토리가 생겼는지 확인
+- 로컬에서 빌드 후에 생긴 dist 폴더 확인
 
-- 로컬의 dist 폴더를 github에 push
-  - 빌드 파일이 .gitignore에 등록돼있기 때문에 `git add`를 할 때,  `git add -f [파일명]` 으로 강제로 등록해서 푸쉬해줘야함.
-
-- AWS에서 git clone 또는 git pull
-  - 경로 : /jara/s03p12a308
+- 로컬에서 dist 폴더를 AWS로 전송
+    - `scp -i "[pem file]" -r "~~~\dist" ubuntu@i3a308.p.ssafy.io:~/dist`
 ```
-// clone
-sudo git clone https://lab.ssafy.com/s03-webmobile2-sub2/s03p12a308.git
-
-// pull
-sudo git pull origin develop
+#파일 전송시
+scp -i [pem file] [upload file] [user id]@[ec2 public IP]:~/[transfer address]
+#예시
+scp -i Desktop/amazon/juhyung.pem Desktop/pant.py ubuntu@~~~~:~/
+#폴더 전송시
+scp -i [pem file] -r [upload folder] [user id]@[ec2 public IP]:~/[transfer address]
+#예시
+scp -i Desktop/amazon/juhyung.pem -r Desktop/example ubuntu@~~~~:~/
 ```
 
-- AWS에서 pull해서 받아온 빌드 파일을 기존에 환경설정 해두었던 디렉토리(/var/www/html/dist)로 복사
+- AWS에서 dist 폴더를 `/var/www/html/dist`로 옮기기
 ```
-sudo cp -r /jara/s03p12a308/Project/frontend/dist /var/www/html/dist
+sudo mv ~/dist /var/www/html/dist
 ```

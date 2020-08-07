@@ -9,11 +9,11 @@ public interface ArticleService {
 
 	public int insertArticle(Article article);
 	
-	public List<Article> selectListTotalArticle();
-	
 	public List<Article> selectListMyArticle(int writer);
 	
 	public List<Article> selectListArticle(int user_id);
+	
+	public List<Article> selectRangeListArticle(HashMap<String, Integer> hashMap);
 	
 	public Article selectArticle(int id);
 	

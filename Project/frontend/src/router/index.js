@@ -6,6 +6,7 @@ import NewArticle from '../components/Articles/NewArticle.vue'
 import ArticleDetail from '../components/Articles/ArticleDetail.vue'
 import SignIn from '../views/SignIn.vue'
 import SignUp from '../views/SignUp.vue'
+import SignUpCertification from '../components/Accounts/SignUpCertification.vue'
 import Profile from '../components/Accounts/Profile.vue'
 import User from '../components/Accounts/User.vue'
 import ChangeUserInfo from '../components/Accounts/ChangeUserInfo.vue'
@@ -14,6 +15,8 @@ import ChangePWD from '../components/Accounts/ChangePWD.vue'
 import Barters from '../views/Barters.vue'
 import Checks from '../views/Checks.vue'
 import Eithers from '../views/Eithers.vue'
+import NewEither from '../components/Eithers/NewEither.vue'
+import EitherDetail from '../components/Eithers/EitherDetail.vue'
 import Tips from '../views/Tips.vue'
 import TipsItemDetail from '../components/Tips/TipsItemDetail.vue'
 import NewTip from '../components/Tips/NewTip.vue'
@@ -92,14 +95,24 @@ Vue.use(VueRouter)
     component: ValidateEmail
   },
   {
-    path: '/accounts/pwd',
+    path: '/accounts/setnewpwd',
     name: 'ChangePWD',
-    component: ChangePWD
+    component: ChangePWD,
   },
   {
     path: '/accounts/user',
     name: 'Profile',
-    component: Profile
+    component: Profile,
+    beforeEnter(to, from, next) {
+      if (Vue.$cookies.isKey('auth-token')) {
+        next()
+      } else { next({name: 'SignIn' }) }
+    }
+  },
+  {
+    path: '/accounts/certification',
+    name: 'SignUpCertification',
+    component: SignUpCertification
   },
   {
     path: '/accounts/:user_id',
@@ -152,6 +165,26 @@ Vue.use(VueRouter)
     }
   },
   {
+    path: '/eithers/new',
+    name: 'NewEither',
+    component: NewEither,
+    beforeEnter(to, from, next) {
+      if (Vue.$cookies.isKey('auth-token')) {
+        next()
+      } else { next({name: 'SignIn' }) }
+    }
+  },
+  {
+    path: '/eithers/:either_id',
+    name: 'EitherDetail',
+    component: EitherDetail,
+    beforeEnter(to, from, next) {
+      if (Vue.$cookies.isKey('auth-token')) {
+        next()
+      } else { next({name: 'SignIn' }) }
+    }
+  },
+  {
     path: '/tips',
     name: 'Tips',
     component: Tips,
@@ -172,6 +205,16 @@ Vue.use(VueRouter)
     }
   },
   {
+    path: '/tips/update',
+    name: 'UpdateTip',
+    component: NewTip,
+    beforeEnter(to, from, next) {
+      if (Vue.$cookies.isKey('auth-token')) {
+        next()
+      } else { next({ name: 'SignIn' }) }
+    }
+  },
+  {
     path: '/tips/:tip_id',
     name: 'TipsItemDetail',
     component: TipsItemDetail,
@@ -181,8 +224,7 @@ Vue.use(VueRouter)
         next()
       } else { next({name: 'SignIn' }) }
     }
-  },
-
+  }
 ]
 
 const router = new VueRouter({

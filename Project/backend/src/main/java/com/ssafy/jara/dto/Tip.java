@@ -1,28 +1,34 @@
 package com.ssafy.jara.dto;
 
 import java.util.Date;
+import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 
 public class Tip {
 
-	private int id;				// 번호	tip pk
-	private int writer;			// 작성자	account fk
-	private String title;		// 제목
-	private String contents;	// 내용
-	private int tag_id;			// 태그	tag fk
+	private int id;						// 번호	tip pk
+	private int writer;					// 작성자	account fk
+	private String title;				// 제목
+	private String contents;			// 내용
+	private int tag_id;					// 태그	tag fk
 	
 	@JsonFormat(pattern="yyyy-MM-dd HH:mm", timezone = "Asia/Seoul")
-	private Date created_at;	// 작성일
+	private Date created_at;			// 작성일
 	
 	@JsonFormat(pattern="yyyy-MM-dd HH:mm", timezone = "Asia/Seoul")
-	private Date updated_at;	// 수정일
-	private int hits;			// 조회수
-	private int likes;			// 좋아요 수 
+	private Date updated_at;			// 수정일
+	private int hits;					// 조회수
+	private int likes;					// 좋아요 수 
+	
+	private List<TipComment> comments;	// 댓글 목록
+	private List<Integer> likeAccounts;	// 좋아요 사용자 목록
+	
+	private String stored_file_name;	// 저장된 이미지 파일 이름
 	
 	public Tip() {} 
 	
-	public Tip(int id, int writer, String title, String contents, int tag_id, Date created_at, Date updated_at, int hits, int likes) {
+	public Tip(int id, int writer, String title, String contents, int tag_id, Date created_at, Date updated_at, int hits, int likes, String stored_file_name) {
 		super();
 		this.id = id;
 		this.writer = writer;
@@ -33,6 +39,7 @@ public class Tip {
 		this.updated_at = updated_at;
 		this.hits = hits;
 		this.likes = likes;
+		this.stored_file_name = stored_file_name;
 	}
 
 	public int getId() {
@@ -106,11 +113,37 @@ public class Tip {
 	public void setLikes(int likes) {
 		this.likes = likes;
 	}
+	
+	public List<TipComment> getComments() {
+		return comments;
+	}
+
+	public void setComments(List<TipComment> comments) {
+		this.comments = comments;
+	}
+
+	public List<Integer> getLikeAccounts() {
+		return likeAccounts;
+	}
+
+	public void setLikeAccounts(List<Integer> likeAccounts) {
+		this.likeAccounts = likeAccounts;
+	}
+	
+	public String getStored_file_name() {
+		return stored_file_name;
+	}
+
+	public void setStored_file_name(String stored_file_name) {
+		this.stored_file_name = stored_file_name;
+	}
 
 	@Override
 	public String toString() {
 		return "Tip [id=" + id + ", writer=" + writer + ", title=" + title + ", contents=" + contents + ", tag_id="
-				+ tag_id + ", created_at=" + created_at + ", updated_at=" + updated_at + ", hits=" + hits + ", likes=" + likes + "]";
+				+ tag_id + ", created_at=" + created_at + ", updated_at=" + updated_at + ", hits=" + hits + ", likes="
+				+ likes + ", comments=" + comments + ", likeAccounts=" + likeAccounts + ", stored_file_name="
+				+ stored_file_name + "]";
 	}
 	
 }

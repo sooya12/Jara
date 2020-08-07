@@ -9,4 +9,5 @@ public interface EitherCommentService {
 	public int updateEitherComment(EitherComment eitherComment);
 	public int deleteEitherComment(int id);
 	public List<EitherComment> selectListEitherComment(int either_id);
+	public EitherComment selectEitherComment(int id);
 }

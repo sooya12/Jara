@@ -58,12 +58,21 @@
       </div>
     </div>
     <div>
-    <div class="ml-3">{{ user.bio }}</div>
+      <div class="ml-2">
+        <v-icon v-if="user.sex" color="red darken-1">mdi-human-female</v-icon>
+        <v-icon v-else color="blue darken-1">mdi-human-male</v-icon>
+        {{ user.bio }}
+      </div>
     </div>
     <div class="text-right">
       <v-btn text @click="updateUserInfo"><v-icon>mdi-account-edit-outline</v-icon>회원정보 수정</v-btn>
     </div>
-    <v-divider class="mt-5"></v-divider>
+    <v-divider class="my-5"></v-divider>
+    <div class="d-flex justify-space-around align-center">
+      <v-btn text class="font-weight-bold">게시글<v-icon class="ml-1" color="green lighten-1">mdi-pencil-box</v-icon></v-btn>
+      |
+      <v-btn text class="font-weight-bold">저장<v-icon class="ml-1" color="teal">mdi-bookmark</v-icon></v-btn>
+    </div>
   </v-container>
 </template>
 
