@@ -3,6 +3,21 @@ import App from './App.vue'
 import store from './store'
 import router from './router'
 import vuetify from './plugins/vuetify'
+import firebase from 'firebase'
+
+const key = process.env.VUE_APP_FIREBASE_API_KEY
+var firebaseConfig = {
+  apiKey: key,
+  authDomain: "jara-8c5be.firebaseapp.com",
+  databaseURL: "https://jara-8c5be.firebaseio.com",
+  projectId: "jara-8c5be",
+  storageBucket: "jara-8c5be.appspot.com",
+  messagingSenderId: "1095649112608",
+  appId: "1:1095649112608:web:99ac22452926e6b3cb0245",
+  measurementId: "G-FLRRCJDJCF"
+ }
+firebase.initializeApp(firebaseConfig)
+var database = firebase.database()
 
 Vue.config.productionTip = false
 
@@ -34,5 +49,6 @@ new Vue({
   store,
   router,
   vuetify,
+  database,
   render: h => h(App)
 }).$mount('#app')
