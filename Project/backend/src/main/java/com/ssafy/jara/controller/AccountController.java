@@ -91,8 +91,8 @@ public class AccountController extends HttpServlet {
 
 		if (accountService.duplicateCheck(account) < 1) {
 			// 비밀번호 암호화
-			String hashPassword = BCrypt.hashpw(account.getPassword(), BCrypt.gensalt());
-			account.setPassword(hashPassword);
+//			String hashPassword = BCrypt.hashpw(account.getPassword(), BCrypt.gensalt());
+//			account.setPassword(hashPassword);
 			
 //			System.out.println("hashPassword : "+hashPassword);
 
@@ -128,8 +128,8 @@ public class AccountController extends HttpServlet {
 //								"style='border: none;color: white;padding: 15px 32px;text-align: center;text-decoration: none; display: inline-block;font-size: 16px;margin: 4px 2px;cursor: pointer;background-color:#388E3C;'>인증하러가기</button></center>").toString());
 
 						
-						 .append("<a href='http://localhost:3030/accounts/certification'>이메일 인증하기</a></center>").toString());
-//						.append("<a href='http://i3a308.p.ssafy.io/accounts/certification'>이메일 인증하기</a>").toString());
+//						 .append("<a href='http://localhost:3030/accounts/certification'>이메일 인증하기</a></center>").toString());
+						.append("<a href='http://i3a308.p.ssafy.io/accounts/certification'>이메일 인증하기</a>").toString());
 
 				sendMail.setFrom("jaraauth@gmail.com", "JARA");
 				sendMail.setTo(account.getEmail());
@@ -176,11 +176,14 @@ public class AccountController extends HttpServlet {
 	@PostMapping("signin")
 	private ResponseEntity<Account> loginAccount(@RequestBody Account account, HttpServletResponse response) {
 		
-		Account findAccount =null;
+		// 비밀번호와 비교
+//		Account findAccount =null;
+//		
+//		if(BCrypt.checkpw(account.getPassword(),accountService.findPassword(account.getEmail()))) { // 기존 비밀번호와 같음
+//			findAccount = accountService.selectAccount(account); // 로그인
+//		}
 		
-		if(BCrypt.checkpw(account.getPassword(),accountService.findPassword(account.getEmail()))) { // 기존 비밀번호와 같음
-			findAccount = accountService.selectAccount(account); // 로그인
-		}
+		Account findAccount= accountService.selectAccount(account); // 로그인
 		
 		System.out.println("findAccount=" + findAccount);
 		if (findAccount != null) {
@@ -212,8 +215,8 @@ public class AccountController extends HttpServlet {
 //						"style='border: none;color: white;padding: 15px 32px;text-align: center;text-decoration: none; display: inline-block;font-size: 16px;margin: 4px 2px;cursor: pointer;background-color:#388E3C;'>인증하러가기</button></center>").toString());
 
 				
-				 .append("<a href='http://localhost:3030/accounts/certification'>이메일 인증하기</a></center>").toString());			
-//				.append("<a href='http://i3a308.p.ssafy.io/accounts/setnewpw'>비밀번호 변경하기</a>").toString());
+//				 .append("<a href='http://localhost:3030/accounts/certification'>이메일 인증하기</a></center>").toString());			
+				.append("<a href='http://i3a308.p.ssafy.io/accounts/setnewpw'>비밀번호 변경하기</a>").toString());
 
 
 		sendMail.setFrom("jaraauth@gmail.com", "JARA");
@@ -227,8 +230,8 @@ public class AccountController extends HttpServlet {
 	private ResponseEntity<String> setNewPassword(@RequestBody Account account) {
 		
 		// 비밀번호 암호화
-		String hashPassword = BCrypt.hashpw(account.getPassword(), BCrypt.gensalt());
-		account.setPassword(hashPassword);
+//		String hashPassword = BCrypt.hashpw(account.getPassword(), BCrypt.gensalt());
+//		account.setPassword(hashPassword);
 		
 		if (accountService.changePassword(account) > 0) {
 			return new ResponseEntity<String>("success", HttpStatus.OK);
