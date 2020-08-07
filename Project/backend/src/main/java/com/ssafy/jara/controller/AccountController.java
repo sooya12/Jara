@@ -128,8 +128,8 @@ public class AccountController extends HttpServlet {
 //								"style='border: none;color: white;padding: 15px 32px;text-align: center;text-decoration: none; display: inline-block;font-size: 16px;margin: 4px 2px;cursor: pointer;background-color:#388E3C;'>인증하러가기</button></center>").toString());
 
 						
-						 .append("<a href='http://localhost:3030/accounts/certification'>이메일 인증하기</a></center>").toString());
-//						.append("<a href='http://i3a308.p.ssafy.io/accounts/certification'>이메일 인증하기</a>").toString());
+//						 .append("<a href='http://localhost:3030/accounts/certification'>이메일 인증하기</a></center>").toString());
+						.append("<a href='http://i3a308.p.ssafy.io/accounts/certification'>이메일 인증하기</a>").toString());
 
 				sendMail.setFrom("jaraauth@gmail.com", "JARA");
 				sendMail.setTo(account.getEmail());
@@ -215,8 +215,8 @@ public class AccountController extends HttpServlet {
 //						"style='border: none;color: white;padding: 15px 32px;text-align: center;text-decoration: none; display: inline-block;font-size: 16px;margin: 4px 2px;cursor: pointer;background-color:#388E3C;'>인증하러가기</button></center>").toString());
 
 				
-				 .append("<a href='http://localhost:3030/accounts/certification'>이메일 인증하기</a></center>").toString());			
-//				.append("<a href='http://i3a308.p.ssafy.io/accounts/setnewpw'>비밀번호 변경하기</a>").toString());
+//				 .append("<a href='http://localhost:3030/accounts/certification'>이메일 인증하기</a></center>").toString());			
+				.append("<a href='http://i3a308.p.ssafy.io/accounts/setnewpw'>비밀번호 변경하기</a>").toString());
 
 
 		sendMail.setFrom("jaraauth@gmail.com", "JARA");
