@@ -23,10 +23,6 @@
 ## :floppy_disk: Install
 
 ```bash
-$ npm install --save vue-check-view
-```
-
-```bash
 $ yarn add vuex
 ```
 
