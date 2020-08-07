@@ -91,8 +91,8 @@ public class AccountController extends HttpServlet {
 
 		if (accountService.duplicateCheck(account) < 1) {
 			// 비밀번호 암호화
-			String hashPassword = BCrypt.hashpw(account.getPassword(), BCrypt.gensalt());
-			account.setPassword(hashPassword);
+//			String hashPassword = BCrypt.hashpw(account.getPassword(), BCrypt.gensalt());
+//			account.setPassword(hashPassword);
 			
 //			System.out.println("hashPassword : "+hashPassword);
 
@@ -176,11 +176,14 @@ public class AccountController extends HttpServlet {
 	@PostMapping("signin")
 	private ResponseEntity<Account> loginAccount(@RequestBody Account account, HttpServletResponse response) {
 		
-		Account findAccount =null;
+		// 비밀번호와 비교
+//		Account findAccount =null;
+//		
+//		if(BCrypt.checkpw(account.getPassword(),accountService.findPassword(account.getEmail()))) { // 기존 비밀번호와 같음
+//			findAccount = accountService.selectAccount(account); // 로그인
+//		}
 		
-		if(BCrypt.checkpw(account.getPassword(),accountService.findPassword(account.getEmail()))) { // 기존 비밀번호와 같음
-			findAccount = accountService.selectAccount(account); // 로그인
-		}
+		Account findAccount= accountService.selectAccount(account); // 로그인
 		
 		System.out.println("findAccount=" + findAccount);
 		if (findAccount != null) {
@@ -227,8 +230,8 @@ public class AccountController extends HttpServlet {
 	private ResponseEntity<String> setNewPassword(@RequestBody Account account) {
 		
 		// 비밀번호 암호화
-		String hashPassword = BCrypt.hashpw(account.getPassword(), BCrypt.gensalt());
-		account.setPassword(hashPassword);
+//		String hashPassword = BCrypt.hashpw(account.getPassword(), BCrypt.gensalt());
+//		account.setPassword(hashPassword);
 		
 		if (accountService.changePassword(account) > 0) {
 			return new ResponseEntity<String>("success", HttpStatus.OK);
