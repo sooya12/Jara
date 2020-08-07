@@ -27,6 +27,10 @@ $ yarn add vuex
 ```
 
 ```bash
+$ npm install vue-check-view firebase
+```
+
+```bash
 $ vue add vue-router vuetify vue-cookies
 ```
 
@@ -143,8 +147,6 @@ $ mvn spring-boot : run
 
 -----
 
-> 서비스 준비중
-
 #### [Eithers : 투표 기능]
 
 - Post
@@ -189,13 +191,13 @@ $ git commit -m "| header | 설명"
 
 
 
-### :100: 명세 요건 진척률 : %
+### :100: 명세 요건 진척률 : 64%
 
 
 
 ### :sweat_smile: 어려웠던 점​
 
-:ballot_box_with_check: 
+:ballot_box_with_check: 암호화
 
 
 
