@@ -41,6 +41,8 @@ public class JsonFilter extends OncePerRequestFilter {
 			try {
 				InputStream is = request.getInputStream();
 				
+				System.out.println("============ is : " + is);
+				
 				if(is != null) {
 					StringBuffer sb = new StringBuffer();
 					
@@ -53,9 +55,16 @@ public class JsonFilter extends OncePerRequestFilter {
 						sb.append((char) data);
 					}
 					
+					System.out.println("============ sb : " + sb.toString());
+					
 					String result = doWork(sb.toString());
 					
+					System.out.println("============ result : " + result);
+					
 					body = result.getBytes(StandardCharsets.UTF_8);
+					
+					System.out.println("============ body : " + body);
+					
 				}
 			} catch (Exception e) {
 				e.printStackTrace();
@@ -93,11 +102,14 @@ public class JsonFilter extends OncePerRequestFilter {
 			for (int i = 0; i < checkList.size(); i++) {
 				String s = checkList.get(i);
 				
+				System.out.println("============ s : " + s);
+				
 				if(input.indexOf(s) >= 0) {
 					input = input.replaceAll(s, StringEscapeUtils.escapeHtml4(s));
-				}
+				} 
 			}
 			
+			System.out.println("============ input : " + input);
 			
 			return input;
 
