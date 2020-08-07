@@ -19,7 +19,7 @@
         :disabled="!isValid"
         color="green darken-1 white--text"
         @click="validate"
-      >변경</v-btn>
+      >인증</v-btn>
     </div>
   </v-container>
 </template>

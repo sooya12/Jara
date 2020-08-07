@@ -84,6 +84,7 @@
 <script>
 import { mapState, mapGetters } from 'vuex'
 import axios from 'axios'
+import firebase from 'firebase'
 
 export default {
   name: 'Home',
@@ -173,6 +174,11 @@ export default {
       this.$router.push('/main/new')
     },
     like(val) {
+      const update = {}
+      update['like'] = 1
+      update['by'] = this.$store.state.userInfo.id
+      const key = firebase.database().ref(`liked/${val.writer}`).push(update).key
+      firebase.database().ref(`liked/${val.writer}/${key}`).update({'key': key})
       axios.post(`${this.$store.state.api_server}/articles/${val.id}/like`, '' , { params: { user_id : this.$store.state.userInfo.id}})
         .then(() => {
           val.likeAccounts.push(this.$store.state.userInfo.id)

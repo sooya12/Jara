@@ -72,6 +72,7 @@
 import { mapState } from 'vuex'
 import ArticleComment from '../Articles/ArticleComment.vue'
 import axios from 'axios'
+import firebase from 'firebase'
 
 
 export default {
@@ -122,6 +123,11 @@ export default {
       } else { alert('작성자만 사용할 수 있어요.') }
     },
     like() {
+      const key = firebase.database().ref(`liked/${this.article.writer}`).push().key
+      const update = {}
+      update['key'] = key
+      update['by'] = this.$store.state.userInfo.id
+      firebase.database().ref(`liked/${this.article.writer}`).push(update)
       axios.post(`${this.$store.state.api_server}/articles/${this.article.id}/like`, '' ,{ params: { user_id : this.$store.state.userInfo.id }})
         .then(() => {
           this.article.likeAccounts.push(this.$store.state.userInfo.id)
@@ -136,6 +142,10 @@ export default {
         })
     },
     addComment() {
+      const update = {}
+      update['by'] = this.$store.state.userInfo.id
+      const key = firebase.database().ref(`comment/${this.article.writer}`).push(update).key
+      firebase.database().ref(`comment/${this.article.writer}/${key}`).update({'key': key})
       axios.post(`${this.$store.state.api_server}/articles/${this.article.id}/comments`, this.commentData)
         .then(res => {
           this.comments.unshift(res.data)
@@ -168,7 +178,9 @@ export default {
     },
     updateComment() {
       axios.put(`${this.$store.state.api_server}/articles/${this.article.id}/comments/${this.commentData.id}`, this.commentData)
-        .then(() => {
+        .then(res => {
+          const idx = this.comments.findIndex(x => x.id === this.commentData.id)
+          this.comments[idx].updated_at = res.data
           this.isUpdate = false
           this.commentData = {
             contents: '',

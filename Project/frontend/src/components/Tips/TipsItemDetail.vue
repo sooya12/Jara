@@ -23,7 +23,9 @@
                       <img :src="require('../../../src/assets/Totodile.jpg')" alt="avatar">
                       </v-list-item-avatar>
                       <v-list-item-content>
-                        <v-list-item-title>{{userInfo.nickname}}<span>({{ tip.writer }})</span></v-list-item-title>
+                        <v-list-item-title>{{users[tip.writer]}}
+                          <!-- <span>({{ tip.writer }})</span> -->
+                        </v-list-item-title>
                         <v-list-item-title>{{tip.created_at | filterCreated }}</v-list-item-title>
                         <!-- <v-list-item-sub-title>{{tip.created_at | filterCreated}} · {{category}}</v-list-item-sub-title> -->
                       </v-list-item-content>
@@ -41,7 +43,7 @@
                     <v-btn @click="like" icon><v-icon color="red darken-1">mdi-heart</v-icon></v-btn>{{ userInfo.nickname }}님 외 {{ tip.likeAccounts.length - 1 }} 명이 글을 좋아합니다.
                   </div>
                   <div>
-                    · 댓글 1명
+                    · 댓글 {{ tip.comments.length }}명
                   </div>
                 </v-flex>
               </v-layout>
@@ -51,7 +53,7 @@
               </v-card-text>
               <v-card-text>
                 <template>
-                  <v-chip href='javascript:false' class='tag'>#{{ tip.tag_id }}</v-chip>
+                  <v-chip href='javascript:false' class='tag'>#{{ tag[tip.tag_id] }}</v-chip>
                 </template>
               </v-card-text>
             </v-card>
@@ -116,7 +118,8 @@ export default {
         writer: this.$store.state.userInfo.id,
         tip_id: this.$route.params.tip_id
       },
-      isTaken : false
+      isTaken : false,
+      tag: {1:'요리',2:'세탁',3:'청소',4:'보관'}
     }
   },
   // 아직 등록자와 작성자가 같은지 확인은 안함...
