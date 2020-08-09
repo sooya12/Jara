@@ -36,6 +36,8 @@
 import axios from 'axios'
 import TipsItem from '../components/Tips/TipsItem.vue'
 import { mapState } from 'vuex'
+import _ from 'lodash'
+
 
 export default {
   name: 'Tips',
@@ -54,7 +56,7 @@ export default {
     axios.get(`${this.$store.state.api_server}/tips/`)
       .then(res => {
         // console.log(res.data)
-        this.tips = res.data
+        this.tips = _.orderBy(res.data, 'id', 'desc')
       })
       .catch(err => {
         console.log(err)
