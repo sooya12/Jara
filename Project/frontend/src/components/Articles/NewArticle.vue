@@ -53,7 +53,8 @@ export default {
         writer: this.$store.state.userInfo.id,
       },
       file: null,
-      imageURL: ''
+      imageURL: '',
+      img_src: ''
     }
   },
   methods: {
@@ -66,11 +67,8 @@ export default {
           .then(res => {
             if (this.file!=null) {
               firebase.storage().ref(`images/${res.data}`).put(this.file)
-              firebase.storage().ref().child(`images/${res.data}`).getDownloadURL().then(url => {
-                axios.post(`${this.$store.state.api_server}/articles/${res.data}/img`, { img_src: url })
-              })
             }
-            this.$router.push('/main')
+            else {this.$router.push('/main')}
           })
       } else {
         axios.put(`${this.$store.state.api_server}/articles/${this.article.id}`, this.article)

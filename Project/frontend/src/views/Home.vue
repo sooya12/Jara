@@ -209,6 +209,7 @@ export default {
           if (response) { 
             this.articles.splice(val, 1)
             axios.delete(`${this.$store.state.api_server}/articles/${val.id}`) 
+            firebase.storage().ref().child(`images/${val.id}`).delete()
           }
         }
       } else { alert('작성자만 사용할 수 있어요.') }
