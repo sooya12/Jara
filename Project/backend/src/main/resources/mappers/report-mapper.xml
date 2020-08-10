@@ -8,4 +8,20 @@
       VALUES (#{reporter_id}, #{accused_nickname}, #{contents});
    </insert>
    
+   <!-- 3회 이상 신고자 확인 -->
+   <select id="countReport" resultType="java.lang.Integer">
+		SELECT count(*)
+		FROM report
+		WHERE accused_nickname=#{accused_nickname}
+   </select>
+   
+   <!-- 닉네임에 해당하는 유저 찾기 -->
+   <select id="findAccusedId" resultType="java.lang.Integer">
+		SELECT id 
+		FROM user
+		WHERE nickname IN (SELECT accused_nickname 
+							FROM report
+							WHERE accused_nickname=#{accused_nickname})
+   </select>
+   
 </mapper>
