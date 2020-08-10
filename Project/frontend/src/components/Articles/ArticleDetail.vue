@@ -28,7 +28,7 @@
         </v-menu>
       </div>
     </div>
-    <v-img id="img" aspect-ratio="4/3" height="300" contain :src="imageURL"></v-img>
+    <v-img v-if="article.img_src!=null" aspect-ratio="4/3" height="300" contain :src="imageURL"></v-img>
     <div class="mt-5 ml-5">{{ article.contents }}</div>   
     <v-divider class="mt-5"></v-divider>
     <div class="d-flex justify-space-around">
