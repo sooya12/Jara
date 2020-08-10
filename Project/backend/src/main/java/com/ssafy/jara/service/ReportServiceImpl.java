@@ -15,4 +15,14 @@ public class ReportServiceImpl implements ReportService {
 	public int insertReport(Report report) {
 		return reportDao.insertReport(report);
 	}
+	
+	@Override
+	public int countReport(String nickname) {
+		return reportDao.countReport(nickname);
+	}
+	
+	@Override
+	public int findAccusedId(String nickname) {
+		return reportDao.findAccusedId(nickname);
+	}
 }
