@@ -60,7 +60,7 @@ public class ArticleController {
 			return new ResponseEntity<String>("success", HttpStatus.OK);
 		}
 		
-		return new ResponseEntity<String>("fail", HttpStatus.INTERNAL_SERVER_ERROR);
+		return new ResponseEntity<String>("fail", HttpStatus.BAD_REQUEST);
 	}
 	
 	@ApiOperation(value = "사용자가 작성한 전체 게시글 및 사용자가 팔로우하는 다른 사용자의 전체 게시글 및 댓글, 좋아요 사용자 조회", response = List.class)
