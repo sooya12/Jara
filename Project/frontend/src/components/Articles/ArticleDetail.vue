@@ -142,10 +142,11 @@ export default {
         })
     },
     addComment() {
+      const key = firebase.database().ref(`comment/${this.article.writer}`).push().key
       const update = {}
       update['by'] = this.$store.state.userInfo.id
-      const key = firebase.database().ref(`comment/${this.article.writer}`).push(update).key
-      firebase.database().ref(`comment/${this.article.writer}/${key}`).update({'key': key})
+      update['key'] = key
+      firebase.database().ref(`comment/${this.article.writer}/${key}`).update(update)
       axios.post(`${this.$store.state.api_server}/articles/${this.article.id}/comments`, this.commentData)
         .then(res => {
           this.comments.unshift(res.data)

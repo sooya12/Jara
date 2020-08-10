@@ -204,13 +204,13 @@ export default new Vuex.Store({
       })
     },
     checkDB({ commit, state }) {
-      firebase.database().ref(`comment/${state.userInfo.id}`).on('child_added', function(snapshot) {
+      firebase.database().ref(`comment/${state.userInfo.id}`).on('child_updated', function(snapshot) {
         commit('SET_NOTIFICATION', snapshot.val())
       })
-      firebase.database().ref(`liked/${state.userInfo.id}`).on('child_added', function(snapshot) {
+      firebase.database().ref(`liked/${state.userInfo.id}`).on('child_updated', function(snapshot) {
         commit('SET_NOTIFICATION', snapshot.val())
       })
-      firebase.database().ref(`following/${state.userInfo.id}`).on('child_added', function(snapshot) {
+      firebase.database().ref(`following/${state.userInfo.id}`).on('child_updated', function(snapshot) {
         commit('SET_REQUEST', snapshot.val())
       })
     },
