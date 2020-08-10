@@ -16,7 +16,7 @@ import io.swagger.annotations.ApiOperation;
 
 @CrossOrigin(origins = { "*" }, maxAge = 6000)
 @RestController
-@RequestMapping("/fileupload")
+@RequestMapping("/jara/fileupload")
 public class FileUploadController {
 	
 	@Autowired

@@ -25,7 +25,7 @@ import io.swagger.annotations.ApiOperation;
 
 @CrossOrigin(origins = { "*" }, maxAge = 6000)
 @RestController
-@RequestMapping("/eithers")
+@RequestMapping("/jara/eithers")
 public class EitherCommentController {
 	
 	@Autowired
