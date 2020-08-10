@@ -115,10 +115,11 @@ export default {
         follower: this.$store.state.userInfo.id,
         following: this.user.id,
       }
+      const key = firebase.database().ref(`following/${this.user.id}`).push().key
       const update = {}
       update['follower'] = this.$store.state.userInfo.id
-      const key = firebase.database().ref(`following/${this.user.id}`).push(update).key
-      firebase.database().ref(`following/${this.user.id}/${key}`).update({'key': key})
+      update['key'] = key
+      firebase.database().ref(`following/${this.user.id}/${key}`).update(update)
       axios.post(`${this.$store.state.api_server}/accounts/follow`, followData)
         .then(res => {
           if (res.data) { alert('팔로우 요청을 보냈습니다.') }

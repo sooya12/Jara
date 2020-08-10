@@ -174,11 +174,12 @@ export default {
       this.$router.push('/main/new')
     },
     like(val) {
+      const key = firebase.database().ref(`liked/${val.writer}`).push().key
       const update = {}
       update['like'] = 1
       update['by'] = this.$store.state.userInfo.id
-      const key = firebase.database().ref(`liked/${val.writer}`).push(update).key
-      firebase.database().ref(`liked/${val.writer}/${key}`).update({'key': key})
+      update['key'] = key
+      firebase.database().ref(`liked/${val.writer}/${key}`).update(update)
       axios.post(`${this.$store.state.api_server}/articles/${val.id}/like`, '' , { params: { user_id : this.$store.state.userInfo.id}})
         .then(() => {
           val.likeAccounts.push(this.$store.state.userInfo.id)

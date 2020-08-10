@@ -129,14 +129,14 @@
         </v-col>
       </v-row>
       <v-chip
-        v-if="commentData.choice==0"
+        v-if="!commentData.choice&&commentData.choice!=null"
         color="red darken-1"
         text-color="white"
       >
       {{ either.choiceA }}
       </v-chip>
       <v-chip
-        v-else-if="commentData.choice==1"
+        v-else-if="commentData&&commentData.choice!=null"
         color="blue darken-2"
         text-color="white"
       >
@@ -188,8 +188,8 @@ export default {
         pick: ''
       },
       choices: [
-        { text: '', value: 0 },
-        { text: '', value: 1 },
+        { text: '', value: false },
+        { text: '', value: true },
       ],
       menuItems: [
         {title: '완료'},
@@ -298,11 +298,18 @@ export default {
     },
     updateComment() {
       axios.put(`${this.$store.state.api_server}/eithers/${this.either.id}/comments/${this.commentData.id}`, this.commentData)
-        .then(() => {
+        .then(res => {
+          console.log(res.data)
           this.isUpdate = false
+          const idx = this.comments.findIndex(x => x.id === this.commentData.id)
+          this.comments[idx].updated_at = res.data.updated_at
+          this.comments[idx].contents = res.data.contents
+          this.comments[idx].choice = res.data.choice
           this.commentData = {
             contents: '',
-            writer: this.$store.state.userInfo.id
+            writer: this.$store.state.userInfo.id,
+            either_id: this.either.id,
+            choice: null
           }
         })
     },

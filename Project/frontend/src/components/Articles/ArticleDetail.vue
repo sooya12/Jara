@@ -84,6 +84,7 @@ export default {
     return {
       liked: false,
       isValid: false,
+      isUpdate: false,
       article: null,
       commentData: {
         contents: '',
@@ -142,10 +143,11 @@ export default {
         })
     },
     addComment() {
+      const key = firebase.database().ref(`comment/${this.article.writer}`).push().key
       const update = {}
       update['by'] = this.$store.state.userInfo.id
-      const key = firebase.database().ref(`comment/${this.article.writer}`).push(update).key
-      firebase.database().ref(`comment/${this.article.writer}/${key}`).update({'key': key})
+      update['key'] = key
+      firebase.database().ref(`comment/${this.article.writer}/${key}`).update(update)
       axios.post(`${this.$store.state.api_server}/articles/${this.article.id}/comments`, this.commentData)
         .then(res => {
           this.comments.unshift(res.data)
@@ -180,7 +182,8 @@ export default {
       axios.put(`${this.$store.state.api_server}/articles/${this.article.id}/comments/${this.commentData.id}`, this.commentData)
         .then(res => {
           const idx = this.comments.findIndex(x => x.id === this.commentData.id)
-          this.comments[idx].updated_at = res.data
+          this.comments[idx].updated_at = res.data.updated_at
+          this.comments[idx].contents = res.data.contents
           this.isUpdate = false
           this.commentData = {
             contents: '',
