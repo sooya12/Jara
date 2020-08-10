@@ -195,13 +195,15 @@ $ git commit -m "| header | 설명"
 
 
 
-### :100: 명세 요건 진척률 : 64%
+### :100: 명세 요건 진척률 : 63%
 
 
 
 ### :sweat_smile: 어려웠던 점​
 
 :ballot_box_with_check: 암호화
+
+:ballot_box_with_check: Firebase
 
 
 
