@@ -35,11 +35,14 @@ public class BarterController {
 	
 	@ApiOperation(value = "새로운 물물교환 등록", response = String.class)
 	@PostMapping("/")
-	private ResponseEntity<Integer> insertBarter(@RequestBody Barter barter) {
-		if (barterService.insertBarter(barter) > 0) {
-			return new ResponseEntity<Integer>(barter.getId(), HttpStatus.OK);
+	private ResponseEntity<Barter> insertBarter(@RequestBody Barter barter) {
+		int ret = barterService.insertBarter(barter);
+		if (ret > 0) {
+			int barterId = barter.getId();
+			Barter newBarter = barterService.selectBarter(barterId);
+			return new ResponseEntity<Barter>(newBarter, HttpStatus.OK);
 		} else {
-			return new ResponseEntity<Integer>(0, HttpStatus.INTERNAL_SERVER_ERROR);
+			return new ResponseEntity<Barter>(HttpStatus.BAD_REQUEST);
 		}
 	}
 	
@@ -57,11 +60,13 @@ public class BarterController {
 	
 	@ApiOperation(value = "해당 물물교환 수정 (title, price, contents, status)", response = String.class)
 	@PutMapping("/{id}")
-	private ResponseEntity<String> updateBarter(@PathVariable int id, @RequestBody Barter barter) {
-		if (barterService.updateBarter(barter) > 0) {
-			return new ResponseEntity<String>("success", HttpStatus.OK);
+	private ResponseEntity<Barter> updateBarter(@PathVariable int id, @RequestBody Barter barter) {
+		int ret = barterService.updateBarter(barter);
+		if (ret > 0) {
+			Barter updatedBarter = barterService.selectBarter(id);
+			return new ResponseEntity<Barter>(updatedBarter, HttpStatus.OK);
 		} else {
-			return new ResponseEntity<String>("fail", HttpStatus.BAD_REQUEST);
+			return new ResponseEntity<Barter>(HttpStatus.BAD_REQUEST);
 		}
 	}
 	
