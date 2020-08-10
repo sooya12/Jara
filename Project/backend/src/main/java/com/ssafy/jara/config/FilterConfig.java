@@ -31,5 +31,5 @@ public class FilterConfig implements WebMvcConfigurer {
 
 		return registrationBean;
 	}
-
+	
 }
