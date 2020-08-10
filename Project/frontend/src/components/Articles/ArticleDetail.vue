@@ -28,6 +28,7 @@
         </v-menu>
       </div>
     </div>
+    <v-img id="img" aspect-ratio="4/3" height="300" contain :src="imageURL"></v-img>
     <div class="mt-5 ml-5">{{ article.contents }}</div>   
     <v-divider class="mt-5"></v-divider>
     <div class="d-flex justify-space-around">
@@ -97,7 +98,8 @@ export default {
       ],
       commentRules : {
         min: v => v.trim().length > 0 || '유효한 입력이 아닙니다.'
-      }
+      },
+      imageURL: null
     }
   },
   methods: {
@@ -110,6 +112,11 @@ export default {
           }
           this.comments = res.data.comments
         })
+    },
+    fetchImg() {
+      firebase.storage().ref().child(`images/${this.$route.params.article_id}`).getDownloadURL().then(url => {
+        this.imageURL = url
+      })
     },
     updateOrDelete(val) {
       if (this.$store.state.userInfo.id == this.article.writer) {
@@ -207,6 +214,7 @@ export default {
   },
   created() {
     this.fetchArticle()
+    this.fetchImg()
   },
   beforeRouteLeave(to, from, next) {
     if (this.commentData.contents.length > 0) {
