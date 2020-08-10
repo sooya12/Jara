@@ -87,6 +87,20 @@
 		ORDER BY nickname
 	</select>
 	
+	<!-- 회원 정보 삭제 -->
+	<delete id="deleteAccount">
+		DELETE
+		FROM user
+		WHERE id=#{id}
+	</delete>
+	
+	<!-- 회원 정보 삭제시 팔로우 테이블에서 삭제 -->
+	<delete id="deleteAllFollow">
+		DELETE 
+		FROM follow
+		WHERE following=#{following} or follower=#{follower}
+	</delete>
+	
 	<!-- 팔로우 추가 : 팔로우 요청 보내기 -->
 	<insert id="insertFollow">
 		INSERT INTO follow (following,follower, status)
