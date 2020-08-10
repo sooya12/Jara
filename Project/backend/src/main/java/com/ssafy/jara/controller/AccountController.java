@@ -56,7 +56,7 @@ import java.security.PublicKey;
 
 @CrossOrigin(origins = { "*" }, maxAge = 6000)
 @RestController
-@RequestMapping("/accounts")
+@RequestMapping("/jara/accounts")
 public class AccountController extends HttpServlet {
 
 	private static final long serialVersionUID = 1L;
