@@ -6,12 +6,8 @@
             {{ users[comment.writer] }} · <span v-if="!comment.updated_at">{{comment.created_at | filterCreated}}</span>
             <span v-else>{{comment.updated_at | filterCreated}} <p style="font-size: x-small; display: inline-block; margin: 0;">(수정됨)</p></span>
             <v-spacer></v-spacer>
-            <div class="my-2 text-right">
               <v-btn @click="flagComment" text small color="primary">수정</v-btn>
-            </div>
-            <div class="my-2 text-right">
               <v-btn @click="deleteComment" text small color="error">삭제</v-btn>
-            </div>
           </v-card-title>
           <v-card-text v-if="!isChange" class='pt-0 pb-0'> {{ comment.contents }} </v-card-text>
           <v-card-text v-if="isChange" class='pt-0 pb-0'>

@@ -46,8 +46,9 @@ public class JsonFilter extends OncePerRequestFilter {
 			try {
 				
 				InputStream is = request.getInputStream();
-				
 				InputStreamReader isr = new InputStreamReader(is, "UTF-8"); // 한글 깨짐 해결
+				
+				log.info("JsonFilter 입력 값 : " + isr);
 				
 				if(isr != null) {
 					StringBuffer sb = new StringBuffer();
@@ -61,15 +62,8 @@ public class JsonFilter extends OncePerRequestFilter {
 						sb.append((char) data);
 					}
 					
-					log.info("============ sb : " + sb.toString());
-					
 					String result = doWork(sb.toString());
-					
-					log.info("============ result : " + result);
-					
 					body = result.getBytes(StandardCharsets.UTF_8);
-					
-					log.info("============ body : " + body);
 					
 				}
 			} catch (Exception e) {
@@ -108,30 +102,14 @@ public class JsonFilter extends OncePerRequestFilter {
 			for (int i = 0; i < checkList.size(); i++) {
 				String s = checkList.get(i);
 				
-//				log.info("============ s : " + s);
-				
 				if(input.indexOf(s) >= 0) {
 					input = input.replaceAll(s, StringEscapeUtils.escapeHtml4(s));
 				} 
 			}
 			
-			log.info("============ input : " + input);
+			log.info("JsonFilter 변환 : " + input);
 			
 			return input;
-
-//			StringBuffer sb = new StringBuffer();
-			
-//			for (int i = 0; i < input.length(); i++) {
-//				char c = input.charAt(i);
-//				if(c == '(' || c == ')' || c == '<' || c == '>' || c == '$' || c == '#' || c == '&') {
-//					sb.append(StringEscapeUtils.escapeHtml4(String.valueOf(c)));
-//				} else {
-//					sb.append(c);
-//				}
-//				
-//			}
-			
-//			return sb.toString();
 		}
 	}
 	

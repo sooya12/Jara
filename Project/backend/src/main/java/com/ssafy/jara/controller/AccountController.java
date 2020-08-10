@@ -41,7 +41,6 @@ import com.ssafy.jara.dto.Account;
 import com.ssafy.jara.dto.Article;
 import com.ssafy.jara.dto.Follow;
 import com.ssafy.jara.dto.Tip;
-//import com.ssafy.jara.encryption.Encryption;
 import com.ssafy.jara.handler.MailHandler;
 import com.ssafy.jara.service.AccountService;
 import com.ssafy.jara.service.ArticleCommentService;
@@ -51,9 +50,9 @@ import com.ssafy.jara.service.TipService;
 
 import io.swagger.annotations.ApiOperation;
 
-//import java.security.KeyPair;
-//import java.security.PrivateKey;
-//import java.security.PublicKey;
+import java.security.KeyPair;
+import java.security.PrivateKey;
+import java.security.PublicKey;
 
 @CrossOrigin(origins = { "*" }, maxAge = 6000)
 @RestController
@@ -93,23 +92,11 @@ public class AccountController extends HttpServlet {
 			// 비밀번호 암호화
 //			String hashPassword = BCrypt.hashpw(account.getPassword(), BCrypt.gensalt());
 //			account.setPassword(hashPassword);
-			
+//			
 //			System.out.println("hashPassword : "+hashPassword);
 
 
 			if (accountService.insertAccount(account) > 0) {
-
-//				KeyPair keyPair = Encryption.genRSAKeyPair();
-//
-//		        PublicKey publicKey = keyPair.getPublic();
-//		        PrivateKey privateKey = keyPair.getPrivate();
-//
-//		        String plainText = account.getEmail(); // 암호화 할 문자열
-//		        
-//		        // Base64 인코딩된 암호화 문자열 입니다.
-//		        String encrypted = Encryption.encryptRSA(plainText, publicKey);
-//		        System.out.println("encrypted : " + encrypted); // 암호화 된 문자열
-
 				
 				// 6자리 인증코드
 				Account reaccount = accountService.findAccount(account.getId());
@@ -145,12 +132,6 @@ public class AccountController extends HttpServlet {
 	@ApiOperation(value = "회원가입 시 이메일 인증", response = String.class)
 	@PostMapping("certification")
 	private ResponseEntity<String> certification(@RequestBody String code) {
-//		KeyPair keyPair = Encryption.genRSAKeyPair();
-//        PrivateKey privateKey = keyPair.getPrivate();
-//        
-//		// 여기서 복호화
-//		String decrypted = Encryption.decryptRSA(encrypted, privateKey);
-//        System.out.println("decrypted : " + decrypted);
 
 		if (accountService.changeStatus(code) > 0) {
 
@@ -160,17 +141,6 @@ public class AccountController extends HttpServlet {
 		return new ResponseEntity<String>("fail", HttpStatus.NO_CONTENT); //
 	}
 
-//	@ApiOperation(value = "이메일과 비밀번호로 로그인 처리", response = Account.class)
-//	@PostMapping("signin")
-//	private ResponseEntity<Account> loginAccount(@RequestBody Account account, HttpSession session) {
-//		Account findAccount = accountService.selectAccount(account);
-//
-//		if (!findAccount.equals(null)) {
-//			session.setAttribute("accountInfo", findAccount);
-//		}
-//
-//		return new ResponseEntity<Account>(accountService.selectAccount(account), HttpStatus.OK);
-//	}
 
 	@ApiOperation(value = "이메일과 비밀번호로 로그인 처리", response = Account.class)
 	@PostMapping("signin")
@@ -178,8 +148,10 @@ public class AccountController extends HttpServlet {
 		
 		// 비밀번호와 비교
 //		Account findAccount =null;
-//		
+//
 //		if(BCrypt.checkpw(account.getPassword(),accountService.findPassword(account.getEmail()))) { // 기존 비밀번호와 같음
+//			findAccount = accountService.selectAccount(account); // 로그인
+//		}else {
 //			findAccount = accountService.selectAccount(account); // 로그인
 //		}
 		
@@ -300,48 +272,7 @@ public class AccountController extends HttpServlet {
 		}
 		return new ResponseEntity<String>("success", HttpStatus.OK);
 	}
-
-//	@ApiOperation(value = "인증 이메일 확인 (status 0->1)")
-//	@GetMapping("email")
-//	public ResponseEntity<Boolean> findEmail(@RequestParam String email) throws MessagingException, UnsupportedEncodingException{
-//
-//		return new ResponseEntity<Boolean>(accountService.findEmail(email) > 0 , HttpStatus.OK);
-//	}
-
-//	@ApiOperation(value = "전체 팔로우 조회하기")
-//	@GetMapping("follow")
-//	public ResponseEntity<List<Follow>> findAllFollow(){
-//		return new ResponseEntity<List<Follow>>(accountService.findAllFollow(),HttpStatus.OK);
-//	}
-
-//	@ApiOperation(value = "해당 사용자(following)가 다른 사용자(follower)를 팔로잉하는 중인지 조회")
-//	@GetMapping("follow/{following}/{follower}")
-//	public ResponseEntity<Boolean> findFollow(@PathVariable("following") int following, @PathVariable("follower") int follower) {
-//		Follow follow = new Follow();
-//		follow.setFollowing(following);
-//		follow.setFollower(follower);
-//		
-//		return new ResponseEntity<Boolean>(accountService.findFollow(follow) > 0, HttpStatus.OK);
-//	}
-
-//	@ApiOperation(value = "팔로우 여부 확인 후 팔로우 취소/추가")
-//	@PostMapping("follow")
-//	public ResponseEntity<String> setFollow(@RequestBody Follow follow) {
-//		if(accountService.findFollow(follow) > 0) { // 이미 팔로우하는 경우 - 팔로우 취소
-//			if(accountService.deleteFollow(follow) > 0) {
-//				return new ResponseEntity<String>("success", HttpStatus.OK);
-//			}
-//			
-//			return new ResponseEntity<String>("fail", HttpStatus.NO_CONTENT);
-//		
-//		} else { // 아직 팔로우하지 않은 경우 - 팔로우 추가
-//			if(accountService.insertFollow(follow) > 0) { 
-//				return new ResponseEntity<String>("success", HttpStatus.OK);
-//			}
-//			
-//			return new ResponseEntity<String>("fail", HttpStatus.NO_CONTENT);
-//		}
-//	}
+	
 
 	@ApiOperation(value = "팔로우 요청 보내기")
 	@PostMapping("follow")
