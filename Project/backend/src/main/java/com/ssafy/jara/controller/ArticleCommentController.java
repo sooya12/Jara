@@ -5,6 +5,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.TimeZone;
 
+import org.apache.ibatis.javassist.bytecode.SignatureAttribute.ClassType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -21,6 +22,7 @@ import com.ssafy.jara.dto.ArticleComment;
 import com.ssafy.jara.service.ArticleCommentService;
 
 import io.swagger.annotations.ApiOperation;
+import jdk.internal.org.jline.utils.Log;
 
 @CrossOrigin(origins = { "*" }, maxAge = 6000)
 @RestController
@@ -57,7 +59,7 @@ public class ArticleCommentController {
 	
 	@ApiOperation(value = "게시글 댓글 수정", response = String.class)
 	@PutMapping("/{article_id}/comments/{id}")
-	private ResponseEntity<HashMap<String, Object>> updateArticleComment(@RequestBody ArticleComment articleComment) {
+	private ResponseEntity<HashMap<String, Object>> updateArticleComment(@RequestBody ArticleComment articleComment, @PathVariable("id") int id) {
 		if(articleCommentService.updateArticleComment(articleComment) > 0) {
 			
 			HashMap<String, Object> hashMap = new HashMap<String, Object>();
@@ -65,8 +67,8 @@ public class ArticleCommentController {
 			SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm");
 			dateFormat.setTimeZone(TimeZone.getTimeZone("Asia/Seoul"));
 			
-			hashMap.put("updated_at", dateFormat.format(articleCommentService.selectArticleComment(articleComment.getId()).getUpdated_at()));
-			hashMap.put("contents", articleCommentService.selectArticleComment(articleComment.getId()).getContents());
+			hashMap.put("updated_at", dateFormat.format(articleCommentService.selectArticleComment(id).getUpdated_at()));
+			hashMap.put("contents", articleCommentService.selectArticleComment(id).getContents());
 
 			return new ResponseEntity<HashMap<String, Object>>(hashMap, HttpStatus.OK);
 		}
