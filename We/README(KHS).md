@@ -80,3 +80,30 @@
 
 
 
+# 2020.08.07 Day :five:
+
+### :computer:
+
+:clipboard: 중간평가 준비
+
+:bell: 알림센터 구현 완료
+
+
+
+### :blonde_woman:
+
+:100: firebase realtime db를 사용하는 방법을 완전히 깨우쳤다.
+
+
+
+# 2020.08.10 Day :six:
+
+### :computer:
+
+:file_folder: firebase storage를 통해 이미지 업로드 구현
+
+
+
+### :blonde_woman:
+
+:woman_facepalming: firebase storage를 사용하는 방법을 완전히 깨우쳤다.
