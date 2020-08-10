@@ -18,6 +18,7 @@ var firebaseConfig = {
  }
 firebase.initializeApp(firebaseConfig)
 var database = firebase.database()
+var storage = firebase.storage()
 
 Vue.config.productionTip = false
 
@@ -50,5 +51,6 @@ new Vue({
   router,
   vuetify,
   database,
+  storage,
   render: h => h(App)
 }).$mount('#app')
