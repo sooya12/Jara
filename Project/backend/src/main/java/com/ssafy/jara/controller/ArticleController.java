@@ -49,6 +49,20 @@ public class ArticleController {
 		return new ResponseEntity<Integer>(0, HttpStatus.INTERNAL_SERVER_ERROR);
 	}
 	
+	@ApiOperation(value = "게시글 이미지 경로 등록", response = String.class)
+	@PutMapping("/{id}/img")
+	private ResponseEntity<String> insertArticleImg(@PathVariable("id") int id, @RequestBody String img_src) {
+		HashMap<String, Object> hashMap = new HashMap<String, Object>();
+		hashMap.put("id", id);
+		hashMap.put("img_src", img_src);
+		
+		if(articleService.updateArticleImg(hashMap) > 0) {
+			return new ResponseEntity<String>("success", HttpStatus.OK);
+		}
+		
+		return new ResponseEntity<String>("fail", HttpStatus.INTERNAL_SERVER_ERROR);
+	}
+	
 	@ApiOperation(value = "사용자가 작성한 전체 게시글 및 사용자가 팔로우하는 다른 사용자의 전체 게시글 및 댓글, 좋아요 사용자 조회", response = List.class)
 	@GetMapping("")
 	private ResponseEntity<List<Article>> selectListArticle(@RequestParam int user_id) {

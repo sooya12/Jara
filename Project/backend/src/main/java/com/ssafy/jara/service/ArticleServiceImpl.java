@@ -86,4 +86,9 @@ public class ArticleServiceImpl implements ArticleService {
 		return articleDao.selectArticleLikeAccount(article_id);
 	}
 
+	@Override
+	public int updateArticleImg(HashMap<String, Object> hashMap) {
+		return articleDao.updateArticleImg(hashMap);
+	}
+
 }

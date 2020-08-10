@@ -37,5 +37,7 @@ public interface ArticleDao {
 	public int deleteArticleLikes(int article_id);
 	
 	public List<Integer> selectArticleLikeAccount(int article_id);
+	
+	public int updateArticleImg(HashMap<String, Object> hashMap);
 
 }
