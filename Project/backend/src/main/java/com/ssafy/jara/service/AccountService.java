@@ -32,6 +32,10 @@ public interface AccountService {
 	
 	public boolean updateAccount(Account account);
 	
+	public int deleteAccount(int id);
+	
+	public int deleteAllFollow(int id);
+	
 	public int insertFollow(Follow follow);
 	
 	public int approveFollow(Follow follow);

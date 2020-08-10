@@ -78,6 +78,16 @@ public class AccountServiceImpl implements AccountService {
 	}
 	
 	@Override
+	public int deleteAccount(int id) {
+		return accountDao.deleteAccount(id);
+	}
+	
+	@Override
+	public int deleteAllFollow(int id) {
+		return accountDao.deleteAllFollow(id);
+	}
+	
+	@Override
 	public int insertFollow(Follow follow) {
 //		System.out.println("팔로우 상태 : "+follow.isStatus());
 		return accountDao.insertFollow(follow);

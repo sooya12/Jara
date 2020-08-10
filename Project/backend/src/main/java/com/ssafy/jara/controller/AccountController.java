@@ -56,7 +56,7 @@ import java.security.PublicKey;
 
 @CrossOrigin(origins = { "*" }, maxAge = 6000)
 @RestController
-@RequestMapping("/accounts")
+@RequestMapping("/jara/accounts")
 public class AccountController extends HttpServlet {
 
 	private static final long serialVersionUID = 1L;
@@ -272,6 +272,41 @@ public class AccountController extends HttpServlet {
 		}
 		return new ResponseEntity<String>("success", HttpStatus.OK);
 	}
+	
+	@ApiOperation(value = "회원 정보 삭제하기")
+	@DeleteMapping("{id}")
+	private ResponseEntity<String> deleteAccount(@RequestBody Account account) {
+		
+		
+		// article 댓글 삭제
+
+		// article like
+
+		// article 삭제 : writer
+
+		
+		
+		// tip 삭제
+		
+		// tip 댓글 삭제
+		// tip like
+		// item 삭제
+		// item 댓글 삭제
+		// either 삭제
+		// either 댓글 삭제
+		// either choice 삭제
+		
+		// 
+
+		accountService.deleteAllFollow(account.getId()); // 팔로잉 팔로워일때 삭제
+
+		if(accountService.deleteAccount(account.getId()) > 0) { // 회원 삭제
+			return new ResponseEntity<String>("success", HttpStatus.OK);
+		}
+		return new ResponseEntity<String>("success", HttpStatus.OK);
+	}
+	
+	
 	
 
 	@ApiOperation(value = "팔로우 요청 보내기")

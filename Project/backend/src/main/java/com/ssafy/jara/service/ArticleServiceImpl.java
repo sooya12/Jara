@@ -22,6 +22,7 @@ public class ArticleServiceImpl implements ArticleService {
 
 	@Override
 	public List<Article> selectListMyArticle(int writer) {
+		
 		return articleDao.selectListMyArticle(writer);
 	}
 	
