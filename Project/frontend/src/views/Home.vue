@@ -43,6 +43,7 @@
             </v-menu>
           </div>
         </v-card-title>
+        <v-img v-if="item.img_src!=null" aspect-ratio="4/3" height="300" contain :src="item.img_src"></v-img>
         <v-card-text class="text-subtitle-1 black--text mx-1">
           {{ item.contents }}
         </v-card-text>
