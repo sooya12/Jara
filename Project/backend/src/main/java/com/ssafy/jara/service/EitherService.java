@@ -8,6 +8,7 @@ import com.ssafy.jara.dto.EitherChoice;
 public interface EitherService {
 	public int insertEither(Either either);
 	public Either selectEither(int id);
+	public int updateEither(int id);
 	public int deleteEither(int id);
 	public List<Either> selectListEither();
 	public List<Either> selectPartialListEither(int s_idx, int count);
