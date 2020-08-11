@@ -77,7 +77,7 @@ public class EitherCommentController {
 	}
 	
 	@ApiOperation(value = "투표 전체 댓글 조회", response = String.class)
-	@GetMapping("/{either_id}/comments/")
+	@GetMapping("/{either_id}/comments")
 	private ResponseEntity<List<EitherComment>> selectListEitherComment(@PathVariable int either_id) {
 		return new ResponseEntity<List<EitherComment>>(eitherCommentService.selectListEitherComment(either_id), HttpStatus.OK);
 	}

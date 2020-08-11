@@ -87,7 +87,7 @@ public class EitherController {
 	}
 	
 	@ApiOperation(value = "전체 투표 조회", response = String.class)
-	@GetMapping("/")
+	@GetMapping("")
 	private ResponseEntity<List<Either>> selectListEither() {
 		return new ResponseEntity<List<Either>>(eitherService.selectListEither(), HttpStatus.OK);
 	}
