@@ -51,10 +51,10 @@ public class ArticleController {
 	
 	@ApiOperation(value = "게시글 이미지 경로 등록", response = String.class)
 	@PutMapping("/{id}/img")
-	private ResponseEntity<String> insertArticleImg(@PathVariable("id") int id, @RequestBody String img_src) {
+	private ResponseEntity<String> insertArticleImg(@RequestBody Article article) {
 		HashMap<String, Object> hashMap = new HashMap<String, Object>();
-		hashMap.put("id", id);
-		hashMap.put("img_src", img_src);
+		hashMap.put("id", article.getId());
+		hashMap.put("img_src", article.getImg_src());
 		
 		if(articleService.updateArticleImg(hashMap) > 0) {
 			return new ResponseEntity<String>("success", HttpStatus.OK);
