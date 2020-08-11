@@ -50,21 +50,22 @@ public class WeatherService {
         String time = String.valueOf(cal.get(cal.HOUR_OF_DAY) - 1); // 해당 시간 예보 검색을 위한 (현재 시간 - 1)
         String originTime = String.valueOf(cal.get(cal.HOUR_OF_DAY)); // 현재 시간
         
-        String base_date = year + ((month.length() < 2)? "0" + month : month) + day;
-        String base_time = (time.length() < 2 ? "0" + time : time) + "00"; // 현재 시간 - 1 기준
+        String base_date = year + ((month.length() < 2)? "0" + month : month) + day; // (200811 201225 형태)
+        String base_time = (time.length() < 2 ? "0" + time : time) + "00"; // 현재 시간 - 1 기준 (0900 1200 형태) 
         String orgTime = (originTime.length() < 2 ? "0" + originTime : originTime) + "00"; // 현재 시간 기준
 		
-		List<Location> locationList = (List<Location>) weatherDao.selectLocation(); 
+		List<Location> locationList = (List<Location>) weatherDao.selectLocation(); // Location에 저장되어 있는 구 정보 받아옴
 		
 		for (int i = 0; i < locationList.size(); i++) {
 			Location location = locationList.get(i);
 			
+			// 받아온 기상 정보를 JSON parsing을 통해 원하는 시간의 원하는 정보(강수형태, 하늘상태, 기온)만 추출
 			jsonParse(apiConnection(base_date, base_time, location.getNx(), location.getNy()), location.getName(), orgTime);
 		}
 	}
-	
+
+	// 발표날짜, 발표시각, 격자위도, 격자경도로 기상청 api와 통신하여 해당 위치의 기상 정보를 JSON으로 받아옴
 	public String apiConnection(String base_date, String base_time, String nx, String ny) throws IOException {
-		
 		StringBuilder urlBuilder = new StringBuilder("http://apis.data.go.kr/1360000/VilageFcstInfoService/getUltraSrtFcst"); /*URL*/
         urlBuilder.append("?" + URLEncoder.encode("ServiceKey","UTF-8") + "=" + "DysdYWgqnU55g9Q7PoDso1H3%2BQJFLffwk4YkWWCS4cSluMp9qKnSyq0J0u1PXFITKErf1yqWK%2FrwEUKlHTVePw%3D%3D"); /*공공데이터포털에서 받은 인증키*/
         urlBuilder.append("&" + URLEncoder.encode("pageNo","UTF-8") + "=" + URLEncoder.encode("1", "UTF-8")); /*페이지번호*/
@@ -101,6 +102,8 @@ public class WeatherService {
 		return sb.toString();
 	}
 	
+	
+	// JSON에서 원하는 시간의 원하는 정보(강수형태, 하늘상태, 기온)을 추출하여 해당 구(name) 테이블의 기상 정보(컬럼 PTY, SKY, T1H) 수정
 	public void jsonParse(String jsonData, String name, String orgTime) throws ParseException {
 		
 		Location location = new Location();
@@ -119,15 +122,17 @@ public class WeatherService {
 			
 			if(weather.get("category").equals("PTY") && weather.get("fcstTime").equals(orgTime)) {
 				log.info(weather.get("category") + " / " + weather.get("fcstTime") + " / " + weather.get("fcstValue"));
-				location.setPTY(PTYCode[Integer.parseInt((String) weather.get("fcstValue"))]);
+				location.setPTY(PTYCode[Integer.parseInt((String) weather.get("fcstValue"))]); // PTY 정보 추출
 			}
+			
 			if(weather.get("category").equals("SKY") && weather.get("fcstTime").equals(orgTime)) {
 				log.info(weather.get("category") + " / " + weather.get("fcstTime") + " / " + weather.get("fcstValue"));
-				location.setSKY(SKYCode[Integer.parseInt((String)weather.get("fcstValue"))]);
+				location.setSKY(SKYCode[Integer.parseInt((String)weather.get("fcstValue"))]); // SKY 정보 추출
 			}
+			
 			if(weather.get("category").equals("T1H") && weather.get("fcstTime").equals(orgTime)) {
 				log.info(weather.get("category") + " / " + weather.get("fcstTime") + " / " + weather.get("fcstValue"));
-				location.setT1H((String) weather.get("fcstValue"));
+				location.setT1H((String) weather.get("fcstValue")); // T1H 정보 추출
 			}
 		}
 		

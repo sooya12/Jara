@@ -48,8 +48,6 @@ public class JsonFilter extends OncePerRequestFilter {
 				InputStream is = request.getInputStream();
 				InputStreamReader isr = new InputStreamReader(is, "UTF-8"); // 한글 깨짐 해결
 				
-				log.info("JsonFilter 입력 값 : " + isr);
-				
 				if(isr != null) {
 					StringBuffer sb = new StringBuffer();
 					
@@ -58,6 +56,8 @@ public class JsonFilter extends OncePerRequestFilter {
 						
 						if(data < 0) 
 							break;
+						
+						log.info("입력된 data : " + data);
 						
 						sb.append((char) data);
 					}
@@ -102,6 +102,7 @@ public class JsonFilter extends OncePerRequestFilter {
 			for (int i = 0; i < checkList.size(); i++) {
 				String s = checkList.get(i);
 				
+				// 입력값에 필터링할 문자열이 포함되어있는 경우
 				if(input.indexOf(s) >= 0) {
 					input = input.replaceAll(s, StringEscapeUtils.escapeHtml4(s));
 				} 

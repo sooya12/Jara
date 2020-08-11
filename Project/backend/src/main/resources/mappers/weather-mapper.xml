@@ -2,11 +2,13 @@
 <!DOCTYPE mapper  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.ssafy.jara.dao.WeatherDao">
 
+	<!-- 전체 위치 정보(구 이름, 격자위도, 격자경도) 조회 -->
 	<select id="selectLocation" resultType="com.ssafy.jara.dto.Location">
 		SELECT name, nx, ny
 		FROM location
 	</select>
 	
+	<!-- 강수형태, 하늘상태, 기온 수정 -->
 	<update id="updateLocationWeather">
 		UPDATE location
 		SET PTY=#{PTY}, SKY=#{SKY}, T1H=#{T1H}
