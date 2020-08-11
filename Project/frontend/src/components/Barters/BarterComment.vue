@@ -7,7 +7,7 @@
             <span v-else>{{comment.updated_at | filterCreated}} <p style="font-size: x-small; display: inline-block; margin: 0;">(수정됨)</p></span>
             <v-spacer></v-spacer>
               <v-btn @click="flagComment" text small color="primary">수정</v-btn>
-              <!-- <v-btn @click="deleteComment" text small color="error">삭제</v-btn> -->
+              <v-btn @click="deleteComment" text small color="error">삭제</v-btn>
           </v-card-title>
           <v-card-text v-if="!isChange" class='pt-0 pb-0'> {{ comment.contents }} </v-card-text>
           <v-card-text v-if="isChange" class='pt-0 pb-0'>
@@ -70,6 +70,17 @@ export default {
         this.isChange = false
       } else {
         alert('수정 된 내용이 없습니다.')
+      }
+    },
+    deleteComment() {
+      if (this.$store.state.userInfo.id == this.comment.writer) {
+        this.commentId = this.comment.id
+        if (this.commentId) {
+          const response = confirm('정말로 삭제 하시겠습니까?')
+          if (response) {
+            this.$emit('find_commentId', this.commentId)
+          }
+        }
       }
     }
   },

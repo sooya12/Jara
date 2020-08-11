@@ -73,6 +73,7 @@
                 <!-- <Comments :comments='comments'></Comments>  // 여기 포인트 -->
                 <BarterComment
                   @change_comment="updateComment"
+                  @find_commentId="deleteComment"
                   v-for="comment in comments"
                   :key="comment.id"
                   :comment="comment"
@@ -149,7 +150,16 @@ export default {
         .catch(err => {
           console.log(err)
         })
-    }
+    },
+    deleteComment(commentId) {
+      axios.delete(`${this.$store.state.api_server}/barters/${this.barter.id}/comments/${commentId}`)
+        .then(() => {
+          this.comments.splice(this.comments.findIndex(x => x.id === commentId), 1)
+        })
+        .catch(err => {
+          console.log(err)
+        })
+    },
   },
   computed: {
     ...mapState([
