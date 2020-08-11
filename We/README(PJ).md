@@ -1,7 +1,7 @@
 # Sub PJT III - 모바일 웹 디자인 및 기본 구성
 
 ## :bar_chart: 진척률(%)
-- 이슈 진행률 : 60%
+- 이슈 진행률 : 70%
 
 ## :confused: 어려웠던 점 & 느낀 점 & 고민해볼 부분
 - (2020-08-03)
@@ -39,8 +39,15 @@
 - AWS 서버에서 Docker에 MariaDB를 올려 사용.
 - mariadb 인코딩 (맨 처음에 한 번만 설정)
     - 참고 : https://app-developer.tistory.com/121
-- mariadb time zone을 ASIA/SEOUL로 변경  (맨 처음에 한 번만 설정) (데이터베이스들의 시간을 한국시간으로 맞추기 위해서)
-    - 검색
+- mariadb time zone 변경  (맨 처음에 한 번만 설정) (데이터베이스들의 시간을 한국시간으로 맞추기 위해서)
+    - 컨테이터 안으로 들어가기: `docker exec -it maria-db bash`
+    - 디렉토리 이동: `cd /etc/mysql`
+    - my.cnf 파일 수정: `vi my.cnf`
+    - [mysqld] 항목을 찾아 아래에 다음과 같이 입력
+```
+[mysqld]
+default-time-zone='+9:00'
+```
 
 ### AWS & Docker
 - AWS 서버 접속

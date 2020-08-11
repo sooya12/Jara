@@ -130,6 +130,7 @@ export default {
           color: 'blue-grey'
         }
       },
+      items: [],
       articles: [],
       menuItems: [
         { title: '수정' },

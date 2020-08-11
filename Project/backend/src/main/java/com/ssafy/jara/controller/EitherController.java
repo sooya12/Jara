@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -62,6 +63,16 @@ public class EitherController {
 			return new ResponseEntity<Map<String, Object>>(resultMap, HttpStatus.OK);
 		} else {
 			return new ResponseEntity<Map<String, Object>>(resultMap, HttpStatus.BAD_REQUEST);
+		}
+	}
+	
+	@ApiOperation(value = "투표 수정", response = String.class)
+	@PutMapping("/{id}")
+	private ResponseEntity<String> updateEither(@PathVariable int id) {
+		if (eitherService.updateEither(id) > 0) {
+			return new ResponseEntity<String>("success", HttpStatus.OK);
+		} else {
+			return new ResponseEntity<String>("fail", HttpStatus.BAD_REQUEST);
 		}
 	}
 	

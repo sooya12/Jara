@@ -15,6 +15,13 @@
       WHERE id=#{id};
    </select>
    
+   <!-- 투표 수정 -->
+   <update id="updateEither" parameterType="int">
+      UPDATE either
+      SET status=true
+      WHERE id=#{id};
+   </update>
+   
    <!-- 투표 삭제 -->
    <delete id="deleteEither" parameterType="int">
       DELETE FROM either

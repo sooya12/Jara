@@ -28,6 +28,12 @@ public class EitherServiceImpl implements EitherService {
 	}
 
 	@Override
+	public int updateEither(int id) {
+		System.out.println("id=" + id);
+		return eitherDao.updateEither(id);
+	}
+	
+	@Override
 	public int deleteEither(int id) {
 		System.out.println("id=" + id);
 		return eitherDao.deleteEither(id);
