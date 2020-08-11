@@ -3,7 +3,7 @@
 <mapper namespace="com.ssafy.jara.dao.BarterDao">
    
    <!-- 물물교환 등록 -->
-   <insert id="insertBarter" parameterType="com.ssafy.jara.dto.Barter">
+   <insert id="insertBarter" parameterType="com.ssafy.jara.dto.Barter" useGeneratedKeys="true" keyProperty="id">
       INSERT INTO item (writer, title, price, contents, tag_id)
       VALUES (#{writer}, #{title}, #{price}, #{contents}, #{tag_id});
    </insert>
