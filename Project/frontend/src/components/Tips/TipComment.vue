@@ -88,7 +88,6 @@ export default {
     ...mapState([
       'userInfo',
       'users',
-      'api_server'
     ])
   }
 }
