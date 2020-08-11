@@ -71,7 +71,24 @@
       <v-btn v-if="isFollow" text @click="unfollow" class="font-weight-bold"><v-icon color="red darken-1">mdi-account-minus-outline</v-icon>언팔로우</v-btn>
       <v-btn v-else text @click="follow" class="font-weight-bold"><v-icon color="blue darken-1">mdi-account-plus</v-icon>팔로우</v-btn>
     </div>
-    <v-divider class="mt-5"></v-divider>
+    <v-divider class="my-5"></v-divider>
+    <div class="d-flex justify-space-around align-center">
+      <v-btn text class="font-weight-bold" @click="isArticles = true">게시글
+        <v-icon v-if="isArticles" class="ml-1" color="green lighten-1">mdi-pencil-box</v-icon>
+        <v-icon v-else class="ml-1" color="green lighten-1">mdi-pencil-box-outline</v-icon>
+      </v-btn>
+      |
+      <v-btn text class="font-weight-bold" @click="isArticles = false">저장
+        <v-icon v-if="isArticles" class="ml-1" color="teal">mdi-bookmark-outline</v-icon>
+        <v-icon v-else class="ml-1" color="teal">mdi-bookmark</v-icon>
+      </v-btn>
+    </div>
+    <v-row class="mt-5 px-3 fill-height" v-if="isArticles">
+      <Articles v-for="article in articles" :key="article.id" :article="article"/>
+    </v-row>
+    <v-row class="mt-5 px-3 fill-height" v-else>
+      <Scraps v-for="scrap in scraps" :key="scrap.id" :scrap="scrap"/>
+    </v-row>
   </v-container>
 </template>
 
@@ -79,9 +96,15 @@
 import { mapState } from 'vuex'
 import axios from 'axios'
 import firebase from 'firebase'
+import Articles from './Articles.vue'
+import Scraps from './Scraps.vue'
 
 export default {
   name: 'User',
+  components: {
+    Articles,
+    Scraps,
+  },
   computed: {
     ...mapState([
       'userInfo',
@@ -95,6 +118,9 @@ export default {
       isUser: false,
       isFollow: false,
       isLoad: false,   
+      isArticles: true,
+      articles: [],
+      scraps: [],
     }
   },
   methods: {
@@ -104,6 +130,8 @@ export default {
           this.user = res.data
           if (this.user.id == this.$store.state.userInfo.id) {this.isUser = !this.isUser}
           if (this.user.followerList.length > 0 && this.user.followerList.includes(this.$store.state.userInfo.id)) {this.isFollow = !this.isFollow}
+          this.articles = res.data.myArticleList
+          this.scraps = res.data.scrapTipList
           this.isLoad = !this.isLoad
         })
     },

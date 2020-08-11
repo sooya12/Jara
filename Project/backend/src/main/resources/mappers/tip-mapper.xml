@@ -121,4 +121,14 @@
 					 WHERE user_id=#{user_id})
 	</select>
 	
+	<!-- (좋아요수+조회수) 순 > 좋아요순 > 최신순 정렬 상위 5개 -->
+	<select id="selectListTipTop5" resultType="com.ssafy.jara.dto.Tip">
+		SELECT *, (SELECT COUNT(*)
+				   FROM tip_like
+				   WHERE tip_id=id) AS likes
+	    FROM tip
+	    ORDER BY (likes + hits) DESC, likes DESC, created_at DESC
+	    LIMIT 5 
+	</select>
+	
 </mapper>

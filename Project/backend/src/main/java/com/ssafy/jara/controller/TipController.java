@@ -128,14 +128,6 @@ public class TipController {
 	@ApiOperation(value = "팁 삭제", response = String.class)
 	@DeleteMapping("/{id}")
 	private ResponseEntity<String> deleteTip(@PathVariable("id") int id) {
-		if(tipCommentService.selectTipComments(id).size() > 0) {
-			tipCommentService.deleteTipComments(id);
-		}
-		
-		if(tipService.selectTip(id).getLikes() > 0) {
-			tipService.deleteTipLikes(id);
-		}
-		
 		if(tipService.deleteTip(id) > 0) {
 			return new ResponseEntity<String>("success", HttpStatus.OK);
 		}
@@ -188,6 +180,12 @@ public class TipController {
 		}
 		
 		return new ResponseEntity<String>("fail", HttpStatus.INTERNAL_SERVER_ERROR);
+	}
+	
+	@ApiOperation(value = "팁 Top 5  조회", response = List.class)
+	@GetMapping("/top5")
+	private ResponseEntity<List<Tip>> selectListTipTop5() {
+		return new ResponseEntity<List<Tip>>(tipService.selectListTipTop5(), HttpStatus.OK);
 	}
 	
 }
