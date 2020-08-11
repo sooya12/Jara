@@ -164,7 +164,7 @@ export default {
   },
   created() {
     this.loading = true
-    axios.get(`${this.$store.state.api_server}/barters/`)
+    axios.get(`${this.$store.state.api_server}/barters`)
       .then(res => {
         // console.log(res.data)
         this.barters = res.data
@@ -203,7 +203,7 @@ export default {
       if (this.editedIndex > -1) {
         Object.assign(this.barters[this.editedIndex], this.editedItem)
       } else {
-        axios.post(`${this.$store.state.api_server}/barters/`,this.editedItem)
+        axios.post(`${this.$store.state.api_server}/barters`,this.editedItem)
           .then(res => {
             // console.log(res.data)
             this.barters.push(res.data)
@@ -216,7 +216,7 @@ export default {
       this.close()
     },
     goToBarterDetail(val) {
-      console.log(val.id)
+      // console.log(val.id)
       this.$router.push(`/barters/${val.id}`)
     }
   }

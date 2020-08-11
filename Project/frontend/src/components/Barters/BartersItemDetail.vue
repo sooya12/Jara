@@ -13,6 +13,14 @@
             <v-card>
               <v-card-title class="headline pb-0">
                 {{ barter.title }}
+                <v-spacer></v-spacer>
+                <span>
+                  <v-btn v-if="$store.state.userInfo.id == barter.writer" icon @click="deleteItem">
+                    <v-icon>
+                      mdi-delete
+                    </v-icon>
+                  </v-btn>
+                </span>
               </v-card-title>
               <v-layout>
                 <v-flex xs7 class='pr-0'>
@@ -159,6 +167,19 @@ export default {
         .catch(err => {
           console.log(err)
         })
+    },
+    deleteItem() {
+      const response = confirm('정말로 삭제 하시겠습니까?')
+      if (response) {
+        axios.delete(`${this.$store.state.api_server}/barters/${this.barter.id}`)
+          .then(() => {
+            console.log('성공')
+            this.$router.push('/barters')
+          })
+          .catch(err => {
+            console.log(err.message)
+          })
+      }
     },
   },
   computed: {
