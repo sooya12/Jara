@@ -14,13 +14,55 @@
               <v-card-title class="headline pb-0">
                 {{ barter.title }}
                 <v-spacer></v-spacer>
-                <span>
-                  <v-btn v-if="$store.state.userInfo.id == barter.writer" icon @click="deleteItem">
-                    <v-icon>
-                      mdi-delete
-                    </v-icon>
-                  </v-btn>
-                </span>
+                <v-toolbar v-if="$store.state.userInfo.id === barter.writer" flat color="white">
+                  <v-row justify="end">
+                    <v-dialog v-model="dialog" persistent max-width="600px">
+                      <template v-slot:activator="{ on, attrs }">
+                        <v-btn
+                          v-bind="attrs"
+                          v-on="on"
+                          @click="updateItem"
+                          icon
+                        >
+                          <v-icon>mdi-pencil</v-icon>
+                        </v-btn>
+                        <v-btn icon @click="deleteItem">
+                          <v-icon>
+                            mdi-delete
+                          </v-icon>
+                        </v-btn>
+                      </template>
+                      <v-card>
+                        <v-card-title>
+                          <span class="headline">Edit Item</span>
+                        </v-card-title>
+                        <v-card-text>
+                          <v-container>
+                            <v-row>
+                              <v-col cols="12" sm="6" md="4">
+                                <v-text-field v-model="editedItem.title" label="Title"></v-text-field>
+                              </v-col>
+                              <v-col cols="12" sm="6" md="4">
+                                <v-text-field v-model="editedItem.contents" label="Contents"></v-text-field>
+                              </v-col>
+                              <v-col cols="12" sm="6" md="4">
+                                <v-text-field v-model="editedItem.price" label="Price"></v-text-field>
+                              </v-col>
+                              <v-col cols="12" sm="6" md="4">
+                                <v-text-field v-model="editedItem.tag_id" label="Type"></v-text-field>
+                              </v-col>
+                            </v-row>
+                          </v-container>
+                        </v-card-text>
+                        <v-card-actions>
+                          <v-spacer></v-spacer>
+                          <v-btn color="blue darken-1" text @click="close">Cancel</v-btn>
+                          <v-btn color="blue darken-1" text @click="save">Save</v-btn>
+                        </v-card-actions>
+                      </v-card>
+                    </v-dialog>
+                  </v-row>
+                </v-toolbar>
               </v-card-title>
               <v-layout>
                 <v-flex xs7 class='pr-0'>
@@ -32,10 +74,9 @@
                       </v-list-item-avatar>
                       <v-list-item-content>
                         <v-list-item-title>{{users[barter.writer]}}
-                          <!-- <span>({{ tip.writer }})</span> -->
                         </v-list-item-title>
-                        <v-list-item-title>{{barter.created_at | filterCreated }}</v-list-item-title>
-                        <!-- <v-list-item-sub-title>{{tip.created_at | filterCreated}} · {{category}}</v-list-item-sub-title> -->
+                        <v-list-item-title v-if="!barter.updated_at">{{barter.created_at | filterCreated }}</v-list-item-title>
+                        <v-list-item-title v-else>{{barter.updated_at | filterCreated }}<p style="font-size: x-small; display: inline-block; margin: 0;">(수정됨)</p></v-list-item-title>
                       </v-list-item-content>
                     </v-list-item>
                   </v-list>
@@ -107,6 +148,7 @@ export default {
   },
   data() {
     return {
+      dialog: false,
       barter: {},
       comments: [],
       isTaken : false,
@@ -115,7 +157,21 @@ export default {
         contents: '',
         writer: this.$store.state.userInfo.id,
         item_id: this.$route.params.item_id
-      }
+      },
+      editedItem: {
+        title: '',
+        tag_id: null,
+        contents: '',
+        writer: this.$store.state.userInfo.id,
+        price: 0,
+      },
+      defaultItem: {
+        title: '',
+        tag_id: null,
+        contents: '',
+        writer: this.$store.state.userInfo.id,
+        price: 0,
+      },
     }
   },
   created() {
@@ -123,7 +179,6 @@ export default {
       .then(res => {
         this.barter = res.data
         // console.log('1차 성공')
-        // console.log(`${this.$store.state.api_server}/barters/${this.$route.params.barter_id}/comments`)
       })
       .catch(err => {
         console.log(err)
@@ -173,7 +228,7 @@ export default {
       if (response) {
         axios.delete(`${this.$store.state.api_server}/barters/${this.barter.id}`)
           .then(() => {
-            console.log('성공')
+            // console.log('성공')
             this.$router.push('/barters')
           })
           .catch(err => {
@@ -181,6 +236,26 @@ export default {
           })
       }
     },
+    updateItem() {
+      this.editedItem = Object.assign({}, this.barter)
+    },
+    close() {
+      this.dialog = false
+      this.$nextTick(() => {
+        this.editedItem = Object.assign({}, this.defaultItem)
+      })
+    },
+    save() {
+      axios.put(`${this.$store.state.api_server}/barters/${this.barter.id}`,this.editedItem)
+        .then(res => {
+          // console.log('성공')
+          this.barter = res.data
+        })
+        .catch(err => {
+          console.log(err.message)
+        })
+      this.close()
+    }
   },
   computed: {
     ...mapState([
