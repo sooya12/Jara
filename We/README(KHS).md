@@ -106,4 +106,24 @@
 
 ### :blonde_woman:
 
-:woman_facepalming: firebase storage를 사용하는 방법을 완전히 깨우쳤다.
+:100: firebase storage를 사용하는 방법을 완전히 깨우쳤다.
+
+
+
+# 2020.08.11 Day :seven:
+
+### :computer:
+
+:couple: 유저페이지에 유저가 작성한 피드와 스크랩한 팁을 보여주는 기능 추가
+
+:bookmark: tip 스크랩 기능 구현
+
+:cloud: 회원가입 시 유저가 입력한 지역의 날씨 정보 표시
+
+:file_folder: firebase storage를 통한 이미지 업로드 수정
+
+
+
+### :blonde_woman:
+
+:woman_facepalming: firebase storage를 사용하는 방법을 완전히 깨우친 줄로만 알았다. 왜일까.. storage에서 URL을 불러오는 게 너무 느리다... 이러면 나가리다...
