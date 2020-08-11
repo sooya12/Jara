@@ -178,7 +178,7 @@ public class TipController {
 	
 	@ApiOperation(value = "팁 스크랩 등록", response = String.class)
 	@PostMapping("/{id}/scrap")
-	private ResponseEntity<String> insertTipScrap(@PathVariable("id") int tip_id, @RequestBody int user_id) {
+	private ResponseEntity<String> insertTipScrap(@PathVariable("id") int tip_id, @RequestParam("user_id") int user_id) {
 		HashMap<String, Integer> hashMap = new HashMap<>();
 		hashMap.put("tip_id", tip_id);
 		hashMap.put("user_id", user_id);
