@@ -52,11 +52,5 @@ public interface AccountDao {
 	public List<Integer> findFollower(int following);
 	public List<Integer> findFollowing(int follower);
 	
-	public double findX(String name);
-	public double findY(String name);
-	
-	public Location findLocation(String name);
-	
-	public List<Location> findAllLocation();
 	
 }

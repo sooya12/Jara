@@ -140,4 +140,17 @@ public class WeatherService {
 		
 		weatherDao.updateLocationWeather(location);
 	}
+	
+	
+	public String selectPTY(String name) {
+		return weatherDao.selectPTY(name);
+	}
+
+	public String selectSKY(String name) {
+		return weatherDao.selectSKY(name);
+	}
+
+	public String selectT1H(String name) {
+		return weatherDao.selectT1H(name);
+	}
 }

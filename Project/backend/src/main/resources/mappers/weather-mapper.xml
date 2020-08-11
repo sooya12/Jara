@@ -8,11 +8,32 @@
 		FROM location
 	</select>
 	
-	<!-- 강수형태, 하늘상태, 기온 수정 -->
+	<!-- 지역에 맞는 날씨 수정 (강수형태, 하늘상태, 기온) -->
 	<update id="updateLocationWeather">
 		UPDATE location
 		SET PTY=#{PTY}, SKY=#{SKY}, T1H=#{T1H}
 		WHERE name=#{name}
 	</update>
-
+	
+	<!-- 강수형태 조회 -->
+	<select id="selectPTY" resultType="java.lang.String">
+		SELECT PTY
+		FROM location
+		WHERE name=#{name}
+	</select>
+	
+	<!-- 하늘상태 조회 -->
+	<select id="selectSKY" resultType="java.lang.String">
+		SELECT SKY
+		FROM location
+		WHERE name=#{name}
+	</select>
+	
+	<!-- 기온 조회 -->
+	<select id="selectT1H" resultType="java.lang.String">
+		SELECT T1H
+		FROM location
+		WHERE name=#{name}
+	</select>
+	
 </mapper>

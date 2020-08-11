@@ -13,4 +13,8 @@ public interface WeatherDao {
 	
 	public int updateLocationWeather(Location location);
 	
+	public String selectPTY(String name);
+	public String selectSKY(String name);
+	public String selectT1H(String name);
+	
 }
