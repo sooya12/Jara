@@ -126,26 +126,5 @@ public class AccountServiceImpl implements AccountService {
 		return accountDao.findFollowing(follower);
 	}
 
-	@Override
-	public double findX(String name) {
-		return accountDao.findX(name);
-	}
-
-	@Override
-	public double findY(String name) {
-		return accountDao.findY(name);
-	}
-	
-	@Override
-	public Location findLocation(String name) {
-		return accountDao.findLocation(name);
-	}
-
-	@Override
-	public List<Location> findAllLocation() {
-		return accountDao.findAllLocation();
-	}
-
-
 	
 }

@@ -37,6 +37,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.ssafy.jara.common.service.jwt.JwtService;
+import com.ssafy.jara.common.weather.WeatherService;
 import com.ssafy.jara.dto.Account;
 import com.ssafy.jara.dto.Article;
 import com.ssafy.jara.dto.Follow;
@@ -81,6 +82,10 @@ public class AccountController extends HttpServlet {
 
 	@Autowired
 	JavaMailSender javaMailSender;
+	
+	@Autowired
+	WeatherService weatherService;
+	
 
 	@ApiOperation(value = "닉네임과 이메일 중복 체크하여 회원가입 처리", response = String.class)
 	@PostMapping("signup")
@@ -216,15 +221,18 @@ public class AccountController extends HttpServlet {
 	@ApiOperation(value = "회원넘버로 회원 정보 조회하기")
 	@GetMapping("{id}")
 	private ResponseEntity<Account> findAccount(@PathVariable int id) {
+		
 		Account account = accountService.findAccount(id); // 해당 id 유저 값
 
 		account.setFollowerList(accountService.findFollowing(id));
 		account.setFollowingList(accountService.findFollower(id));
 
-		account.setX(accountService.findX(account.getLocation()));
-		account.setY(accountService.findY(account.getLocation()));
-
 		account.setMyArticleList(articleService.selectListMyArticle(id));
+		
+		account.setPTY(weatherService.selectPTY(account.getLocation()));
+		account.setSKY(weatherService.selectSKY(account.getLocation()));
+		account.setT1H(weatherService.selectT1H(account.getLocation()));
+		
 
 		for (int i = 0; i < account.getMyArticleList().size(); i++) {
 			Article article = account.getMyArticleList().get(i);
@@ -336,8 +344,7 @@ public class AccountController extends HttpServlet {
 			resultMap.putAll(jwtService.get(request.getHeader("token")));
 			accountMap = (Map<String, Object>) resultMap.get("Account");
 			String location = (String) accountMap.get("location");
-			accountMap.put("x", (double) accountService.findX(location));
-			accountMap.put("y", (double) accountService.findY(location));
+			
 		} catch (Exception e) {
 			e.printStackTrace();
 			return new ResponseEntity<Map<String, Object>>(HttpStatus.INTERNAL_SERVER_ERROR);
@@ -345,23 +352,5 @@ public class AccountController extends HttpServlet {
 		return new ResponseEntity<Map<String, Object>>(accountMap, HttpStatus.OK);
 	}
 
-//	@ApiOperation(value = "전체 위치 조회하기")
-//	@GetMapping("location")
-//	public ResponseEntity<List<Location>> findAllLocation(){
-//		List<Location> locations = accountService.findAllLocation();
-//		if(locations.isEmpty()) {
-//			return new ResponseEntity(HttpStatus.NO_CONTENT);
-//		}
-//		return new ResponseEntity<List<Location>>(locations, HttpStatus.OK);
-//	}
-//	
-//	@ApiOperation(value = "구이름으로  x 조회하기")
-//	@GetMapping("location/{name}")
-//	private ResponseEntity<Double> findX(@PathVariable String name){
-//		
-//		double x = accountService.findX(name);
-//
-//		return new ResponseEntity<Double>(x, HttpStatus.OK);
-//	}
 
 }
