@@ -35,7 +35,6 @@
                 <v-flex xs5 text-xs-right class='pr-4 pt-3'>
                   <div>
                     · 댓글 {{ comments.length }}명
-                    <!-- · 댓글 -->
                   </div>
                 </v-flex>
               </v-layout>
@@ -137,6 +136,19 @@ export default {
         console.log(err.message)
       })
     this.isTaken = true
+  },
+  methods: {
+    newComment() {
+      axios.post(`${this.$store.state.api_server}/barters/${this.barter.id}/comments`, this.new_comment)
+        .then(res => {
+          // console.log('성공~')
+          this.comments.push(res.data)
+          this.new_comment.contents = ''
+        })
+        .catch(err => {
+          console.log(err.message)
+        })
+    }
   },
   computed: {
     ...mapState([
