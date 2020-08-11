@@ -34,10 +34,10 @@
 import { mapState } from 'vuex'
 
 export default {
-  name: 'TipComments',
+  name: 'BarterComments',
   props: {
     comment: {
-      type: Object,
+      type: Object
     }
   },
   data() {
@@ -48,22 +48,11 @@ export default {
         id: null,
         contents: '',
         writer: this.$store.state.userInfo.id,
-        tip_id: this.$route.params.tip_id
+        item_id: this.$route.params.item_id
       },
     }
   },
   methods: {
-    deleteComment() {
-      if (this.$store.state.userInfo.id == this.comment.writer){
-        this.commentId = this.comment.id
-        if (this.commentId) {
-          const response = confirm('정말로 삭제 하시겠습니까?')
-          if (response) {
-            this.$emit('find_commentId',this.commentId)    
-          }
-        }
-      }
-    },
     flagComment() {
       if (this.isChange) {
         this.change_comment.contents = ''
@@ -82,12 +71,23 @@ export default {
       } else {
         alert('수정 된 내용이 없습니다.')
       }
+    },
+    deleteComment() {
+      if (this.$store.state.userInfo.id == this.comment.writer) {
+        this.commentId = this.comment.id
+        if (this.commentId) {
+          const response = confirm('정말로 삭제 하시겠습니까?')
+          if (response) {
+            this.$emit('find_commentId', this.commentId)
+          }
+        }
+      }
     }
   },
   computed: {
     ...mapState([
-      'userInfo',
       'users',
+      'userInfo'
     ])
   }
 }

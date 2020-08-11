@@ -32,7 +32,7 @@
               </template>
               <v-card>
                 <v-card-title>
-                  <span class="headline">{{ formTitle }}</span>
+                  <span class="headline">New Item</span>
                 </v-card-title>
 
                 <v-card-text>
@@ -88,6 +88,7 @@
               @page-count="pageCount = $event"
               :search="search"
               :custom-filter="filterSearch"
+              @click:row="goToBarterDetail"
             >
               <template v-slot:item.status="{ item }">
                 <v-chip :color="getColor(item.status)" dark>
@@ -131,7 +132,6 @@ export default {
       page: 1,
       pageCount: 0,
       dialog: false,
-      editedIndex: -1,
       editedItem: {
         title: '',
         tag_id: null,
@@ -149,9 +149,6 @@ export default {
     }
   },
   computed: {
-    formTitle() {
-      return this.editedIndex === -1 ? 'New Item' : 'Edit Item'
-    },
     ...mapState([
       'api_server'
     ])
@@ -163,7 +160,7 @@ export default {
   },
   created() {
     this.loading = true
-    axios.get(`${this.$store.state.api_server}/barters/`)
+    axios.get(`${this.$store.state.api_server}/barters`)
       .then(res => {
         // console.log(res.data)
         this.barters = res.data
@@ -195,24 +192,23 @@ export default {
       this.dialog = false
       this.$nextTick(() => {
         this.editedItem = Object.assign({}, this.defaultItem)
-        this.editedIndex = -1
       })
     },
     save() {
-      if (this.editedIndex > -1) {
-        Object.assign(this.barters[this.editedIndex], this.editedItem)
-      } else {
-        axios.post(`${this.$store.state.api_server}/barters/`,this.editedItem)
-          .then(res => {
-            // console.log(res.data)
-            this.barters.push(res.data)
-            this.barters = _.orderBy(this.barters,'id','desc')
-          })
-          .catch(err => {
-            console.log(err)
-          })
-      }
+      axios.post(`${this.$store.state.api_server}/barters`,this.editedItem)
+        .then(res => {
+          // console.log(res.data)
+          this.barters.push(res.data)
+          this.barters = _.orderBy(this.barters,'id','desc')
+        })
+        .catch(err => {
+          console.log(err)
+        })
       this.close()
+    },
+    goToBarterDetail(val) {
+      // console.log(val.id)
+      this.$router.push(`/barters/${val.id}`)
     }
   }
 }

@@ -13,6 +13,7 @@ import ChangeUserInfo from '../components/Accounts/ChangeUserInfo.vue'
 import ValidateEmail from '../components/Accounts/ValidateEmail.vue'
 import ChangePWD from '../components/Accounts/ChangePWD.vue'
 import Barters from '../views/Barters.vue'
+import BartersItemDetail from '../components/Barters/BartersItemDetail.vue'
 import Checks from '../views/Checks.vue'
 import Eithers from '../views/Eithers.vue'
 import NewEither from '../components/Eithers/NewEither.vue'
@@ -138,6 +139,16 @@ Vue.use(VueRouter)
     path: '/barters',
     name: 'Barters',
     component: Barters,
+    beforeEnter(to, from, next) {
+      if (Vue.$cookies.isKey('auth-token')) {
+        next()
+      } else { next({name: 'SignIn' }) }
+    }
+  },
+  {
+    path: '/barters/:item_id',
+    name: 'BartersItemDetail',
+    component: BartersItemDetail,
     beforeEnter(to, from, next) {
       if (Vue.$cookies.isKey('auth-token')) {
         next()
