@@ -122,14 +122,6 @@ public class ArticleController {
 	@ApiOperation(value = "게시글 및 게시글 댓글, 좋아요 모두 삭제", response = String.class)
 	@DeleteMapping("/{id}")
 	private ResponseEntity<String> deleteArticle(@PathVariable("id") int id) {
-		if(articleCommentService.selectArticleComments(id).size() > 0) { // 게시글의 댓글 모두 삭제
-			articleCommentService.deleteArticleComments(id); 
-		}
-		
-		if(articleService.selectArticleLikes(id) > 0) { // 게시글의 좋아요 모두 삭제
-			articleService.deleteArticleLikes(id);
-		}
-		
 		if(articleService.deleteArticle(id) > 0) {
 			return new ResponseEntity<String>("success", HttpStatus.OK);
 		}
