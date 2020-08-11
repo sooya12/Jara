@@ -221,7 +221,7 @@ export default {
       } else { return false }
     }
   },
-  mounted() {
+  created() {
     this.fetchArticles()
   },  
   updated() {

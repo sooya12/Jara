@@ -1,5 +1,12 @@
 <template>
   <v-container fluid mt-5>
+    <div id="loading" v-if="isLoading" class="text-center">
+      <v-progress-circular
+        :size="50"
+        color="green lighten-3"
+        indeterminate
+      ></v-progress-circular>
+    </div>
     <div class="d-flex align-center">
       <v-icon x-large>mdi-account-circle</v-icon>
       <div class="ml-2 font-weight-bold">{{ userInfo.nickname }}</div>
@@ -54,7 +61,8 @@ export default {
       },
       file: null,
       imageURL: '',
-      img_src: ''
+      img_src: '',
+      isLoading: false,
     }
   },
   methods: {
@@ -63,6 +71,7 @@ export default {
     },
     createArticle() {
       if (this.$route.path == '/main/new') {
+        this.isLoading = true
         axios.post(`${this.$store.state.api_server}/articles`, this.article)
           .then(res => {
             if (this.file!=null) {
@@ -71,11 +80,12 @@ export default {
                 firebase.storage().ref().child(`images/${res.data}`).getDownloadURL().then(url => {
                   this.img_src = url
                 })
-              }, 500)
-              setTimeout(() => {
-                axios.put(`${this.$store.state.api_server}/articles/${res.data}/img`, { id: res.data, img_src: this.img_src })
               }, 1000)
-              this.$router.push('/main')
+              setTimeout(() => {
+                this.isLoading = false
+                axios.put(`${this.$store.state.api_server}/articles/${res.data}/img`, { id: res.data, img_src: this.img_src })
+                  .then(() => this.$router.push('/main'))
+              }, 1500)
             }
             else {this.$router.push('/main')}
           })
@@ -88,6 +98,10 @@ export default {
 }
 </script>
 
-<style>
-
+<style scoped>
+  #loading {
+    position: absolute;
+    left: 43%;
+    top: 50%;
+  }
 </style>
