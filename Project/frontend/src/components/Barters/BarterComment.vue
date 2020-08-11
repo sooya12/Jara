@@ -6,19 +6,19 @@
             {{ users[comment.writer] }} · <span v-if="!comment.updated_at">{{comment.created_at | filterCreated}}</span>
             <span v-else>{{comment.updated_at | filterCreated}} <p style="font-size: x-small; display: inline-block; margin: 0;">(수정됨)</p></span>
             <v-spacer></v-spacer>
-              <!-- <v-btn @click="flagComment" text small color="primary">수정</v-btn> -->
+              <v-btn @click="flagComment" text small color="primary">수정</v-btn>
               <!-- <v-btn @click="deleteComment" text small color="error">삭제</v-btn> -->
           </v-card-title>
           <v-card-text v-if="!isChange" class='pt-0 pb-0'> {{ comment.contents }} </v-card-text>
           <v-card-text v-if="isChange" class='pt-0 pb-0'>
-            <!-- <v-text-field
+            <v-text-field
               ref="contents"
               v-model="change_comment.contents"
               label="Content"
               placeholder="수정할 댓글을 입력해 주세요."
               required
               @keyup.enter="updateComment"
-            ></v-text-field> -->
+            ></v-text-field>
           </v-card-text>
           <v-card-actions class='pr-3'>
             <!-- <v-btn small flat><v-icon left dark class='mr-2'>favorite_border</v-icon> 좋아요({{c.net_votes}})</v-btn> -->
@@ -50,6 +50,27 @@ export default {
         writer: this.$store.state.userInfo.id,
         item_id: this.$route.params.item_id
       },
+    }
+  },
+  methods: {
+    flagComment() {
+      if (this.isChange) {
+        this.change_comment.contents = ''
+        this.change_comment.id = null
+        this.isChange = false
+      } else {
+        this.change_comment.contents = this.comment.contents
+        this.change_comment.id = this.comment.id
+        this.isChange = true
+      }
+    },
+    updateComment() {
+      if (this.comment.contents != this.change_comment) {
+        this.$emit('change_comment', this.change_comment)
+        this.isChange = false
+      } else {
+        alert('수정 된 내용이 없습니다.')
+      }
     }
   },
   computed: {

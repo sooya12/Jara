@@ -72,17 +72,11 @@
               <!-- <template v-if='loadedComments'> 로딩 창-->
                 <!-- <Comments :comments='comments'></Comments>  // 여기 포인트 -->
                 <BarterComment
-                  v-for="comment in comments"
-                  :key="comment.id"
-                  :comment="comment"
-                />
-                <!-- <BarterComment
-                  @find_commentId="deleteComment"
                   @change_comment="updateComment"
                   v-for="comment in comments"
                   :key="comment.id"
                   :comment="comment"
-                /> -->
+                />
               </template>
             </v-card>
           </v-flex>
@@ -116,8 +110,6 @@ export default {
     }
   },
   created() {
-    console.log(typeof(this.$route.params.item_id))
-    console.log(this.$route.params.item_id)
     axios.get(`${this.$store.state.api_server}/barters/${this.$route.params.item_id}`)
       .then(res => {
         this.barter = res.data
@@ -147,6 +139,15 @@ export default {
         })
         .catch(err => {
           console.log(err.message)
+        })
+    },
+    updateComment(changeComment) {
+      axios.put(`${this.$store.state.api_server}/barters/${this.barter.id}/comments/${changeComment.id}`,changeComment)
+        .then(res => {
+          this.comments.splice(this.comments.findIndex(x => x.id === changeComment.id), 1, res.data)
+        })
+        .catch(err => {
+          console.log(err)
         })
     }
   },
