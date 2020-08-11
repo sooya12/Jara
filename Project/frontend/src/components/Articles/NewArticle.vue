@@ -67,6 +67,15 @@ export default {
           .then(res => {
             if (this.file!=null) {
               firebase.storage().ref(`images/${res.data}`).put(this.file)
+              setTimeout(() => {
+                firebase.storage().ref().child(`images/${res.data}`).getDownloadURL().then(url => {
+                  this.img_src = url
+                })
+              }, 500)
+              setTimeout(() => {
+                axios.put(`${this.$store.state.api_server}/articles/${res.data}/img`, { id: res.data, img_src: this.img_src })
+              }, 1000)
+              this.$router.push('/main')
             }
             else {this.$router.push('/main')}
           })
