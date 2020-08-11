@@ -228,11 +228,6 @@ public class AccountController extends HttpServlet {
 		account.setFollowingList(accountService.findFollower(id));
 
 		account.setMyArticleList(articleService.selectListMyArticle(id));
-		
-		account.setPTY(weatherService.selectPTY(account.getLocation()));
-		account.setSKY(weatherService.selectSKY(account.getLocation()));
-		account.setT1H(weatherService.selectT1H(account.getLocation()));
-		
 
 		for (int i = 0; i < account.getMyArticleList().size(); i++) {
 			Article article = account.getMyArticleList().get(i);
@@ -242,8 +237,6 @@ public class AccountController extends HttpServlet {
 		}
 
 		account.setScrapTipList(tipService.selectListTipScrap(id));
-
-//		System.out.println(account.getScrapTipList());
 
 		for (int i = 0; i < account.getScrapTipList().size(); i++) {
 			Tip tip = account.getScrapTipList().get(i);
@@ -344,6 +337,9 @@ public class AccountController extends HttpServlet {
 			resultMap.putAll(jwtService.get(request.getHeader("token")));
 			accountMap = (Map<String, Object>) resultMap.get("Account");
 			String location = (String) accountMap.get("location");
+			accountMap.put("PTY",weatherService.selectPTY(location));
+			accountMap.put("SKY",weatherService.selectSKY(location));
+			accountMap.put("PTY",weatherService.selectT1H(location));
 			
 		} catch (Exception e) {
 			e.printStackTrace();
