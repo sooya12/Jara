@@ -135,7 +135,7 @@ export default {
   },
   methods: {
     fetchEithers() {
-      axios.get(`${this.$store.state.api_server}/eithers/`)
+      axios.get(`${this.$store.state.api_server}/eithers`)
         .then(res => {
           this.numOfEithers = res.data.length
           this.isLoad = true
