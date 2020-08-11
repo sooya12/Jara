@@ -1,7 +1,8 @@
 <template>
   <v-container fluid mt-5>
     <div class="text-center font-weight-bold text-sm-h3 text-h6">{{ date }} {{ day }}</div>
-    <div class="text-center text-sm-h6 text-subtitle-2"><v-icon :color="weatherIcon.맑음.color">mdi-{{ weatherIcon.맑음.icon }}</v-icon> 현재 {{ userInfo.location }}의 날씨는 {{ weather }} 업데이트 중입니다.</div>
+    <div class="text-center text-sm-h6 text-subtitle-2">{{ weather.fore }}<v-icon :color="weatherIcon[weather.pic].color">mdi-{{ weatherIcon[weather.pic].icon }}</v-icon>{{ weather.back }}</div>
+    <div v-if="weather.plus" class="text-center text-sm-h6 text-subtitle-2"><v-icon>{{ weather.plus.icon }}</v-icon>{{ weather.plus.tip }}</div>
     <div class="mt-10 d-flex justify-center align-center">
       <v-icon x-large>mdi-account-circle</v-icon>
       <v-btn text class="grey--text font-weight-bold text-sm-h5 text-body1" @click="write">어떤 이야기를 공유해 볼까요?</v-btn>
@@ -110,10 +111,10 @@ export default {
       weather: '',
       weatherIcon: {
         흐림: {
-          icon: 'apple-cloud',
+          icon: 'apple-icloud', 
           color: 'grey'
         },
-        구름: {
+        구름많음: {
           icon: 'weather-cloudy',
           color: 'grey'
         },
@@ -219,10 +220,42 @@ export default {
       if (val.includes(this.$store.state.userInfo.id)) {
         return true
       } else { return false }
+    },
+    setWeather() {
+      if (this.$store.state.userInfo.PTY=='없음') {
+        if (this.$store.state.userInfo.SKY=='맑음') {
+          this.weather = { 
+            pic: this.$store.state.userInfo.SKY,
+            fore: '현재 ' + `${this.$store.state.userInfo.location}` + '의 날씨는 ' + `${this.$store.state.userInfo.SKY}`,
+            back: '이며, 기온은 ' + `${this.$store.state.userInfo.T1H}` + '도 입니다.',
+            plus: {
+              icon: 'shield-sun-outline',
+              tip: '선크림을 꼭 발라주세요 :D'
+            }
+          }
+        } else {
+          this.weather = { 
+            pic: this.$store.state.userInfo.SKY,
+            fore: '현재 ' + `${this.$store.state.userInfo.location}` + '의 날씨는 ' + `${this.$store.state.userInfo.SKY}`,
+            back: '이며, 기온은 ' + `${this.$store.state.userInfo.T1H}` + '도 입니다.',
+          }
+        }
+      } else if (this.$store.state.userInfo.PTY=='비') {
+        this.weather = {
+          pic: this.$store.state.userInfo.PTY,
+          fore: '현재 ' + `${this.$store.state.userInfo.location}` + '는 ' + `${this.$store.userInfo.PTY}`,
+          back: '가 내리고 있으며, 기온은 ' + `${this.$store.state.userInfo.T1H}` + '도 입니다.',
+          plus: {
+            icon: 'umbrella-closed-variant',
+            tip: '우산을 꼭 챙겨주세요 :D'
+          }
+        }
+      } 
     }
   },
   created() {
     this.fetchArticles()
+    this.setWeather()
   },  
   updated() {
     if (this.articles.length < this.numOfArticles) {

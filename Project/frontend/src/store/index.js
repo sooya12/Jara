@@ -106,9 +106,8 @@ export default new Vuex.Store({
     signIn({ commit, state, dispatch }, data) {
       Axios.post(`${state.api_server}/accounts/signin`, data)
         .then(res => {
-          commit('SET_USERINFO', res.data)
           commit('SET_TOKEN', res.headers['jwt-auth-token'])
-          // dispatch('initial')
+          dispatch('getUser')
           dispatch('checkDB')
           router.push('/main')
         })
