@@ -88,6 +88,7 @@
               @page-count="pageCount = $event"
               :search="search"
               :custom-filter="filterSearch"
+              @click:row="goToBarterDetail"
             >
               <template v-slot:item.status="{ item }">
                 <v-chip :color="getColor(item.status)" dark>
@@ -213,6 +214,10 @@ export default {
           })
       }
       this.close()
+    },
+    goToBarterDetail(val) {
+      console.log(val.id)
+      this.$router.push(`/barters/${val.id}`)
     }
   }
 }
