@@ -2,7 +2,7 @@
   <v-container fluid mt-5>
     <div class="text-center font-weight-bold text-sm-h3 text-h6">{{ date }} {{ day }}</div>
     <div class="text-center text-sm-h6 text-subtitle-2">{{ weather.fore }}<v-icon :color="weatherIcon[weather.pic].color">mdi-{{ weatherIcon[weather.pic].icon }}</v-icon>{{ weather.back }}</div>
-    <div v-if="Object.keys(weather).includes(plus)" class="text-center text-sm-h6 text-subtitle-2"><v-icon>{{ weather.plus.icon }}</v-icon>{{ weather.plus.tip }}</div>
+    <div v-if="isPlus" class="text-center text-sm-h6 text-subtitle-2"><v-icon>{{ weather.plus.icon }}</v-icon>{{ weather.plus.tip }}</div>
     <div class="mt-10 d-flex justify-center align-center">
       <v-icon x-large>mdi-account-circle</v-icon>
       <v-btn text class="grey--text font-weight-bold text-sm-h5 text-body1" @click="write">어떤 이야기를 공유해 볼까요?</v-btn>
@@ -106,6 +106,7 @@ export default {
   data() {
     return {
       isLoad: false,
+      isPlus: false,
       date: `오늘은 ${this.$store.state.today.getMonth()+1}월 ${this.$store.state.today.getDate()}일`,
       day: `${this.$store.state.week[this.$store.state.today.getDay()]}요일 입니다.`,
       weather: '',
@@ -233,6 +234,7 @@ export default {
               tip: '선크림을 꼭 발라주세요 :D'
             }
           }
+          this.isPlus = true
         } else {
           this.weather = { 
             pic: this.$store.state.userInfo.SKY,
@@ -250,6 +252,7 @@ export default {
             tip: '우산을 꼭 챙겨주세요 :D'
           }
         }
+        this.isPlus=true
       } 
     }
   },

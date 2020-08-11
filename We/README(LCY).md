@@ -198,9 +198,14 @@
 
 
 
-## :pig2: 8월 11일 (화) 오늘 할 일 :droplet:
+## :pig2: 8월 11일 (화) 오늘 한 일 :droplet:
 
-* location 기능
-* 이메일 (회원가입/비밀번호 변경) 기능 되는지 확인하기
-* article 등록하면 오류메세지 뜸
+* location 기능 - cron 사용
+
+  > 이미 있는 location 에 cron으로 받아온 실시간 데이터를 update 시켜준다
+  >
+  > /info 로 location에 해당하는 날씨 값을 넘겨줌
+
+  
+
 

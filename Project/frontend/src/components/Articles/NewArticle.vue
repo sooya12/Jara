@@ -63,6 +63,7 @@ export default {
       imageURL: '',
       img_src: '',
       isLoading: false,
+      id: null,
     }
   },
   methods: {
@@ -74,25 +75,23 @@ export default {
         this.isLoading = true
         axios.post(`${this.$store.state.api_server}/articles`, this.article)
           .then(res => {
-            if (this.file!=null) {
-              firebase.storage().ref(`images/${res.data}`).put(this.file)
-              setTimeout(() => {
-                firebase.storage().ref().child(`images/${res.data}`).getDownloadURL().then(url => {
-                  this.img_src = url
-                })
-              }, 1000)
-              setTimeout(() => {
-                this.isLoading = false
-                axios.put(`${this.$store.state.api_server}/articles/${res.data}/img`, { id: res.data, img_src: this.img_src })
-                  .then(() => this.$router.push('/main'))
-              }, 1500)
-            }
-            else {this.$router.push('/main')}
+            this.id = res.data
+            if (this.file==null) {
+              this.$router.push('/main')
+            } else {this.uploadImg()}
           })
       } else {
         axios.put(`${this.$store.state.api_server}/articles/${this.article.id}`, this.article)
           .then(() => this.$router.push('/main'))  
       }
+    },
+    uploadImg() {
+      firebase.storage().ref(`images/${this.id}`).put(this.file).then(() => {
+        firebase.storage().ref(`images/${this.id}`).getDownloadURL().then(url => {
+          axios.put(`${this.$store.state.api_server}/articles/${this.id}/img`, { id: this.id, img_src: url })
+            .then(()=> this.$router.push('/main'))
+        })
+      })
     }
   }
 }
