@@ -62,7 +62,7 @@ public class BarterCommentController {
 	
 	@ApiOperation(value = "물물교환 전체 댓글 조회", response = String.class)
 	@GetMapping("/{item_id}/comments/")
-	private ResponseEntity<List<BarterComment>> selectListBarterComment(@PathVariable int item_id) {
-		return new ResponseEntity<List<BarterComment>>(barterCommentService.selectListBarterComment(item_id), HttpStatus.OK);
+	private ResponseEntity<List<BarterComment>> selectListBarterComment(@PathVariable String item_id) {
+		return new ResponseEntity<List<BarterComment>>(barterCommentService.selectListBarterComment(Integer.parseInt(item_id)), HttpStatus.OK);
 	}
 }
