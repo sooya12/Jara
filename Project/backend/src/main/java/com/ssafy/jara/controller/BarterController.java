@@ -34,7 +34,7 @@ public class BarterController {
 	FileUploadService fileUploadService;
 	
 	@ApiOperation(value = "새로운 물물교환 등록", response = String.class)
-	@PostMapping("/")
+	@PostMapping("")
 	private ResponseEntity<Barter> insertBarter(@RequestBody Barter barter) {
 		int ret = barterService.insertBarter(barter);
 		if (ret > 0) {
@@ -81,7 +81,7 @@ public class BarterController {
 	}
 	
 	@ApiOperation(value = "전체 물물교환 조회", response = String.class)
-	@GetMapping("/")
+	@GetMapping("")
 	private ResponseEntity<List<Barter>> selectListBarter() {
 		return new ResponseEntity<List<Barter>>(barterService.selectListBarter(), HttpStatus.OK);
 	}
