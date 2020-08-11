@@ -339,7 +339,7 @@ public class AccountController extends HttpServlet {
 			String location = (String) accountMap.get("location");
 			accountMap.put("PTY",weatherService.selectPTY(location));
 			accountMap.put("SKY",weatherService.selectSKY(location));
-			accountMap.put("PTY",weatherService.selectT1H(location));
+			accountMap.put("T1H",weatherService.selectT1H(location));
 			
 		} catch (Exception e) {
 			e.printStackTrace();
