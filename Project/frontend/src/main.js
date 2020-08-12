@@ -26,7 +26,7 @@ Vue.filter('filterCreated', function (value) {
   if (!value) return ''
   const now = new Date()
   // console.log(now)
-  const created = new Date(value.toString() + 'Z')
+  const created = new Date(value.toString())
   // console.log(created)
   const elapsedSeconds = (now - created) / 1000 // 경과 시간(초)
   // console.log(elapsedSeconds)
