@@ -228,6 +228,11 @@ public class AccountController extends HttpServlet {
 		account.setFollowingList(accountService.findFollower(id));
 
 		account.setMyArticleList(articleService.selectListMyArticle(id));
+		
+		account.setPTY(weatherService.selectPTY(account.getLocation()));
+		account.setSKY(weatherService.selectSKY(account.getLocation()));
+		account.setT1H(weatherService.selectT1H(account.getLocation()));
+
 
 		for (int i = 0; i < account.getMyArticleList().size(); i++) {
 			Article article = account.getMyArticleList().get(i);
