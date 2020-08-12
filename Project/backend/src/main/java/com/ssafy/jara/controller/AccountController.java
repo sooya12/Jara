@@ -341,9 +341,9 @@ public class AccountController extends HttpServlet {
 			resultMap.putAll(jwtService.get(request.getHeader("token")));
 			accountMap = (Map<String, Object>) resultMap.get("Account");
 			String location = (String) accountMap.get("location");
-			accountMap.put("PTY",weatherService.selectPTY(location));
-			accountMap.put("SKY",weatherService.selectSKY(location));
-			accountMap.put("T1H",weatherService.selectT1H(location));
+			accountMap.put("pty",weatherService.selectPTY(location));
+			accountMap.put("sky",weatherService.selectSKY(location));
+			accountMap.put("t1h",weatherService.selectT1H(location));
 			
 		} catch (Exception e) {
 			e.printStackTrace();
