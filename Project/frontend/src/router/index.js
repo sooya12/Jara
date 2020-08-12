@@ -21,6 +21,7 @@ import EitherDetail from '../components/Eithers/EitherDetail.vue'
 import Tips from '../views/Tips.vue'
 import TipsItemDetail from '../components/Tips/TipsItemDetail.vue'
 import NewTip from '../components/Tips/NewTip.vue'
+import PageNotFound from '../views/PageNotFound.vue'
 
 Vue.use(VueRouter)
 
@@ -235,6 +236,11 @@ Vue.use(VueRouter)
         next()
       } else { next({name: 'SignIn' }) }
     }
+  },
+  {
+    path: '*',
+    name: 'PageNotFound',
+    component: PageNotFound,
   }
 ]
 
