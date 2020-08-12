@@ -163,7 +163,7 @@ public class AccountController extends HttpServlet {
 		Account findAccount= accountService.selectAccount(account); // 로그인
 		
 		System.out.println("findAccount=" + findAccount);
-		if (findAccount != null) {
+		if (!findAccount.equals(null)) {
 			String token = jwtService.create(findAccount);
 			response.setHeader("jwt-auth-token", token);
 			return new ResponseEntity<Account>(findAccount, HttpStatus.OK);
