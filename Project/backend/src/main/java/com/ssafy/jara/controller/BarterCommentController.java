@@ -41,11 +41,12 @@ public class BarterCommentController {
 	
 	@ApiOperation(value = "물물교환 댓글 수정 (contents)", response = String.class)
 	@PutMapping("/{item_id}/comments/{id}")
-	private ResponseEntity<String> updateBarterComment(@PathVariable int id, @RequestBody BarterComment barterComment) {
+	private ResponseEntity<BarterComment> updateBarterComment(@PathVariable int id, @RequestBody BarterComment barterComment) {
 		if (barterCommentService.updateBarterComment(barterComment) > 0) {
-			return new ResponseEntity<String>("success", HttpStatus.OK);
+			BarterComment updatedBarterComment = barterCommentService.selectBarterComment(id);
+			return new ResponseEntity<BarterComment>(updatedBarterComment, HttpStatus.OK);
 		} else {
-			return new ResponseEntity<String>("fail", HttpStatus.BAD_REQUEST);
+			return new ResponseEntity<BarterComment>(HttpStatus.BAD_REQUEST);
 		}
 	}
 	
