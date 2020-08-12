@@ -242,3 +242,25 @@
 > >   firebase.storage().ref(`images/${article.id}`).getDownloadURL().then(url => this.img_src = url)
 > > })
 > > ```
+
+
+
+
+
+# 2020.08.12 Day :eight:
+
+### :computer:
+
+:key: 로그인 문제 해결
+
+:four::zero::four: 404페이지 작성
+
+:ballot_box_with_check: Checks 페이지 초안 작성
+
+
+
+### :blonde_woman:
+
+:woman_technologist: ㅎr........... axios 요청이 비동기인 줄은 물론 알고 있던거지만, .then에서 .catch로 갈 수도 있다는 걸, 굳이 알 필요가 없는 것 까지 오늘 알아버렸다........
+
+:file_cabinet: 최근 검색 유저 때 사용해보려고했던 로컬 스토리지를 custom Checks를 위해 사용해보려고 하는데 일일이 넣어주고 꺼내 오는 작업이 굉장히 번거롭다. 어떻게 해결해야할 지 감이 잡히지 않는다.
