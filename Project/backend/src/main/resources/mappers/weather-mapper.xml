@@ -11,7 +11,7 @@
 	<!-- 지역에 맞는 날씨 수정 (강수형태, 하늘상태, 기온) -->
 	<update id="updateLocationWeather">
 		UPDATE location
-		SET PTY=#{PTY}, SKY=#{SKY}, T1H=#{T1H}
+		SET PTY=#{PTY}, SKY=#{SKY}, T1H=#{T1H}, updated_at=now()
 		WHERE name=#{name}
 	</update>
 	
