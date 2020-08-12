@@ -159,8 +159,13 @@ public class AccountController extends HttpServlet {
 //		}else {
 //			findAccount = accountService.selectAccount(account); // 로그인
 //		}
+
 		
 		Account findAccount= accountService.selectAccount(account); // 로그인
+		
+		findAccount.setPTY(weatherService.selectPTY(findAccount.getLocation()));
+		findAccount.setSKY(weatherService.selectSKY(findAccount.getLocation()));
+		findAccount.setT1H(weatherService.selectT1H(findAccount.getLocation()));
 		
 		System.out.println("findAccount=" + findAccount);
 		if (!findAccount.equals(null)) {
@@ -229,11 +234,6 @@ public class AccountController extends HttpServlet {
 
 		account.setMyArticleList(articleService.selectListMyArticle(id));
 		
-		account.setPTY(weatherService.selectPTY(account.getLocation()));
-		account.setSKY(weatherService.selectSKY(account.getLocation()));
-		account.setT1H(weatherService.selectT1H(account.getLocation()));
-
-
 		for (int i = 0; i < account.getMyArticleList().size(); i++) {
 			Article article = account.getMyArticleList().get(i);
 
