@@ -1167,3 +1167,354 @@ public class WeatherService {
 
 -----
 
+
+
+### :feet: 20.08.12
+
+##### Location 테이블이 업데이트가 제대로 됬는지 확인되지 않아서 updated_at 컬럼을 추가하여 수정일 표시
+
+##### Spring Boot에서 WebSocket을 사용해 실시간 채팅 1차 구현
+
+>pom.xml
+
+```bash
+<dependency>
+	<groupId>org.springframework.boot</groupId>
+	<artifactId>spring-boot-starter-websocket</artifactId>
+</dependency>
+
+<!-- View JSP-->
+<dependency>
+	<groupId>javax.servlet</groupId>
+	<artifactId>jstl</artifactId>
+</dependency>
+<dependency>
+	<groupId>org.apache.tomcat.embed</groupId>
+	<artifactId>tomcat-embed-jasper</artifactId>
+	<scope>provided</scope>
+</dependency>
+
+<!-- Json Simple -->
+<dependency>
+	<groupId>com.googlecode.json-simple</groupId>
+	<artifactId>json-simple</artifactId>
+	<version>1.1.1</version>		
+</dependency>
+```
+
+> application.properties
+
+```bash
+# Tomcat Server Port
+server.port=80
+
+# JSP, HTML ModelAndView Path
+spring.mvc.view.prefix=/WEB-INF/view/
+spring.mvc.view.suffix=.jsp
+
+# JSP to Modify Not Restart Server
+server.servlet.jsp.init-parameters.development=true
+```
+
+> ChatController.java
+
+```bash
+package com.chat.controller;
+
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.servlet.ModelAndView;
+
+@Controller
+public class ChatController {
+
+	@RequestMapping("/chat")
+	public ModelAndView chat() {
+		ModelAndView mv = new ModelAndView();
+		mv.setViewName("chat");
+		
+		return mv;
+	}
+	
+}
+```
+
+> SocketHandler.java
+
+```bash
+package com.chat.handler;
+
+import java.util.HashMap;
+
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
+import org.springframework.stereotype.Component;
+import org.springframework.web.socket.CloseStatus;
+import org.springframework.web.socket.TextMessage;
+import org.springframework.web.socket.WebSocketSession;
+import org.springframework.web.socket.handler.TextWebSocketHandler;
+
+@Component
+public class SocketHandler extends TextWebSocketHandler {
+	// TextWebSocketHandler는 handleTextMessage를 실행시킴
+	// 메시지 타입에 따라서 handleBinaryMessage 또는 handleTextMessage 실행
+
+	HashMap<String, WebSocketSession> sessionMap = new HashMap<>(); // 웹소켓 세션을 담아둘 맵
+	
+	// 메시지 발송 시 실행
+	@Override
+	public void handleTextMessage(WebSocketSession session, TextMessage message) {
+		String msg = message.getPayload(); // message.getPayload()로 메시지 전송받음
+		JSONObject obj = JsonToObjectParser(msg); // JSON형태로 전송된 메시지 파싱
+		
+		for(String key : sessionMap.keySet()) {
+			WebSocketSession wss = sessionMap.get(key);
+			try {
+				wss.sendMessage(new TextMessage(obj.toJSONString()));
+			} catch(Exception e) {
+				e.printStackTrace();
+			}
+		}
+	}
+	
+	// 웹소켓 연결 시 동작
+	@SuppressWarnings("unchecked")
+	@Override
+	public void afterConnectionEstablished(WebSocketSession session) throws Exception {
+		super.afterConnectionEstablished(session);
+		sessionMap.put(session.getId(), session);
+		
+		JSONObject obj = new JSONObject();
+		obj.put("type", "getId"); // 발신메시지의 타입
+		obj.put("sessionId", session.getId()); // 생성된 세션 Id
+		
+		session.sendMessage(new TextMessage(obj.toJSONString()));
+	}
+	
+	// 웹소켓 종료 시 동작
+	@Override
+	public void afterConnectionClosed(WebSocketSession session, CloseStatus status) throws Exception {
+		sessionMap.remove(session.getId());
+		super.afterConnectionClosed(session, status);
+	}
+	
+	// JSON 파싱
+	private static JSONObject JsonToObjectParser(String jsonStr) {
+		JSONParser parser = new JSONParser();
+		JSONObject obj = null;
+		
+		try {
+			obj = (JSONObject) parser.parse(jsonStr);
+		} catch (ParseException e) {
+			e.printStackTrace();
+		}
+		
+		return obj;
+	}
+}
+```
+
+> WebSocketConfig.java
+
+```bash
+package com.chat.config;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.web.socket.config.annotation.EnableWebSocket;
+import org.springframework.web.socket.config.annotation.WebSocketConfigurer;
+import org.springframework.web.socket.config.annotation.WebSocketHandlerRegistry;
+
+import com.chat.handler.SocketHandler;
+
+@Configuration
+@EnableWebSocket
+public class WebSocketConfig implements WebSocketConfigurer {
+	// 생성한 구현체 등록
+	
+	@Autowired
+	SocketHandler socketHandler;
+	
+	@Override
+	public void registerWebSocketHandlers(WebSocketHandlerRegistry registry) {
+		registry.addHandler(socketHandler, "/chating");
+	}
+
+}
+```
+
+> chat.jsp
+
+```bash
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+	pageEncoding="UTF-8"%>
+<!DOCTYPE html>
+<html>
+<head>
+<script
+	src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+<meta charset="UTF-8">
+<title>Chat</title>
+<style>
+* {
+	margin: 0;
+	padding: 0;
+}
+
+.container {
+	width: 500px;
+	margin: 0 auto;
+	padding: 25px
+}
+
+.container h1 {
+	text-align: left;
+	padding: 5px 5px 5px 15px;
+	color: #FFBB00;
+	border-left: 3px solid #FFBB00;
+	margin-bottom: 20px;
+}
+
+.chating {
+	background-color: #000;
+	width: 500px;
+	height: 500px;
+	overflow: auto;
+}
+
+.chating p {
+	color: #fff;
+	text-align: left;
+}
+
+.chating .me {
+	color: #F6F6F6;
+	text-align: right;
+}
+
+.chating .others {
+	color: #FFE400;
+	text-align: left;
+}
+
+input {
+	width: 330px;
+	height: 25px;
+}
+
+#yourMsg {
+	display: none;
+}
+</style>
+</head>
+<script type="text/javascript">
+	var ws;
+
+	function wsOpen() {
+		ws = new WebSocket("ws://" + location.host + "/chating");
+		wsEvt();
+	}
+
+	function wsEvt() {
+		ws.onopen = function(data) {
+			// 소켓이 열리면 동작(초기화 세팅)
+		}
+
+		ws.onmessage = function(data) {
+			// 메시지 받으면 동작
+			var msg = data.data;
+			
+			if (msg != null && msg.trim() != '') {
+				var d = JSON.parse(msg);
+				
+				if (d.type == "getId") {
+					var si = d.sessionId != null ? d.sessionId : "";
+
+					if (si != '') {
+						$("#sessionId").val(si);
+					}
+					
+				} else if (d.type == "message") {
+					if (d.sessionId == $("#sessionId").val()) {
+						$("#chating").append("<p class='me'>나 :" + d.msg + "</p>");
+					} else {
+						$("#chating").append("<p class='others'>" + d.userName + " :" + d.msg + "</p>");
+					}
+					
+				} else {
+					console.warn("unknown type!")
+				}
+				/* $("#chating").append("<p>" + msg + "</p>"); */
+			}
+		}
+
+		document.addEventListener("keypress", function(e) {
+			if (e.keyCode == 13) { //enter press
+				send();
+			}
+		});
+	}
+
+	function chatName() {
+		var userName = $("#userName").val();
+		if (userName == null || userName.trim() == "") {
+			alert("사용자 이름을 입력해주세요.");
+			$("#userName").focus();
+		} else {
+			wsOpen();
+			$("#yourName").hide();
+			$("#yourMsg").show();
+		}
+	}
+
+	function send() {
+		/* var uN = $("#userName").val();
+		var msg = $("#chatting").val();
+		ws.send(uN + " : " + msg);
+		$('#chatting').val(""); */
+
+		var option = {
+			type : "message",
+			sessionId : $("#sessionId").val(),
+			userName : $("#userName").val(),
+			msg : $("#chatting").val()
+		}
+		ws.send(JSON.stringify(option))
+		$('#chatting').val("");
+	}
+</script>
+<body>
+	<div id="container" class="container">
+		<h1>채팅</h1>
+		<input type="hidden" id="sessionId" value="">
+		
+		<div id="chating" class="chating"></div>
+
+		<div id="yourName">
+			<table class="inputTable">
+				<tr>
+					<th>사용자명</th>
+					<th><input type="text" name="userName" id="userName"></th>
+					<th><button onclick="chatName()" id="startBtn">이름 등록</button></th>
+				</tr>
+			</table>
+		</div>
+		<div id="yourMsg">
+			<table class="inputTable">
+				<tr>
+					<th>메시지</th>
+					<th><input id="chatting" placeholder="보내실 메시지를 입력하세요."></th>
+					<th><button onclick="send()" id="sendBtn">보내기</button></th>
+				</tr>
+			</table>
+		</div>
+	</div>
+</body>
+</html>
+```
+
+[참고] https://myhappyman.tistory.com/100
+
+-----
+
