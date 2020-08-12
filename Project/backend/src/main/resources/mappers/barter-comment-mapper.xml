@@ -3,7 +3,7 @@
 <mapper namespace="com.ssafy.jara.dao.BarterCommentDao">
    
    <!-- 물물교환 댓글 등록 -->
-   <insert id="insertBarterComment" parameterType="com.ssafy.jara.dto.BarterComment">
+   <insert id="insertBarterComment" parameterType="com.ssafy.jara.dto.BarterComment" useGeneratedKeys="true" keyProperty="id">
       INSERT INTO item_comment (item_id, writer, contents)
       VALUES (#{item_id}, #{writer}, #{contents});
    </insert>
@@ -29,4 +29,10 @@
       ORDER BY created_at DESC;
    </select>
    
+   <!-- 물물교환 댓글 조회 -->
+   <select id="selectBarterComment" resultType="com.ssafy.jara.dto.BarterComment">
+      SELECT *
+      FROM item_comment
+      WHERE id=#{id};
+   </select>
 </mapper>
