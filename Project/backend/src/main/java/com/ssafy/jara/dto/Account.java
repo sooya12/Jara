@@ -29,7 +29,7 @@ public class Account {
 
 	public Account(int id, String nickname, String email, String password, boolean sex, Date birthday, String location,
 			String bio, boolean status, String code, List<Integer> followerList, List<Integer> followingList,
-			List<Article> myArticleList, List<Tip> scrapTipList, String pTY, String sKY, String t1h) {
+			List<Article> myArticleList, List<Tip> scrapTipList, String PTY, String SKY, String T1H) {
 		super();
 		this.id = id;
 		this.nickname = nickname;
@@ -45,36 +45,33 @@ public class Account {
 		this.followingList = followingList;
 		this.myArticleList = myArticleList;
 		this.scrapTipList = scrapTipList;
-		PTY = pTY;
-		SKY = sKY;
-		T1H = t1h;
+		this.PTY = PTY;
+		this.SKY = SKY;
+		this.T1H = T1H;
 	}
-
-
-
 
 	public String getPTY() {
 		return PTY;
 	}
 
-	public void setPTY(String pTY) {
-		PTY = pTY;
+	public void setPTY(String PTY) {
+		this.PTY = PTY;
 	}
 
 	public String getSKY() {
 		return SKY;
 	}
 
-	public void setSKY(String sKY) {
-		SKY = sKY;
+	public void setSKY(String SKY) {
+		this.SKY = SKY;
 	}
 
 	public String getT1H() {
 		return T1H;
 	}
 
-	public void setT1H(String t1h) {
-		T1H = t1h;
+	public void setT1H(String T1H) {
+		this.T1H = T1H;
 	}
 
 	public String getCode() {

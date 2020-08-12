@@ -160,7 +160,6 @@ public class AccountController extends HttpServlet {
 //			findAccount = accountService.selectAccount(account); // 로그인
 //		}
 
-		
 		Account findAccount= accountService.selectAccount(account); // 로그인
 		
 		findAccount.setPTY(weatherService.selectPTY(findAccount.getLocation()));
