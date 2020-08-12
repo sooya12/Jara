@@ -108,7 +108,7 @@ export default new Vuex.Store({
         .then(res => {
           commit('SET_TOKEN', res.headers['jwt-auth-token'])
           dispatch('getUser')
-          dispatch('checkDB')
+          dispatch('checkDB', res.data.id)
           router.push('/main')
         })
         .catch(() => {
@@ -203,34 +203,17 @@ export default new Vuex.Store({
         commit('SET_DIALOG', false)
       })
     },
-    checkDB({ commit, state }) {
-      firebase.database().ref(`comment/${state.userInfo.id}`).on('child_added', function(snapshot) {
+    checkDB({ commit }, id) {
+      firebase.database().ref(`comment/${id}`).on('child_added', function(snapshot) {
         commit('SET_NOTIFICATION', snapshot.val())
       })
-      firebase.database().ref(`liked/${state.userInfo.id}`).on('child_added', function(snapshot) {
+      firebase.database().ref(`liked/${id}`).on('child_added', function(snapshot) {
         commit('SET_NOTIFICATION', snapshot.val())
       })
-      firebase.database().ref(`following/${state.userInfo.id}`).on('child_added', function(snapshot) {
+      firebase.database().ref(`following/${id}`).on('child_added', function(snapshot) {
         commit('SET_REQUEST', snapshot.val())
       })
     },
-    // initial({ commit, state }) {
-    //   firebase.database().ref(`comment/${state.userInfo.id}`).once('value', function(snapshot) {
-    //     if (snapshot.val() != null) { 
-    //       commit('SET_NOTIFICATION', Object.values(snapshot.val()))
-    //     }
-    //   })
-    //   firebase.database().ref(`liked/${state.userInfo.id}`).once('value', function(snapshot) {
-    //     if (snapshot.val() != null) { 
-    //       commit('SET_NOTIFICATION', Object.values(snapshot.val()))
-    //     }
-    //   })
-    //   firebase.database().ref(`following/${state.userInfo.id}`).once('value', function(snapshot) {
-    //     if (snapshot.val() != null) { 
-    //       commit('SET_REQUEST', Object.values(snapshot.val()))
-    //     }
-    //   })
-    // }
   },
   modules: {
   }
