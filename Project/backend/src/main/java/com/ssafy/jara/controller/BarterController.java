@@ -1,5 +1,6 @@
 package com.ssafy.jara.controller;
 
+import java.util.HashMap;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -56,7 +57,32 @@ public class BarterController {
 	@ApiOperation(value = "해당 물물교환 수정 (title, price, contents, status)", response = String.class)
 	@PutMapping("/{id}")
 	private ResponseEntity<Barter> updateBarter(@PathVariable int id, @RequestBody Barter barter) {
-		int ret = barterService.updateBarter(barter);
+		Barter originalBarter = barterService.selectBarter(id);
+		
+		HashMap<String, Object> hashMap = new HashMap<String, Object>();
+		hashMap.put("id", id);
+		hashMap.put("status", barter.getStatus());
+		hashMap.put("img_src", barter.getImg_src());
+		hashMap.put("original_updated_at", originalBarter.getUpdated_at());
+		
+		int ret = -1;
+		
+		if (barter.getStatus()) {	// status(상태)를 false(거래중)에서 true(거래완료)로 변경
+			ret = barterService.updateBarterStatus(hashMap);
+		} else {
+			if (originalBarter.getImg_src() == null) {	// img_src만 변경
+				if (barter.getImg_src() != null) {
+					ret = barterService.updateBarterImgSrc(hashMap);
+				}
+			} else {
+				if (originalBarter.getImg_src().equals(barter.getImg_src())) {	// 게시글 변경
+					ret = barterService.updateBarter(barter);
+				} else {	// img_src만 변경
+					ret = barterService.updateBarterImgSrc(hashMap);
+				}
+			}
+		}
+		
 		if (ret > 0) {
 			Barter updatedBarter = barterService.selectBarter(id);
 			return new ResponseEntity<Barter>(updatedBarter, HttpStatus.OK);
