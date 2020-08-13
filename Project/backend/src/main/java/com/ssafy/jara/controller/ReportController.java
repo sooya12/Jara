@@ -79,17 +79,13 @@ public class ReportController {
 		int id = reportService.findAccusedId(report.getAccused_nickname());
 		
 		accountService.deleteAllFollow(id); // 팔로잉 팔로워일때 삭제
-		
-		List<Report> reportList=null;
-		
+				
 		if(accountService.deleteAccount(id) > 0) { // 회원 삭제
-			
-			reportList = reportService.selectListReport();
-
-			return new ResponseEntity<List<Report>>(reportList, HttpStatus.OK);
+		
+			return new ResponseEntity<List<Report>>(reportService.selectListReport(), HttpStatus.OK);
 		}
 		
-		return new ResponseEntity<List<Report>>(reportList, HttpStatus.NO_CONTENT);
+		return new ResponseEntity<List<Report>>(HttpStatus.NO_CONTENT);
 
 	}
 }
