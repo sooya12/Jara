@@ -59,8 +59,6 @@ public class BarterController {
 	private ResponseEntity<Barter> updateBarter(@PathVariable int id, @RequestBody Barter barter) {
 		Barter originalBarter = barterService.selectBarter(id);
 		
-		System.out.println("물물교환 수정합니다");
-		
 		HashMap<String, Object> hashMap = new HashMap<String, Object>();
 		hashMap.put("id", id);
 		hashMap.put("status", barter.getStatus());
