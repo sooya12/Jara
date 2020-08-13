@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -65,9 +66,30 @@ public class ReportController {
 
 		if (!reportService.selectListReport().equals(null)) {
 			return new ResponseEntity<List<Report>>(report, HttpStatus.OK);
-
 		}
 
 		return new ResponseEntity<List<Report>>(report, HttpStatus.NO_CONTENT);
+	}
+	
+	@ApiOperation(value = "관리자 페이지 - 계정 삭제", response = String.class)
+	@DeleteMapping("admin")
+	private ResponseEntity<List<Report>> deleteAccount(@RequestBody Report report) {
+		
+		
+		int id = reportService.findAccusedId(report.getAccused_nickname());
+		
+		accountService.deleteAllFollow(id); // 팔로잉 팔로워일때 삭제
+		
+		List<Report> reportList=null;
+		
+		if(accountService.deleteAccount(id) > 0) { // 회원 삭제
+			
+			reportList = reportService.selectListReport();
+
+			return new ResponseEntity<List<Report>>(reportList, HttpStatus.OK);
+		}
+		
+		return new ResponseEntity<List<Report>>(reportList, HttpStatus.NO_CONTENT);
+
 	}
 }
