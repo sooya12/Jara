@@ -37,8 +37,8 @@ public class WeatherService {
 	// 하늘상태(SKY) 코드 : 맑음(1), 구름많음(3), 흐림(4) 
 	private static String[] SKYCode = new String[] {"", "맑음", "", "구름많음", "흐림"};
 	
-	// 0시 6시 12시 18시에 자동 실행
-	@Scheduled(cron = "0 0 0,6,12,18 * * *")
+	// 2시간마다 실행
+	@Scheduled(cron = "0 0 0/2 * * *")
 	public void WeatherScheduled() throws IOException, ParseException {
 		log.info("Weather 정보");
 		

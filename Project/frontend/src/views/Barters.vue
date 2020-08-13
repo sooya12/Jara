@@ -39,16 +39,21 @@
                   <v-container>
                     <v-row>
                       <v-col cols="12" sm="6" md="4">
-                        <v-text-field v-model="editedItem.title" label="Title"></v-text-field>
+                        <v-text-field v-model="editedItem.title" label="Title" required></v-text-field>
                       </v-col>
                       <v-col cols="12" sm="6" md="4">
-                        <v-text-field v-model="editedItem.contents" label="Contents"></v-text-field>
+                        <v-text-field v-model="editedItem.contents" label="Contents" required></v-text-field>
                       </v-col>
                       <v-col cols="12" sm="6" md="4">
                         <v-text-field v-model="editedItem.price" label="Price"></v-text-field>
                       </v-col>
                       <v-col cols="12" sm="6" md="4">
-                        <v-text-field v-model="editedItem.tag_id" label="Type"></v-text-field>
+                        <v-autocomplete
+                          label="Type"
+                          v-model="tag"
+                          :items="tags"
+                          required
+                        ></v-autocomplete>
                       </v-col>
                     </v-row>
                   </v-container>
@@ -146,6 +151,8 @@ export default {
         writer: this.$store.state.userInfo.id,
         price: 0,
       },
+      tag: '',
+      tags: ['구해요','사요','팔아요','나눠요']
     }
   },
   computed: {
@@ -195,6 +202,9 @@ export default {
       })
     },
     save() {
+      const tag_id_dict = {'구해요':5,'사요':6,'팔아요':7,'나눠요':8}
+      this.editedItem.tag_id = tag_id_dict[this.tag]
+
       axios.post(`${this.$store.state.api_server}/barters`,this.editedItem)
         .then(res => {
           // console.log(res.data)
