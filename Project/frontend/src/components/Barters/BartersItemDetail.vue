@@ -224,16 +224,20 @@ export default {
         })
     },
     deleteItem() {
-      const response = confirm('정말로 삭제 하시겠습니까?')
-      if (response) {
-        axios.delete(`${this.$store.state.api_server}/barters/${this.barter.id}`)
-          .then(() => {
-            // console.log('성공')
-            this.$router.push('/barters')
-          })
-          .catch(err => {
-            console.log(err.message)
-          })
+      if (this.$store.state.userInfo.id === this.barter.writer) {
+        const response = confirm('정말로 삭제 하시겠습니까?')
+        if (response) {
+          axios.delete(`${this.$store.state.api_server}/barters/${this.barter.id}`)
+            .then(() => {
+              // console.log('성공')
+              this.$router.push('/barters')
+            })
+            .catch(err => {
+              console.log(err.message)
+            })
+        }
+      } else {
+        alert('Item 등록자만 삭제 가능 합니다.')
       }
     },
     updateItem() {
@@ -246,15 +250,19 @@ export default {
       })
     },
     save() {
-      axios.put(`${this.$store.state.api_server}/barters/${this.barter.id}`,this.editedItem)
-        .then(res => {
-          // console.log('성공')
-          this.barter = res.data
-        })
-        .catch(err => {
-          console.log(err.message)
-        })
-      this.close()
+      if (this.$store.state.userInfo.id === this.barter.writer) {
+        axios.put(`${this.$store.state.api_server}/barters/${this.barter.id}`,this.editedItem)
+          .then(res => {
+            // console.log('성공')
+            this.barter = res.data
+          })
+          .catch(err => {
+            console.log(err.message)
+          })
+        this.close()
+      } else {
+        alert('Item 등록자만 수정 가능 합니다.')
+      }
     }
   },
   computed: {
