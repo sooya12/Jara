@@ -135,8 +135,8 @@ public class AccountController extends HttpServlet {
 	}
 
 	@ApiOperation(value = "회원가입 시 이메일 인증", response = String.class)
-	@PostMapping("certification")
-	private ResponseEntity<String> certification(@RequestBody String code) {
+	@PostMapping("certification/{code}")
+	private ResponseEntity<String> certification(@PathVariable String code) {
 
 		if (accountService.changeStatus(code) > 0) {
 
@@ -207,7 +207,7 @@ public class AccountController extends HttpServlet {
 	}
 
 	@ApiOperation(value = "비밀번호 변경 처리", response = Account.class)
-	@PutMapping("setnewpw")
+	@PutMapping("setnewpwd")
 	private ResponseEntity<String> setNewPassword(@RequestBody Account account) {
 		
 		// 비밀번호 암호화
