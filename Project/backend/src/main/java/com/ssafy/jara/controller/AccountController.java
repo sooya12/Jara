@@ -197,7 +197,7 @@ public class AccountController extends HttpServlet {
 
 				
 //				 .append("<a href='http://localhost:3030/accounts/certification'>이메일 인증하기</a></center>").toString());			
-				.append("<a href='http://i3a308.p.ssafy.io/accounts/setnewpw'>비밀번호 변경하기</a>").toString());
+				.append("<a href='http://i3a308.p.ssafy.io/accounts/setnewpwd'>비밀번호 변경하기</a>").toString());
 
 
 		sendMail.setFrom("jaraauth@gmail.com", "JARA");
