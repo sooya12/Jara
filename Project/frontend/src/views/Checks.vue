@@ -37,16 +37,34 @@
     </div>
     <v-divider class="my-5"></v-divider>
     <div v-if="isRed">
-      메롱
+      <div class="px-3" v-for="(item, index) in seek" :key="index">
+        <v-checkbox
+          v-model="item.checked"
+          color="green darken-2"
+          :label="item.item"
+        ></v-checkbox>
+      </div>
     </div>
     <div v-if="isOrange">
-      바보
+      <div class="px-3" v-for="(item, index) in moveIn" :key="index">
+        <v-checkbox
+          v-model="item.checked"
+          color="green darken-2"
+          :label="item.item"
+        ></v-checkbox>
+      </div>
     </div>
     <div v-if="isYellow">
-      멍청이
+      <div class="px-3" v-for="(item, index) in moveOut" :key="index">
+        <v-checkbox
+          v-model="item.checked"
+          color="green darken-2"
+          :label="item.item"
+        ></v-checkbox>
+      </div>
     </div>
     <div v-if="isGreen">
-      <div v-if="self.length==0" class="text-center">자라님의 체크리스트를 직접 만들어보세요.</div>
+      <div v-if="self.length==0" class="text-center font-weight-bold">자라님의 체크리스트를 직접 만들어보세요.</div>
       <v-form v-model="isValid" class="mt-3 px-3 d-flex">
         <v-textarea
           v-model="checkItem"
@@ -86,9 +104,124 @@ export default {
       isYellow: false,
       isGreen: false,
       isValid: false,
-      seek: [],
-      in: [],
-      out: [],
+      seek: [
+        {
+          checked: false,
+          item: '관리비 및 공과금 확인'
+        },
+        {
+          checked: false,
+          item: '역세권 확인'
+        },
+        {
+          checked: false,
+          item: '편의점 확인'
+        },
+        {
+          checked: false,
+          item: '난방(보일러) 확인'
+        },
+        {
+          checked: false,
+          item: '방음 확인'
+        },
+        {
+          checked: false,
+          item: '싱크대 아래(배수관) 확인'
+        },
+        {
+          checked: false,
+          item: '수압 확인'
+        },
+        {
+          checked: false,
+          item: '곰팡이(습도) 확인'
+        },
+        {
+          checked: false,
+          item: '채광 확인'
+        },
+        {
+          checked: false,
+          item: '옵션 확인'
+        },
+        {
+          checked: false,
+          item: '보안 확인'
+        }
+      ],
+      moveIn: [
+        {
+          checked: false,
+          item: '전입 신고'
+        },
+        {
+          checked: false,
+          item: '이사 업체 계약'
+        },
+        {
+          checked: false,
+          item: '엘레베이터 사용 시 사전 예약'
+        },
+        {
+          checked: false,
+          item: '디지털 도어락 비밀번호 변경'
+        },
+        {
+          checked: false,
+          item: '주차증 발급'
+        },
+        {
+          checked: false,
+          item: '은행, 신용카드 주소 변경'
+        },
+        {
+          checked: false,
+          item: '도시가스 신청'
+        },
+        {
+          checked: false,
+          item: '인터넷, 케이블TV 신청'
+        },
+      ],
+      moveOut: [
+        {
+          checked: false,
+          item: '공과금 정산'
+        },
+        {
+          checked: false,
+          item: '관리비 납부 확인'
+        },
+        {
+          checked: false,
+          item: '우편물 주거이전 서비스 신청'
+        },
+        {
+          checked: false,
+          item: '신문, 우유 등 배달 중지 요청'
+        },
+        {
+          checked: false,
+          item: '도시가스 철거'
+        },
+        {
+          checked: false,
+          item: '세탁소 등 이용품목 수령 및 확인'
+        },
+        {
+          checked: false,
+          item: '냉장고 안 식품 정리'
+        },
+        {
+          checked: false,
+          item: '인터넷, 케이블 TV 이전 설치 요청'
+        },
+        {
+          checked: false,
+          item: '폐기물 스티커 구입'
+        },
+      ],
       self: [],
       checkItem: '',
       checkListRules: {
