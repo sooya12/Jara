@@ -2,6 +2,7 @@ import Vue from 'vue'
 import VueRouter from 'vue-router'
 import Entrance from '../Entrance.vue'
 import Home from '../views/Home.vue'
+import Admin from '../views/Admin.vue'
 import NewArticle from '../components/Articles/NewArticle.vue'
 import ArticleDetail from '../components/Articles/ArticleDetail.vue'
 import SignIn from '../views/SignIn.vue'
@@ -30,6 +31,11 @@ Vue.use(VueRouter)
     path: '/',
     name: 'Entrance',
     component: Entrance
+  },
+  {
+    path: '/admin',
+    name: 'Admin',
+    component: Admin,
   },
   {
     path: '/main',

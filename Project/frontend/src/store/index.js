@@ -164,10 +164,14 @@ export default new Vuex.Store({
       router.push('/accounts/user')
       commit('SET_DRAWER', false)
     },
-    report({ commit, getters }) {
+    report({ commit, getters, state }) {
       if (getters.isLoggedIn) {
-        commit('SET_DIALOG', true)
-        commit('SET_DRAWER', false)
+        if (state.userInfo.id === 8) {
+          router.push('/admin')
+        } else {
+          commit('SET_DIALOG', true)
+          commit('SET_DRAWER', false)
+        }
       } else {
         alert('로그인한 자라만 사용할 수 있어요!')
         commit('SET_DRAWER', false)
