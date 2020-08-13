@@ -208,15 +208,16 @@
                   class="my-2"
                 ></v-text-field>
                 <div class="font-weight-bold d-flex align-center">주소<v-icon class="ml-2">mdi-map-search</v-icon></div>
-                <v-text-field
-                  v-model="signUpData.location"
-                  label="예) 서울특별시 강남구"
-                  :rules="[locationRules.required]"
-                  background-color="white"
+                <v-select
+                  :items="districts"
+                  :rules="[districtsRules.required]"
                   outlined
-                  color="green darken-2"
+                  background-color="white"
                   class="my-2"
-                ></v-text-field>
+                  color="green darken-2"
+                  item-color="green darken-2"
+                  v-model="signUpData.location"
+                ></v-select>
               </v-form>
             </v-container>
           </v-card>
@@ -323,6 +324,33 @@ export default {
         { text: '남성', value: 0 },
         { text: '여성', value: 1 },
       ],
+      districts: [
+        '강남구',
+        '강동구',
+        '강북구',
+        '강서구',
+        '관악구',
+        '광진구',
+        '구로구',
+        '금천구',
+        '노원구',
+        '도봉구',
+        '동대문구',
+        '동작구',
+        '마포구',
+        '서대문구',
+        '서초구',
+        '성동구',
+        '성북구',
+        '송파구',
+        '양천구',
+        '영등포구',
+        '용산구',
+        '은평구',
+        '종로구',
+        '중구',
+        '중랑구'
+      ],
       signUpData: {
         email: '',
         password: '',
@@ -357,8 +385,8 @@ export default {
       bDayRules: {
         over: value => value < this.current || '유효하지 않은 날짜입니다.'
       },
-      locationRules: {
-        required: value => !!value || '주소를 입력해주세요.',
+      districtsRules: {
+        required: value => !!value || '주소를 선택해주세요.',
       },
       isError: false,
       isAgree: false,
