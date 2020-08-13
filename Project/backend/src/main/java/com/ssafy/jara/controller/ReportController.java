@@ -7,12 +7,12 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.ssafy.jara.dto.Account;
 import com.ssafy.jara.dto.Report;
 import com.ssafy.jara.service.AccountService;
 import com.ssafy.jara.service.ReportService;
@@ -59,7 +59,7 @@ public class ReportController {
 	}
 
 	@ApiOperation(value = "관리자 페이지 - 신고 리스트", response = String.class)
-	@PostMapping("admin")
+	@GetMapping("admin")
 	private ResponseEntity<List<Report>> selectListReport() {
 		
 		List<Report> report = reportService.selectListReport();
