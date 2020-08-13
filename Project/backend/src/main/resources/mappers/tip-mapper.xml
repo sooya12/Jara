@@ -79,6 +79,7 @@
 		VALUES (#{tip_id}, #{user_id})
 	</insert>
 	
+	<!-- 팁 좋아하는 사람 목록 조회 -->
 	<select id="selectTipLikeAccounts" resultType="java.lang.Integer">
 		SELECT user_id
 		FROM tip_like
@@ -130,5 +131,12 @@
 	    ORDER BY (likes + hits) DESC, likes DESC, created_at DESC
 	    LIMIT 5 
 	</select>
+	
+	<!-- 팁 이미지 경로(firebase) 저장 -->
+	<update id="updateTipImg">
+		UPDATE tip
+		SET img_src=#{img_src}
+		WHERE id=#{id}
+	</update>
 	
 </mapper>

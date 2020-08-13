@@ -26,9 +26,11 @@ public class Tip {
 	
 	private String stored_file_name;	// 저장된 이미지 파일 이름
 	
+	private String img_src;				// 파이어베이스 이미지 파일 경로 
+	
 	public Tip() {} 
 	
-	public Tip(int id, int writer, String title, String contents, int tag_id, Date created_at, Date updated_at, int hits, int likes, String stored_file_name) {
+	public Tip(int id, int writer, String title, String contents, int tag_id, Date created_at, Date updated_at, int hits, int likes, String stored_file_name, String img_src) {
 		super();
 		this.id = id;
 		this.writer = writer;
@@ -40,6 +42,7 @@ public class Tip {
 		this.hits = hits;
 		this.likes = likes;
 		this.stored_file_name = stored_file_name;
+		this.img_src = img_src;
 	}
 
 	public int getId() {
@@ -138,12 +141,20 @@ public class Tip {
 		this.stored_file_name = stored_file_name;
 	}
 
+	public String getImg_src() {
+		return img_src;
+	}
+
+	public void setImg_src(String img_src) {
+		this.img_src = img_src;
+	}
+
 	@Override
 	public String toString() {
 		return "Tip [id=" + id + ", writer=" + writer + ", title=" + title + ", contents=" + contents + ", tag_id="
 				+ tag_id + ", created_at=" + created_at + ", updated_at=" + updated_at + ", hits=" + hits + ", likes="
 				+ likes + ", comments=" + comments + ", likeAccounts=" + likeAccounts + ", stored_file_name="
-				+ stored_file_name + "]";
+				+ stored_file_name + ", img_src=" + img_src + "]";
 	}
-	
+
 }

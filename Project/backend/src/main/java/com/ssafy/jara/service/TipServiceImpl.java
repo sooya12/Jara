@@ -102,4 +102,9 @@ public class TipServiceImpl implements TipService {
 		return tipDao.selectListTipTop5();
 	}
 
+	@Override
+	public int updateTipImg(HashMap<String, Object> hashMap) {
+		return tipDao.updateTipImg(hashMap);
+	}
+
 }
