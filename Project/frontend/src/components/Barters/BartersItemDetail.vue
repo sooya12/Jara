@@ -29,6 +29,7 @@
                     <v-dialog v-model="dialog" persistent max-width="600px">
                       <template v-slot:activator="{ on, attrs }">
                         <v-btn
+                          v-if="!barter.status"
                           v-bind="attrs"
                           v-on="on"
                           @click="updateItem"
@@ -59,7 +60,12 @@
                                 <v-text-field v-model="editedItem.price" label="Price"></v-text-field>
                               </v-col>
                               <v-col cols="12" sm="6" md="4">
-                                <v-text-field v-model="editedItem.tag_id" label="Type"></v-text-field>
+                                <v-autocomplete
+                                  label="Type"
+                                  v-model="tag"
+                                  :items="tags"
+                                  required
+                                ></v-autocomplete>
                               </v-col>
                             </v-row>
                           </v-container>
@@ -103,7 +109,7 @@
               </v-card-text>
               <v-card-text>
                 <template>
-                  <v-chip href='javascript:false' class='tag'>#{{ tag[barter.tag_id] }}</v-chip>
+                  <v-chip href='javascript:false' class='tag'>#{{ tag_name[barter.tag_id] }}</v-chip>
                 </template>
               </v-card-text>
             </v-card>
@@ -162,7 +168,9 @@ export default {
       barter: {},
       comments: [],
       isTaken : false,
-      tag: {5:'구해요',6:'사요',7:'팔아요',8:'나눠요'},
+      tag_name: {5:'구해요',6:'사요',7:'팔아요',8:'나눠요'},
+      tags: ['구해요','사요','팔아요','나눠요'],
+      tag: '',
       new_comment: {
         contents: '',
         writer: this.$store.state.userInfo.id,
@@ -217,21 +225,23 @@ export default {
     },
     saleCompleted() {
       if (!this.barter.status) {
-        const response = confirm('판매를 완료하시겠습니까?')
-        if (response) {
-          this.editedItem = this.barter
-          this.editedItem.status = 1
-          axios.put(`${this.$store.state.api_server}/barters/${this.barter.id}`,this.editedItem)
-            .then(res => {
-              console.log(res)
-              this.barter = res.data
-              this.$nextTick(() => {
-                this.editedItem = Object.assign({}, this.defaultItem)
+        if (this.$store.state.userInfo.id === this.barter.writer) {
+          const response = confirm('판매를 완료하시겠습니까?')
+          if (response) {
+            this.editedItem = this.barter
+            this.editedItem.status = true
+            axios.put(`${this.$store.state.api_server}/barters/${this.barter.id}`,this.editedItem)
+              .then(res => {
+                console.log(res)
+                this.barter = res.data
+                this.$nextTick(() => {
+                  this.editedItem = Object.assign({}, this.defaultItem)
+                })
               })
-            })
-            .catch(err => {
-              console.log(err.message)
-            })
+              .catch(err => {
+                console.log(err.message)
+              })
+          }
         }
       } else {
         alert('이미 판매가 완료된 Item 입니다.')
@@ -282,14 +292,14 @@ export default {
       })
     },
     save() {
-      if (this.$store.state.userInfo.id === this.barter.writer) {
+      if (this.$store.state.userInfo.id === this.barter.writer && !this.barter.status) {
+        const tag_id_dict = {'구해요':5,'사요':6,'팔아요':7,'나눠요':8}
+        this.editedItem.tag_id = tag_id_dict[this.tag]
+
         axios.put(`${this.$store.state.api_server}/barters/${this.barter.id}`,this.editedItem)
           .then(res => {
-            // console.log('성공')
+            // console.log(res.data)
             this.barter = res.data
-            this.$nextTick(() => {
-              this.editedItem = Object.assign({}, this.defaultItem)
-            })
           })
           .catch(err => {
             console.log(err.message)
