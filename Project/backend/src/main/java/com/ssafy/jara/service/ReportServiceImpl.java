@@ -1,5 +1,7 @@
 package com.ssafy.jara.service;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -24,5 +26,10 @@ public class ReportServiceImpl implements ReportService {
 	@Override
 	public int findAccusedId(String nickname) {
 		return reportDao.findAccusedId(nickname);
+	}
+
+	@Override
+	public List<Report> selectListReport() {
+		return reportDao.selectListReport();
 	}
 }
