@@ -59,6 +59,8 @@ public class BarterController {
 	private ResponseEntity<Barter> updateBarter(@PathVariable int id, @RequestBody Barter barter) {
 		Barter originalBarter = barterService.selectBarter(id);
 		
+		System.out.println("물물교환 수정합니다");
+		
 		HashMap<String, Object> hashMap = new HashMap<String, Object>();
 		hashMap.put("id", id);
 		hashMap.put("status", barter.getStatus());
@@ -73,6 +75,8 @@ public class BarterController {
 			if (originalBarter.getImg_src() == null) {	// img_src만 변경
 				if (barter.getImg_src() != null) {
 					ret = barterService.updateBarterImgSrc(hashMap);
+				} else {
+					ret = barterService.updateBarter(barter);
 				}
 			} else {
 				if (originalBarter.getImg_src().equals(barter.getImg_src())) {	// 게시글 변경
