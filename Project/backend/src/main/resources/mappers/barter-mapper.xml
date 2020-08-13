@@ -18,7 +18,7 @@
    <!-- 물물교환 수정 -->
    <update id="updateBarter" parameterType="com.ssafy.jara.dto.Barter">
       UPDATE item
-      SET title=#{title}, price=#{price}, contents=#{contents}, status=#{status}
+      SET title=#{title}, price=#{price}, contents=#{contents}, status=#{status}, tag_id=#{tag_id}
       WHERE id=#{id}
    </update>
    
