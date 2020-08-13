@@ -13,6 +13,16 @@
             <v-card>
               <v-card-title class="headline pb-0">
                 {{ barter.title }}
+                <v-btn color="green" icon v-if="!barter.status" @click="saleCompleted">
+                  <v-icon>
+                    mdi-toggle-switch
+                  </v-icon>
+                </v-btn>
+                <!-- <v-btn icon v-else> -->
+                  <v-icon color="gray" v-else>
+                    mdi-toggle-switch-off
+                  </v-icon>
+                <!-- </v-btn> -->
                 <v-spacer></v-spacer>
                 <v-toolbar v-if="$store.state.userInfo.id === barter.writer" flat color="white">
                   <v-row justify="end">
@@ -205,6 +215,28 @@ export default {
           console.log(err.message)
         })
     },
+    saleCompleted() {
+      if (!this.barter.status) {
+        const response = confirm('판매를 완료하시겠습니까?')
+        if (response) {
+          this.editedItem = this.barter
+          this.editedItem.status = 1
+          axios.put(`${this.$store.state.api_server}/barters/${this.barter.id}`,this.editedItem)
+            .then(res => {
+              console.log(res)
+              this.barter = res.data
+              this.$nextTick(() => {
+                this.editedItem = Object.assign({}, this.defaultItem)
+              })
+            })
+            .catch(err => {
+              console.log(err.message)
+            })
+        }
+      } else {
+        alert('이미 판매가 완료된 Item 입니다.')
+      }
+    },
     updateComment(changeComment) {
       axios.put(`${this.$store.state.api_server}/barters/${this.barter.id}/comments/${changeComment.id}`,changeComment)
         .then(res => {
@@ -255,6 +287,9 @@ export default {
           .then(res => {
             // console.log('성공')
             this.barter = res.data
+            this.$nextTick(() => {
+              this.editedItem = Object.assign({}, this.defaultItem)
+            })
           })
           .catch(err => {
             console.log(err.message)
