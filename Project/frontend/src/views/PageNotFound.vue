@@ -1,6 +1,6 @@
 <template>
   <v-container fluid class='mt-5'>
-    <v-img src="@/assets/jara.png"></v-img>
+    <v-img src="@/assets/cryingjara.png"></v-img>
     <div class="mt-5 font-weight-bold green--text text-h3 text-center">Ooops!</div>
     <div class="font-weight-bold text-h6 text-center">Page Not Found</div>
     <div class="mt-3 font-weight-bold text-h6 text-center">자라가 페이지를 찾을 수 없습니다.</div>
