@@ -56,4 +56,18 @@
       WHERE id=#{id}
    </update>
    
+   <!-- 물물교환 상태 변경 -->
+   <update id="updateBarterStatus">
+      UPDATE item
+      SET status=#{status}, updated_at=#{original_updated_at}
+      WHERE id=#{id}
+   </update>
+   
+   <!-- 물물교환 이미지 변경 -->
+   <update id="updateBarterImgSrc">
+      UPDATE item
+      SET img_src=#{img_src}, updated_at=#{original_updated_at}
+      WHERE id=#{id}
+   </update>
+   
 </mapper>

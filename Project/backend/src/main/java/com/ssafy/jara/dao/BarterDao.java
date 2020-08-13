@@ -1,5 +1,6 @@
 package com.ssafy.jara.dao;
 
+import java.util.HashMap;
 import java.util.List;
 
 import org.apache.ibatis.annotations.Mapper;
@@ -16,4 +17,6 @@ public interface BarterDao {
 	public List<Barter> selectListBarterTag(int tag_id);
 	public List<Barter> selectListBarterSearch(String searchWord);
 	public int updateBarterHits(int id);
+	public int updateBarterStatus(HashMap<String, Object> hashMap);
+	public int updateBarterImgSrc(HashMap<String, Object> hashMap);
 }
