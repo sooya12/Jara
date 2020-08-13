@@ -292,10 +292,10 @@ export default {
       })
     },
     save() {
-      if (this.$store.state.userInfo.id === this.barter.writer && !this.barter.status) {
+      if ((this.$store.state.userInfo.id === this.barter.writer) && !this.barter.status) {
         const tag_id_dict = {'구해요':5,'사요':6,'팔아요':7,'나눠요':8}
         this.editedItem.tag_id = tag_id_dict[this.tag]
-
+        console.log(this.editedItem)
         axios.put(`${this.$store.state.api_server}/barters/${this.barter.id}`,this.editedItem)
           .then(res => {
             // console.log(res.data)
