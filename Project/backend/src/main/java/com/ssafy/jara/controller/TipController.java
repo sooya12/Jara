@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.ssafy.jara.common.service.fileupload.FileUploadService;
+import com.ssafy.jara.dto.Article;
 import com.ssafy.jara.dto.Tip;
 import com.ssafy.jara.service.TipCommentService;
 import com.ssafy.jara.service.TipService;
@@ -46,6 +47,20 @@ public class TipController {
 		} 
 		
 		return new ResponseEntity<Integer>(0, HttpStatus.INTERNAL_SERVER_ERROR);
+	}
+	
+	@ApiOperation(value = "팁 이미지 경로 등록", response = String.class)
+	@PutMapping("/{id}/img")
+	private ResponseEntity<String> insertTipImg(@RequestBody Tip tip) {
+		HashMap<String, Object> hashMap = new HashMap<String, Object>();
+		hashMap.put("id", tip.getId());
+		hashMap.put("img_src", tip.getImg_src());
+		
+		if(tipService.updateTipImg(hashMap) > 0) {
+			return new ResponseEntity<String>("success", HttpStatus.OK);
+		}
+		
+		return new ResponseEntity<String>("fail", HttpStatus.BAD_REQUEST);
 	}
 	
 	@ApiOperation(value = "전체 팁 조회", response = List.class)

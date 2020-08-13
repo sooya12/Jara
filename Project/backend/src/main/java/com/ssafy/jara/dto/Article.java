@@ -22,7 +22,7 @@ public class Article {
 	
 	private String stored_file_name;		// 저장된 이미지 파일 이름
 	
-	private String img_src;
+	private String img_src;					// 파이어베이스 이미지 파일 경로
 	
 	public Article() {}
 
