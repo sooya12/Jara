@@ -73,6 +73,8 @@ public class BarterController {
 			if (originalBarter.getImg_src() == null) {	// img_src만 변경
 				if (barter.getImg_src() != null) {
 					ret = barterService.updateBarterImgSrc(hashMap);
+				} else {
+					ret = barterService.updateBarter(barter);
 				}
 			} else {
 				if (originalBarter.getImg_src().equals(barter.getImg_src())) {	// 게시글 변경
