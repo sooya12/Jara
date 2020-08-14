@@ -2,6 +2,7 @@ import Vue from 'vue'
 import VueRouter from 'vue-router'
 import Entrance from '../Entrance.vue'
 import Home from '../views/Home.vue'
+import Admin from '../views/Admin.vue'
 import NewArticle from '../components/Articles/NewArticle.vue'
 import ArticleDetail from '../components/Articles/ArticleDetail.vue'
 import SignIn from '../views/SignIn.vue'
@@ -13,6 +14,7 @@ import ChangeUserInfo from '../components/Accounts/ChangeUserInfo.vue'
 import ValidateEmail from '../components/Accounts/ValidateEmail.vue'
 import ChangePWD from '../components/Accounts/ChangePWD.vue'
 import Barters from '../views/Barters.vue'
+import BartersItemDetail from '../components/Barters/BartersItemDetail.vue'
 import Checks from '../views/Checks.vue'
 import Eithers from '../views/Eithers.vue'
 import NewEither from '../components/Eithers/NewEither.vue'
@@ -20,6 +22,7 @@ import EitherDetail from '../components/Eithers/EitherDetail.vue'
 import Tips from '../views/Tips.vue'
 import TipsItemDetail from '../components/Tips/TipsItemDetail.vue'
 import NewTip from '../components/Tips/NewTip.vue'
+import PageNotFound from '../views/PageNotFound.vue'
 
 Vue.use(VueRouter)
 
@@ -28,6 +31,11 @@ Vue.use(VueRouter)
     path: '/',
     name: 'Entrance',
     component: Entrance
+  },
+  {
+    path: '/admin',
+    name: 'Admin',
+    component: Admin,
   },
   {
     path: '/main',
@@ -145,6 +153,16 @@ Vue.use(VueRouter)
     }
   },
   {
+    path: '/barters/:item_id',
+    name: 'BartersItemDetail',
+    component: BartersItemDetail,
+    beforeEnter(to, from, next) {
+      if (Vue.$cookies.isKey('auth-token')) {
+        next()
+      } else { next({name: 'SignIn' }) }
+    }
+  },
+  {
     path: '/checks',
     name: 'Checks',
     component: Checks,
@@ -224,6 +242,11 @@ Vue.use(VueRouter)
         next()
       } else { next({name: 'SignIn' }) }
     }
+  },
+  {
+    path: '*',
+    name: 'PageNotFound',
+    component: PageNotFound,
   }
 ]
 

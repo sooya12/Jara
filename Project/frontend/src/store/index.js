@@ -14,7 +14,8 @@ Vue.use(firebase)
 
 export default new Vuex.Store({
   state: {
-    api_server: 'http://localhost:8081',
+    api_server: 'http://localhost:8081/jara',      // Local
+    // api_server: 'https://i3a308.p.ssafy.io/jara',  // Server
     authToken: VueCookies.get('auth-token'),
     entrance: true,
     drawer: false,
@@ -22,7 +23,8 @@ export default new Vuex.Store({
     userInfo: null,
     results: [],
     showSearch: false,
-    users: null,
+    users: [],
+    psas: [],
     today: new Date(),
     week: ['일', '월', '화', '수', '목', '금', '토'],
     error: false,
@@ -61,8 +63,9 @@ export default new Vuex.Store({
     SET_USERINFO(state, val) {
       state.userInfo = val
     },
-    SET_USERS(state, val) {
-      state.users = val
+    SET_USERS(state, val1, val2) {
+      state.users = val1
+      state.psas = val2
     },
     SET_DRAWER(state, status) {
       state.drawer = status
@@ -105,10 +108,9 @@ export default new Vuex.Store({
     signIn({ commit, state, dispatch }, data) {
       Axios.post(`${state.api_server}/accounts/signin`, data)
         .then(res => {
-          commit('SET_USERINFO', res.data)
           commit('SET_TOKEN', res.headers['jwt-auth-token'])
-          // dispatch('initial')
-          dispatch('checkDB')
+          dispatch('getUser')
+          dispatch('checkDB', res.data.id)
           router.push('/main')
         })
         .catch(() => {
@@ -124,14 +126,16 @@ export default new Vuex.Store({
     getUsers({ commit, state }) {
       Axios.get(`${state.api_server}/accounts`)
         .then(res => {
+          const imgs = {}
           const nicks = {}
           state.results.push({ header: '모든 유저' })
           state.results.push({ divider: true })
           res.data.forEach(function(user) {
             nicks[user.id] = user.nickname
+            imgs[user.id] = user.img_src
             state.results.push({ nickname: user.nickname, id: user.id })
           })
-          commit('SET_USERS', nicks)
+          commit('SET_USERS', nicks, imgs)
         })
     },
     draw({ commit, state }) {
@@ -164,9 +168,23 @@ export default new Vuex.Store({
       router.push('/accounts/user')
       commit('SET_DRAWER', false)
     },
-    report({ commit }) {
-      commit('SET_DIALOG', true)
-      commit('SET_DRAWER', false)
+    report({ commit, getters, state }) {
+      if (getters.isLoggedIn) {
+        commit('SET_DRAWER', false)
+        const requestHeaders = {
+          headers: {
+            token: VueCookies.get('auth-token')
+          }
+        }
+        Axios.get(`${state.api_server}/admin`, requestHeaders)
+          .then(() => router.push('/admin'))
+          .catch(() => {
+            commit('SET_DIALOG', true)
+          })
+      } else {
+        alert('로그인한 회원님만 사용할 수 있어요!')
+        commit('SET_DRAWER', false)
+      }
     },
     getUser({ commit, state }) {
       const requestHeaders = {
@@ -203,34 +221,17 @@ export default new Vuex.Store({
         commit('SET_DIALOG', false)
       })
     },
-    checkDB({ commit, state }) {
-      firebase.database().ref(`comment/${state.userInfo.id}`).on('child_added', function(snapshot) {
+    checkDB({ commit }, id) {
+      firebase.database().ref(`comment/${id}`).on('child_added', function(snapshot) {
         commit('SET_NOTIFICATION', snapshot.val())
       })
-      firebase.database().ref(`liked/${state.userInfo.id}`).on('child_added', function(snapshot) {
+      firebase.database().ref(`liked/${id}`).on('child_added', function(snapshot) {
         commit('SET_NOTIFICATION', snapshot.val())
       })
-      firebase.database().ref(`following/${state.userInfo.id}`).on('child_added', function(snapshot) {
+      firebase.database().ref(`following/${id}`).on('child_added', function(snapshot) {
         commit('SET_REQUEST', snapshot.val())
       })
     },
-    // initial({ commit, state }) {
-    //   firebase.database().ref(`comment/${state.userInfo.id}`).once('value', function(snapshot) {
-    //     if (snapshot.val() != null) { 
-    //       commit('SET_NOTIFICATION', Object.values(snapshot.val()))
-    //     }
-    //   })
-    //   firebase.database().ref(`liked/${state.userInfo.id}`).once('value', function(snapshot) {
-    //     if (snapshot.val() != null) { 
-    //       commit('SET_NOTIFICATION', Object.values(snapshot.val()))
-    //     }
-    //   })
-    //   firebase.database().ref(`following/${state.userInfo.id}`).once('value', function(snapshot) {
-    //     if (snapshot.val() != null) { 
-    //       commit('SET_REQUEST', Object.values(snapshot.val()))
-    //     }
-    //   })
-    // }
   },
   modules: {
   }

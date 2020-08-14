@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -26,7 +27,7 @@ import io.swagger.annotations.ApiOperation;
 
 @CrossOrigin(origins = { "*" }, maxAge = 6000)
 @RestController
-@RequestMapping("/eithers")
+@RequestMapping("/jara/eithers")
 public class EitherController {
 	
 	@Autowired
@@ -49,6 +50,12 @@ public class EitherController {
 	@GetMapping("/{id}")
 	private ResponseEntity<Map<String, Object>> selectEither(@PathVariable int id) {
 		Either either = eitherService.selectEither(id);
+		
+		if (either == null) {
+			System.out.println("ERROR: 해당하는 글이 존재하지 않습니다.");
+			return new ResponseEntity<Map<String, Object>>(HttpStatus.NOT_FOUND);
+		}
+		
 		List<EitherComment> eitherComments = eitherCommentService.selectListEitherComment(id);
 		List<Integer> choiceA = eitherService.selectChoiceAList(id);
 		List<Integer> choiceB = eitherService.selectChoiceBList(id);
@@ -58,10 +65,17 @@ public class EitherController {
 		resultMap.put("choiceA", choiceA);
 		resultMap.put("choiceB", choiceB);
 		resultMap.put("eitherComments", eitherComments);
-		if (either != null) {
-			return new ResponseEntity<Map<String, Object>>(resultMap, HttpStatus.OK);
+		
+		return new ResponseEntity<Map<String, Object>>(resultMap, HttpStatus.OK);
+	}
+	
+	@ApiOperation(value = "투표 수정", response = String.class)
+	@PutMapping("/{id}")
+	private ResponseEntity<String> updateEither(@PathVariable int id) {
+		if (eitherService.updateEither(id) > 0) {
+			return new ResponseEntity<String>("success", HttpStatus.OK);
 		} else {
-			return new ResponseEntity<Map<String, Object>>(resultMap, HttpStatus.BAD_REQUEST);
+			return new ResponseEntity<String>("fail", HttpStatus.BAD_REQUEST);
 		}
 	}
 	
@@ -76,7 +90,7 @@ public class EitherController {
 	}
 	
 	@ApiOperation(value = "전체 투표 조회", response = String.class)
-	@GetMapping("/")
+	@GetMapping("")
 	private ResponseEntity<List<Either>> selectListEither() {
 		return new ResponseEntity<List<Either>>(eitherService.selectListEither(), HttpStatus.OK);
 	}

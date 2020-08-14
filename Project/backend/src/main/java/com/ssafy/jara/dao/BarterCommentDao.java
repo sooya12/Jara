@@ -12,4 +12,5 @@ public interface BarterCommentDao {
 	public int updateBarterComment(BarterComment barterComment);
 	public int deleteBarterComment(int id);
 	public List<BarterComment> selectListBarterComment(int item_id);
+	public BarterComment selectBarterComment(int id);
 }

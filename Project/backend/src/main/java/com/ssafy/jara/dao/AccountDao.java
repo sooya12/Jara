@@ -29,11 +29,17 @@ public interface AccountDao {
 	
 	public Account findAccount(int id);
 	
+	public Account findPartAccount(int id);
+	
 	public int findEmail(String email);
 	
 	public List<Account> findAllAccount();
 	
 	public boolean updateAccount(Account account);
+	
+	public int deleteAccount(int id);
+	
+	public int deleteAllFollow(int id);
 	
 	public int insertFollow(Follow follow);
 	
@@ -48,11 +54,5 @@ public interface AccountDao {
 	public List<Integer> findFollower(int following);
 	public List<Integer> findFollowing(int follower);
 	
-	public double findX(String name);
-	public double findY(String name);
-	
-	public Location findLocation(String name);
-	
-	public List<Location> findAllLocation();
 	
 }

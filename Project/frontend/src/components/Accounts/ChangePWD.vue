@@ -87,7 +87,7 @@ export default {
   },
   methods: {
     updatePWD() {
-      axios.put(`${this.$store.state.api_server}/accounts/setnewpw`, this.changePWDData)
+      axios.put(`${this.$store.state.api_server}/accounts/setnewpwd`, this.changePWDData)
         .then(() => {
           alert('비밀번호가 성공적으로 변경되었습니다.')
           this.$router.push('/accounts/signin')

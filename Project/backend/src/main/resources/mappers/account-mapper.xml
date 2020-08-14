@@ -20,7 +20,7 @@
 	<select id="selectAccount" resultType="com.ssafy.jara.dto.Account">
 		SELECT *
 		FROM user
-		WHERE email=#{email} <!-- and password=#{password} --> and status = 1;
+		WHERE email=#{email} and password=#{password} and status = 1;
 	</select>
 	
 	<!-- 이메일로 비밀번호 찾기(로그인 시) 비밀번호 암호화에 필요 -->
@@ -60,7 +60,14 @@
 	
 	<!-- 회원 정보 조회 -->
 	<select id="findAccount" resultType="com.ssafy.jara.dto.Account">
-		SELECT *
+		SELECT id, nickname, sex, birthday, location, bio, status, img_src
+		FROM user
+		WHERE id=#{id}
+	</select>
+	
+	<!-- 회원 정보 조회 - 민감 정보 제외 -->
+	<select id="findPartAccount" resultType="com.ssafy.jara.dto.Account">
+		SELECT id, nickname, sex, birthday, location, bio, status, img_src
 		FROM user
 		WHERE id=#{id}
 	</select>
@@ -76,16 +83,30 @@
 	<update id="updateAccount">
 		UPDATE user SET
 		nickname=#{nickname}, password=#{password}, 
-		sex=#{sex}, birthday=#{birthday}, location=#{location}, bio=#{bio}
+		sex=#{sex}, birthday=#{birthday}, location=#{location}, bio=#{bio}, img_src=#{img_src}
 		WHERE id=#{id}
 	</update>
 	
 	<!-- 모든 회원 정보(유저) 조회 -->
 	<select id="findAllAccount" resultType="com.ssafy.jara.dto.Account">
-		SELECT *
+		SELECT id, nickname, img_src
 		FROM user
 		ORDER BY nickname
 	</select>
+	
+	<!-- 회원 정보 삭제 -->
+	<delete id="deleteAccount">
+		DELETE
+		FROM user
+		WHERE id=#{id}
+	</delete>
+	
+	<!-- 회원 정보 삭제시 팔로우 테이블에서 삭제 -->
+	<delete id="deleteAllFollow">
+		DELETE 
+		FROM follow
+		WHERE following=#{following} or follower=#{follower}
+	</delete>
 	
 	<!-- 팔로우 추가 : 팔로우 요청 보내기 -->
 	<insert id="insertFollow">
@@ -134,34 +155,5 @@
 		WHERE follower=#{follower} and following=#{following} 
 	</delete>
 	
-	
-	<!-- 위치 x 조회하기 -->
-	<select id="findX" resultType="java.lang.Double">
-		SELECT x
-		FROM location
-		WHERE name=#{name}
-	</select>
-	
-	<!-- 위치 y 조회하기 -->
-	<select id="findY" resultType="java.lang.Double">
-		SELECT y
-		FROM location
-		WHERE name=#{name}
-	</select>
-	
-	<!-- 위치  조회하기 -->
-	<select id="findlocation" resultType="com.ssafy.jara.dto.Location">
-		SELECT *
-		FROM location
-		WHERE name=#{name}
-	</select>
-	
-	
-	<!-- 모든 위치 조회하기 -->
-	<select id="findAllLocation" resultType="com.ssafy.jara.dto.Location">
-		SELECT *
-		FROM location
-		ORDER BY name
-	</select>
 
 </mapper>

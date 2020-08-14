@@ -4,6 +4,21 @@
       유효하지 않은 입력입니다.
     </v-alert>
     <v-icon x-large>mdi-account-edit-outline</v-icon>
+    <div class="font-weight-bold mt-5 px-3">프로필 사진<v-icon class="ml-1">mdi-camera</v-icon></div>
+    <div v-if="file==null" class="d-flex justify-center">
+      <v-icon v-if="user.img_src==null" x-large>mdi-account-circle</v-icon>
+      <v-avartar v-else><img :src="user.img_src"></v-avartar>
+    </div>
+    <div v-else class="d-flex justify-center"><v-avatar><img :src="imgURL" alt="프로필 사진"></v-avatar></div>
+    <v-file-input
+      @change="image"
+      v-model="file"
+      outlined
+      placeholder="사진을 첨부해 주세요."
+      color="green darken-2"
+      class="mt-3 px-3"
+    >
+    </v-file-input>
     <v-form
       v-model="isValid"
       ref="form"
@@ -107,8 +122,9 @@
 </template>
 
 <script>
-import { mapState } from 'vuex'
+import { mapState, mapActions } from 'vuex'
 import axios from 'axios'
+import firebase from 'firebase'
 
 export default {
   name: 'ChageUserInfo',
@@ -124,6 +140,9 @@ export default {
   data() {
     return {
       user: null,
+      file: null,
+      imgURL: '',
+      src: '',
       currentPWD: '',
       changePWD: '',
       confirmPWD: '',
@@ -141,7 +160,7 @@ export default {
       },
       currentPWDRules: {
         required: value => !!value || '현재 비밀번호를 입력해주세요.',
-        same: v => v == this.user.password || '비밀번호가 일치하지 않습니다.'
+        same: v => v == this.$store.state.userInfo.password || '비밀번호가 일치하지 않습니다.'
       },
       passwordRules: {
         required: value => !!value || '변경하실 비밀번호를 입력해주세요.',
@@ -152,11 +171,15 @@ export default {
         same: v => v == this.changePWD || '비밀번호가 일치하지 않습니다.'
       },
       locationRules: {
-        requried: value => !!value || '주소를 입력해주세요.',
+        required: value => !!value || '주소를 입력해주세요.',
       },
     }
   },
   methods: {
+    ...mapActions([
+      'getUser',
+      'getUsers'
+    ]),
     getUserInfo() {
       axios.get(`${this.$store.state.api_server}/accounts/${this.$route.params.user_id}`)
         .then(res => {
@@ -166,8 +189,12 @@ export default {
     },
     updateInfo() {
       if (this.changePWD.length > 0 && this.confirmPWD == this.changePWD) {this.user.password = this.changePWD}
+      else {this.user['password'] = this.$store.state.userInfo.password}
+      if (this.file!=null) {this.user.img_src = this.src}
       axios.put(`${this.$store.state.api_server}/accounts/${this.$route.params.user_id}`, this.user)
         .then(() => {
+          this.$store.dispatch('getUser')
+          this.$store.dispatch('getUsers')
           alert('수정이 성공적으로 완료되었습니다.')
           this.isSave = !this.isSave
           this.$router.push(`/accounts/${this.$route.params.user_id}`)
@@ -179,6 +206,12 @@ export default {
     },
     cancle() {
       this.$router.push(`/accounts/${this.$route.params.user_id}`)
+    },
+    image() {
+      this.imgURL = URL.createObjectURL(this.file)
+      firebase.storage().ref(`psas/${this.user.id}`).put(this.file).then(() => {
+        firebase.storage().ref(`psas/${this.user.id}`).getDownloadURL().then(url => this.src = url)
+      })
     }
   },
   beforeRouteLeave(to, from, next) {

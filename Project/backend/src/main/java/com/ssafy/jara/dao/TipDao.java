@@ -41,4 +41,8 @@ public interface TipDao {
 	public int insertTipScrap(HashMap<String, Integer> hashMap);
 	
 	public List<Tip> selectListTipScrap(int user_id);
+	
+	public List<Tip> selectListTipTop5();
+	
+	public int updateTipImg(HashMap<String, Object> hashMap);
 }

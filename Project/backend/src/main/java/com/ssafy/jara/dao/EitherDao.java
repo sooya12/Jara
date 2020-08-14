@@ -11,6 +11,7 @@ import com.ssafy.jara.dto.EitherChoice;
 public interface EitherDao {
 	public int insertEither(Either either);
 	public Either selectEither(int id);
+	public int updateEither(int id);
 	public int deleteEither(int id);
 	public List<Either> selectListEither();
 	public int pickEither(EitherChoice eitherChoice);

@@ -79,6 +79,7 @@
 		VALUES (#{tip_id}, #{user_id})
 	</insert>
 	
+	<!-- 팁 좋아하는 사람 목록 조회 -->
 	<select id="selectTipLikeAccounts" resultType="java.lang.Integer">
 		SELECT user_id
 		FROM tip_like
@@ -120,5 +121,22 @@
 					 FROM scrap
 					 WHERE user_id=#{user_id})
 	</select>
+	
+	<!-- (좋아요수+조회수) 순 > 좋아요순 > 최신순 정렬 상위 5개 -->
+	<select id="selectListTipTop5" resultType="com.ssafy.jara.dto.Tip">
+		SELECT *, (SELECT COUNT(*)
+				   FROM tip_like
+				   WHERE tip_id=id) AS likes
+	    FROM tip
+	    ORDER BY (likes + hits) DESC, likes DESC, created_at DESC
+	    LIMIT 5 
+	</select>
+	
+	<!-- 팁 이미지 경로(firebase) 저장 -->
+	<update id="updateTipImg">
+		UPDATE tip
+		SET img_src=#{img_src}
+		WHERE id=#{id}
+	</update>
 	
 </mapper>

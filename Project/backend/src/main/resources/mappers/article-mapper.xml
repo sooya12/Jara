@@ -18,7 +18,7 @@
 	
 	<!-- 사용자가 작성한 전체 게시글 및 사용자가 팔로우하는 다른 사용자의 전체 게시글 -->
 	<select id="selectListArticle" resultType="com.ssafy.jara.dto.Article">
-		SELECT id, writer, contents, created_at, updated_at, shares
+		SELECT id, writer, contents, created_at, updated_at, shares, img_src
 		FROM article
 		WHERE writer=#{user_id} OR (writer IN (SELECT following 
 											   FROM follow 
@@ -28,7 +28,7 @@
 	
 	<!-- 사용자가 작성한 전체 게시글 및 사용자가 팔로우하는 다른 사용자의 전체 게시글 idx부터 range만큼 가져오기 -->
 	<select id="selectRangeListArticle" resultType="com.ssafy.jara.dto.Article">
-		SELECT id, writer, contents, created_at, updated_at, shares
+		SELECT id, writer, contents, created_at, updated_at, shares, img_src
 		FROM article
 		WHERE writer=#{user_id} OR (writer IN (SELECT following 
 											   FROM follow 
@@ -105,5 +105,12 @@
 		FROM article_like
 		WHERE article_id=#{article_id}
 	</select>
+	
+	<!-- 게시글 이미지 경로(firebase) 저장 -->
+	<update id="updateArticleImg">
+		UPDATE article 
+		SET img_src=#{img_src}
+		WHERE id=#{id}
+	</update>
 	
 </mapper>

@@ -7,22 +7,12 @@
       dark
     >
       <v-app-bar-nav-icon @click="draw"></v-app-bar-nav-icon>
-      <div>
-        <v-img
-          alt="JARA Logo"
-          class="shrink mr-2"
-          contain
-          src="@/assets/jara.png"
-          transition="scale-transition"
-          width="40"
-        />
-      </div>
-      <v-toolbar-title class="font-weight-bold">JARA</v-toolbar-title>
+      <v-toolbar-title class="font-weight-bold pl-0" @click="goToHome">JARA</v-toolbar-title>
       <v-spacer></v-spacer>
       <v-btn icon @click="show" v-if="!isSearch">
         <v-icon>mdi-magnify</v-icon>
       </v-btn>
-      <div v-else class="searchbar mt-6">
+      <div v-else class="searchbar mt-6" style="width: 150px;">
         <v-autocomplete
           v-model="searchWord"
           :search-input.sync="searched"
@@ -64,14 +54,13 @@
         >
           <v-tabs-slider></v-tabs-slider>
 
-          <v-tab>
+          <v-tab @click="deleteNotification">
             알림
           </v-tab>
 
           <v-tab-item>
             <v-card
-              flat
-              tile
+              elevation
             >
               <v-card-text v-for="(noti, idx) in requestData.notification" :key="idx">
                 <div v-if="Object.keys(noti).includes('like')"><v-icon color="red darken-1" class="mr-1">mdi-heart</v-icon>{{ users[noti.by] }}님이 회원님의 게시글을 좋아합니다.</div>
@@ -112,7 +101,8 @@
         >
           <v-list-item two-line>
             <v-list-item-avatar>
-              <v-icon>mdi-account-circle</v-icon>
+              <v-icon v-if="userInfo.img_src==null">mdi-account-circle</v-icon>
+              <v-avatar v-else><img :src="userInfo.img_src"></v-avatar>
             </v-list-item-avatar>
             <v-list-item-content v-if="!isLoggedIn">
               <v-list-item-title>방문자 님</v-list-item-title>
@@ -130,35 +120,35 @@
             <v-list-item-icon>
               <v-icon>mdi-home</v-icon>
             </v-list-item-icon>
-            <v-list-item-title>Home</v-list-item-title>
+            <v-list-item-title>홈</v-list-item-title>
           </v-list-item>
 
           <v-list-item @click="goToBarters">
             <v-list-item-icon>
               <v-icon>mdi-shopping</v-icon>
             </v-list-item-icon>
-            <v-list-item-title>Barter</v-list-item-title>
+            <v-list-item-title>마켓</v-list-item-title>
           </v-list-item>
 
           <v-list-item @click="goToChecks">
             <v-list-item-icon>
               <v-icon>mdi-checkbox-marked</v-icon>
             </v-list-item-icon>
-            <v-list-item-title>Check</v-list-item-title>
+            <v-list-item-title>체크</v-list-item-title>
           </v-list-item>
 
           <v-list-item @click="goToEithers">
             <v-list-item-icon>
               <v-icon>mdi-align-horizontal-left</v-icon>
             </v-list-item-icon>
-            <v-list-item-title>Either</v-list-item-title>
+            <v-list-item-title>이더</v-list-item-title>
           </v-list-item>
 
           <v-list-item @click="goToTips">
             <v-list-item-icon>
               <v-icon>mdi-lightbulb</v-icon>
             </v-list-item-icon>
-            <v-list-item-title>Tip</v-list-item-title>
+            <v-list-item-title>꿀팁</v-list-item-title>
           </v-list-item>
 
           <v-list-item @click="report">
@@ -170,7 +160,7 @@
                 <v-list-item-icon v-bind="attrs" v-on="on">
                   <v-icon color="error">mdi-alarm-light</v-icon>
                 </v-list-item-icon>
-                <v-list-item-title>Report</v-list-item-title>
+                <v-list-item-title>신고</v-list-item-title>
               </template>
               <v-card>
                 <v-card-title class="headline grey lighten-2">
@@ -229,7 +219,7 @@
             <v-list-item-icon>
               <v-icon>mdi-export</v-icon>
             </v-list-item-icon>
-            <v-list-item-title>Sign out</v-list-item-title>
+            <v-list-item-title>로그아웃</v-list-item-title>
           </v-list-item>
 
         </v-list-item-group>
@@ -256,6 +246,7 @@ export default {
     this.$store.dispatch('getUsers')
     if (this.$route.path != "/") {this.$store.commit('SET_ENTRANCE', false)}
     if (this.$store.state.authToken&&this.$store.state.userInfo==null) {this.$store.dispatch('getUser')}
+    // if (this.$store.state.userInfo!=null) {this.isTaken = true}
     if (this.$store.state.authToken) {this.$store.commit('SET_ENTRANCE', false)}
   },
   computed: {
@@ -343,10 +334,15 @@ export default {
           this.$store.commit('SET_DEQUEST', idx)
           firebase.database().ref(`following/${this.$store.state.userInfo.id}/${rq.key}`).remove()
         })
+    },
+    deleteNotification() {
+      firebase.database().ref(`liked/${this.$store.state.userInfo.id}`).remove()
+      firebase.database().ref(`comment/${this.$store.state.userInfo.id}`).remove()
     }
   },
   data() {
     return {
+      // isTaken: false,
       searched: null,
       searchWord: null,
     }

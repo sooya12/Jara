@@ -1,6 +1,9 @@
 package com.ssafy.jara.controller;
 
+import java.text.SimpleDateFormat;
+import java.util.HashMap;
 import java.util.List;
+import java.util.TimeZone;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -22,7 +25,7 @@ import io.swagger.annotations.ApiOperation;
 
 @CrossOrigin(origins = { "*" }, maxAge = 6000)
 @RestController
-@RequestMapping("/eithers")
+@RequestMapping("/jara/eithers")
 public class EitherCommentController {
 	
 	@Autowired
@@ -41,11 +44,23 @@ public class EitherCommentController {
 	
 	@ApiOperation(value = "투표 댓글 수정 (contents)", response = String.class)
 	@PutMapping("/{either_id}/comments/{id}")
-	private ResponseEntity<String> updateEitherComment(@PathVariable int id, @RequestBody EitherComment eitherComment) {
+	private ResponseEntity<HashMap<String, Object>> updateEitherComment(@PathVariable int id, @RequestBody EitherComment eitherComment) {
 		if (eitherCommentService.updateEitherComment(eitherComment) > 0) {
-			return new ResponseEntity<String>("success", HttpStatus.OK);
+			
+			HashMap<String, Object> hashMap = new HashMap<String, Object>();
+			
+			SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+			dateFormat.setTimeZone(TimeZone.getTimeZone("Asia/Seoul"));
+			
+			eitherComment = eitherCommentService.selectEitherComment(id);
+			
+			hashMap.put("updated_at", dateFormat.format(eitherComment.getUpdated_at()));
+			hashMap.put("contents", eitherComment.getContents());
+			hashMap.put("choice", eitherComment.isChoice());
+			
+			return new ResponseEntity<HashMap<String, Object>>(hashMap, HttpStatus.OK);
 		} else {
-			return new ResponseEntity<String>("fail", HttpStatus.BAD_REQUEST);
+			return new ResponseEntity<HashMap<String, Object>>(HttpStatus.BAD_REQUEST);
 		}
 	}
 	
@@ -62,7 +77,7 @@ public class EitherCommentController {
 	}
 	
 	@ApiOperation(value = "투표 전체 댓글 조회", response = String.class)
-	@GetMapping("/{either_id}/comments/")
+	@GetMapping("/{either_id}/comments")
 	private ResponseEntity<List<EitherComment>> selectListEitherComment(@PathVariable int either_id) {
 		return new ResponseEntity<List<EitherComment>>(eitherCommentService.selectListEitherComment(either_id), HttpStatus.OK);
 	}

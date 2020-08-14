@@ -1,8 +1,14 @@
 <template>
   <v-container fluid mt-5 v-if="isLoad">
     <div class="d-flex justify-space-between align-center">
-      <div class="text-sm-h3 text-h6">
+      <div class="text-sm-h3 text-h6" v-if="user.img_src==null">
         <v-icon x-large>mdi-account-circle</v-icon>
+        {{ user.nickname }}
+      </div>
+      <div class="text-sm-h3 text-h6" v-else>
+        <v-avatar>
+          <img :src="user.img_src" alt="프로필 사진">
+        </v-avatar>
         {{ user.nickname }}
       </div>
       <div class="d-flex text-sm-h6 text-subtitle-2">
@@ -69,19 +75,37 @@
     </div>
     <v-divider class="my-5"></v-divider>
     <div class="d-flex justify-space-around align-center">
-      <v-btn text class="font-weight-bold">게시글<v-icon class="ml-1" color="green lighten-1">mdi-pencil-box</v-icon></v-btn>
+      <v-btn text class="font-weight-bold" @click="isArticles = true">게시글
+        <v-icon v-if="isArticles" class="ml-1" color="green lighten-1">mdi-pencil-box</v-icon>
+        <v-icon v-else class="ml-1" color="green lighten-1">mdi-pencil-box-outline</v-icon>
+      </v-btn>
       |
-      <v-btn text class="font-weight-bold">저장<v-icon class="ml-1" color="teal">mdi-bookmark</v-icon></v-btn>
+      <v-btn text class="font-weight-bold" @click="isArticles = false">저장
+        <v-icon v-if="isArticles" class="ml-1" color="teal">mdi-bookmark-outline</v-icon>
+        <v-icon v-else class="ml-1" color="teal">mdi-bookmark</v-icon>
+      </v-btn>
     </div>
+    <v-row class="mt-5 px-3 fill-height" v-if="isArticles">
+      <Articles v-for="article in articles" :key="article.id" :article="article"/>
+    </v-row>
+    <v-row class="mt-5 px-3 fill-height" v-else>
+      <Scraps v-for="scrap in scraps" :key="scrap.id" :scrap="scrap"/>
+    </v-row>
   </v-container>
 </template>
 
 <script>
 import { mapState } from 'vuex'
 import axios from 'axios'
+import Articles from './Articles.vue'
+import Scraps from './Scraps.vue'
 
 export default {
   name: 'Profile',
+  components: {
+    Articles,
+    Scraps,
+  },
   computed: {
     ...mapState([
       'userInfo',
@@ -92,7 +116,10 @@ export default {
   data() {
     return {
       user: null,
-      isLoad: false,   
+      isLoad: false,
+      articles: [],
+      scraps: [],
+      isArticles: true,
     }
   },
   methods: {
@@ -100,6 +127,8 @@ export default {
       axios.get(`${this.$store.state.api_server}/accounts/${this.$store.state.userInfo.id}`)
         .then(res => {
           this.user = res.data
+          this.articles = res.data.myArticleList
+          this.scraps = res.data.scrapTipList
           this.isLoad = !this.isLoad
         })
     },

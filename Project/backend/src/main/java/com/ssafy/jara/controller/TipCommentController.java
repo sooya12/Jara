@@ -22,7 +22,7 @@ import io.swagger.annotations.ApiOperation;
 
 @CrossOrigin(origins = { "*" }, maxAge = 6000)
 @RestController
-@RequestMapping("/tips")
+@RequestMapping("/jara/tips")
 public class TipCommentController {
 
 	@Autowired

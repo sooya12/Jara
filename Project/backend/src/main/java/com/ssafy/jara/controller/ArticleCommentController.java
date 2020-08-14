@@ -1,7 +1,7 @@
 package com.ssafy.jara.controller;
 
 import java.text.SimpleDateFormat;
-import java.util.Date;
+import java.util.HashMap;
 import java.util.TimeZone;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,7 +16,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
 import com.ssafy.jara.dto.ArticleComment;
 import com.ssafy.jara.service.ArticleCommentService;
 
@@ -24,7 +23,7 @@ import io.swagger.annotations.ApiOperation;
 
 @CrossOrigin(origins = { "*" }, maxAge = 6000)
 @RestController
-@RequestMapping("/articles")
+@RequestMapping("/jara/articles")
 public class ArticleCommentController {
 	
 	@Autowired
@@ -57,17 +56,23 @@ public class ArticleCommentController {
 	
 	@ApiOperation(value = "게시글 댓글 수정", response = String.class)
 	@PutMapping("/{article_id}/comments/{id}")
-	private ResponseEntity<String> updateArticleComment(@RequestBody ArticleComment articleComment) {
+	private ResponseEntity<HashMap<String, Object>> updateArticleComment(@RequestBody ArticleComment articleComment, @PathVariable("id") int id) {
 		if(articleCommentService.updateArticleComment(articleComment) > 0) {
+			
+			HashMap<String, Object> hashMap = new HashMap<String, Object>();
 			
 			SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm");
 			dateFormat.setTimeZone(TimeZone.getTimeZone("Asia/Seoul"));
-			Date date = articleCommentService.selectArticleComment(articleComment.getId()).getUpdated_at();
+			
+			articleComment = articleCommentService.selectArticleComment(id);
+			
+			hashMap.put("updated_at", dateFormat.format(articleComment.getUpdated_at()));
+			hashMap.put("contents", articleComment.getContents());
 
-			return new ResponseEntity<String>(dateFormat.format(date), HttpStatus.OK);
+			return new ResponseEntity<HashMap<String, Object>>(hashMap, HttpStatus.OK);
 		}
 		
-		return new ResponseEntity<String>(HttpStatus.BAD_REQUEST);
+		return new ResponseEntity<HashMap<String, Object>>(HttpStatus.BAD_REQUEST);
 	}
 	
 	@ApiOperation(value = "게시글 댓글 삭제", response = String.class)

@@ -20,13 +20,13 @@ public class Barter {
 	private boolean status;		// 물물교환 거래상태
 	private int hits;			// 물물교환 조회수
 	
-	private String stored_file_name;		// 저장된 이미지 파일 이름
+	private String img_src;
 	
 	public Barter() {
 		super();
 	}
 	public Barter(int id, int writer, int tag_id, String title, int price, String contents, Date created_at,
-			Date updated_at, boolean status, int hits, String stored_file_name) {
+			Date updated_at, boolean status, int hits, String img_src) {
 		super();
 		this.id = id;
 		this.writer = writer;
@@ -38,7 +38,7 @@ public class Barter {
 		this.updated_at = updated_at;
 		this.status = status;
 		this.hits = hits;
-		this.stored_file_name = stored_file_name;
+		this.img_src = img_src;
 	}
 	
 	public int getId() {
@@ -89,7 +89,7 @@ public class Barter {
 	public void setUpdated_at(Date updated_at) {
 		this.updated_at = updated_at;
 	}
-	public boolean isStatus() {
+	public boolean getStatus() {
 		return status;
 	}
 	public void setStatus(boolean status) {
@@ -101,17 +101,16 @@ public class Barter {
 	public void setHits(int hits) {
 		this.hits = hits;
 	}
-	public String getStored_file_name() {
-		return stored_file_name;
+	public String getImg_src() {
+		return img_src;
 	}
-	public void setStored_file_name(String stored_file_name) {
-		this.stored_file_name = stored_file_name;
+	public void setImg_src(String img_src) {
+		this.img_src = img_src;
 	}
-	
 	@Override
 	public String toString() {
 		return "Barter [id=" + id + ", writer=" + writer + ", tag_id=" + tag_id + ", title=" + title + ", price="
 				+ price + ", contents=" + contents + ", created_at=" + created_at + ", updated_at=" + updated_at
-				+ ", status=" + status + ", hits=" + hits + ", stored_file_name=" + stored_file_name + "]";
+				+ ", status=" + status + ", hits=" + hits + ", img_src=" + img_src + "]";
 	}
 }

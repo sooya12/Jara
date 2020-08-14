@@ -245,8 +245,8 @@ server {
 
 
         # Backend Proxy 설정
-        location /api {
-                proxy_pass http://localhost:8399/api/;
+        location /[api] {
+                proxy_pass http://localhost:8399;
                 proxy_redirect off;
                 charset utf-8;
 
@@ -351,10 +351,10 @@ scp -i Desktop/amazon/juhyung.pem -r Desktop/example ubuntu@~~~~:~/
 
 - AWS에서 .jar 파일 실행
 ```
-sudo java -jar JARA-0.0.1-SNAPSHOT.jar  // 이렇게 배포하면 터미널을 종료했을 때 프로그램 역시 종료된다.
+sudo java -jar -Duser.timezone=Asia/Seoul JARA-0.0.1-SNAPSHOT.jar  // 이렇게 배포하면 터미널을 종료했을 때 프로그램 역시 종료된다.
 ```
 ```
-sudo nohup java -jar JARA-0.0.1-SNAPSHOT.jar &  // 이렇게 nohup 커맨드를 사용하면 ssh 접속이 끊긴 이후에도 백그라운드에서 jar가 계속 돌아간다.
+sudo nohup java -jar -Duser.timezone=Asia/Seoul JARA-0.0.1-SNAPSHOT.jar &  // 이렇게 nohup 커맨드를 사용하면 ssh 접속이 끊긴 이후에도 백그라운드에서 jar가 계속 돌아간다.
 ```
 
 - (참고) AWS에 jdk (1.8) 설치 (.jar 파일을 실행할 때 java 명령어가 실행되지 않을 경우에 설치)
