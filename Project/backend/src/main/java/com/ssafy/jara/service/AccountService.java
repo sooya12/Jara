@@ -1,5 +1,6 @@
 package com.ssafy.jara.service;
 
+import java.util.HashMap;
 import java.util.List;
 
 import com.ssafy.jara.dto.Account;
@@ -49,8 +50,13 @@ public interface AccountService {
 	public int deleteFollow(Follow follow);
 	
 	public List<Integer> findFollower(int following);
+	
 	public List<Integer> findFollowing(int follower);
 	
-
+	public int findIdByEmail(String email);
+	
+	public int insertNaverAccount(Account account);
+	
+	public int updateNaverAccount(HashMap<String, Object> hashMap);
 	
 }

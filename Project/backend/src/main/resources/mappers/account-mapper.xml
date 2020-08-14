@@ -155,5 +155,23 @@
 		WHERE follower=#{follower} and following=#{following} 
 	</delete>
 	
+	<!-- 이메일로 id 조회 -->
+	<select id="findIdByEmail" resultType="java.lang.Integer">
+		SELECT id
+		FROM user
+		WHERE email=#{email}
+	</select>
+	
+	<!-- 네이버 소셜 로그인 회원가입 (password는 랜덤값 삽입) -->
+	<insert id="insertNaverAccount" useGeneratedKeys="true" keyProperty="id">
+		INSERT INTO user (nickname, password, email, sex, status, access_token, refresh_token)
+		VALUES(#{nickname}, LEFT(MD5(RAND()), 10), #{email}, #{sex}, 1, #{access_token}, #{refresh_token})
+	</insert>
+	
+	<update id="updateNaverAccount">
+		UPDATE user
+		SET location=#{location}
+		WHERE id=#{id}
+	</update>
 
 </mapper>

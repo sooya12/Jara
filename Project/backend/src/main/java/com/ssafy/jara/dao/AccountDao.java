@@ -1,12 +1,12 @@
 package com.ssafy.jara.dao;
 
+import java.util.HashMap;
 import java.util.List;
 
 import org.apache.ibatis.annotations.Mapper;
 
 import com.ssafy.jara.dto.Account;
 import com.ssafy.jara.dto.Follow;
-import com.ssafy.jara.dto.Location;
 
 @Mapper
 public interface AccountDao {
@@ -52,7 +52,12 @@ public interface AccountDao {
 	public int deleteFollow(Follow follow);
 	
 	public List<Integer> findFollower(int following);
+	
 	public List<Integer> findFollowing(int follower);
 	
+	public int findIdByEmail(String email);
 	
+	public int insertNaverAccount(Account account);
+	
+	public int updateNaverAccount(HashMap<String, Object> hashMap);
 }

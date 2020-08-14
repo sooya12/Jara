@@ -1,5 +1,6 @@
 package com.ssafy.jara.service;
 
+import java.util.HashMap;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,7 +9,6 @@ import org.springframework.stereotype.Service;
 import com.ssafy.jara.dao.AccountDao;
 import com.ssafy.jara.dto.Account;
 import com.ssafy.jara.dto.Follow;
-import com.ssafy.jara.dto.Location;
 
 @Service
 public class AccountServiceImpl implements AccountService {
@@ -121,17 +121,27 @@ public class AccountServiceImpl implements AccountService {
 
 	@Override
 	public List<Integer> findFollower(int following) {
-		
 		return accountDao.findFollower(following);
 	}
 
 	@Override
 	public List<Integer> findFollowing(int follower) {
-		
 		return accountDao.findFollowing(follower);
 	}
 
+	@Override
+	public int findIdByEmail(String email) {
+		return accountDao.findIdByEmail(email);
+	}
 
+	@Override
+	public int insertNaverAccount(Account account) {
+		return accountDao.insertNaverAccount(account);
+	}
 
+	@Override
+	public int updateNaverAccount(HashMap<String, Object> hashMap) {
+		return accountDao.updateNaverAccount(hashMap);
+	}
 	
 }
