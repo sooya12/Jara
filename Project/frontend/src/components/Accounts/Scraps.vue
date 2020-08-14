@@ -21,7 +21,8 @@
             <v-card>
               <v-card-title class="headline d-flex align-center justify-space-between">
                 <div>
-                  <v-icon class="mr-1">mdi-account-circle</v-icon>
+                  <v-icon v-if="psas[scrap.writer]==null" class="mr-1">mdi-account-circle</v-icon>
+                  <v-avatar v-else class="mr-1"><img :src="psas[scrap.writer]"></v-avatar>
                   {{ users[scrap.writer] }}
                 </div>
                 <v-menu offset-y >
@@ -104,7 +105,8 @@ export default {
   computed: {
     ...mapState([
       'users',
-      'userInfo'
+      'userInfo',
+      'psas'
     ])
   },
   methods: {

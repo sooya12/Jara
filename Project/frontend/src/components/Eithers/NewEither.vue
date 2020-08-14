@@ -1,7 +1,9 @@
 <template>
   <v-container fluid>
     <div class="mt-5 d-flex align-center font-weight-bold">
-      <v-icon x-large class="mr-2">mdi-account-circle</v-icon>{{ userInfo.nickname }}
+      <v-icon x-large v-if="psas[userInfo.id]==null" class="mr-2">mdi-account-circle</v-icon>
+      <v-avatar v-else class="mr-2"><img :src="psas[userInfo.id]"></v-avatar>
+      {{ userInfo.nickname }}
     </div>
     <v-text-field
       class="mt-5"
@@ -37,7 +39,8 @@ export default {
   computed: {
     ...mapState([
       'userInfo',
-      'api_server'
+      'api_server',
+      'psas'
     ])
   },
   data() {

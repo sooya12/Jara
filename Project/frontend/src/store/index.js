@@ -24,6 +24,7 @@ export default new Vuex.Store({
     results: [],
     showSearch: false,
     users: [],
+    psas: [],
     today: new Date(),
     week: ['일', '월', '화', '수', '목', '금', '토'],
     error: false,
@@ -62,8 +63,9 @@ export default new Vuex.Store({
     SET_USERINFO(state, val) {
       state.userInfo = val
     },
-    SET_USERS(state, val) {
-      state.users = val
+    SET_USERS(state, val1, val2) {
+      state.users = val1
+      state.psas = val2
     },
     SET_DRAWER(state, status) {
       state.drawer = status
@@ -124,14 +126,16 @@ export default new Vuex.Store({
     getUsers({ commit, state }) {
       Axios.get(`${state.api_server}/accounts`)
         .then(res => {
+          const imgs = {}
           const nicks = {}
           state.results.push({ header: '모든 유저' })
           state.results.push({ divider: true })
           res.data.forEach(function(user) {
             nicks[user.id] = user.nickname
+            imgs[user.id] = user.img_src
             state.results.push({ nickname: user.nickname, id: user.id })
           })
-          commit('SET_USERS', nicks)
+          commit('SET_USERS', nicks, imgs)
         })
     },
     draw({ commit, state }) {

@@ -3,7 +3,10 @@
     <div v-if="comments.length > 0">
       <div v-for="(comment, index) in comments" :key="index" >
         <div class="d-flex justify-space-between align-center">
-          <v-btn text x-large class="pa-0 font-weight-bold" @click="goToUser(comment.writer)"><v-icon class="mr-1">mdi-account-circle</v-icon>{{ users[comment.writer] }}</v-btn>
+          <v-btn text x-large class="pa-0 font-weight-bold" @click="goToUser(comment.writer)">
+            <v-icon class="mr-1" v-if="psas[comment.writer]==null">mdi-account-circle</v-icon>
+            <v-avatar class="mr-1" v-else><img :src="psas[comment.writer]"></v-avatar>
+            {{ users[comment.writer] }}</v-btn>
           <div class="d-flex align-center">
             <div v-if="comment.updated_at==null" class="grey--text">{{ comment.created_at }}</div> 
             <div v-else class="grey--text">{{ comment.updated_at }} (수정됨)</div>
@@ -45,6 +48,7 @@ export default {
     ...mapState([
       'userInfo',
       'users',
+      'psas'
     ])  
   },
   props: {

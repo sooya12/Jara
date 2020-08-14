@@ -1,8 +1,14 @@
 <template>
   <v-container fluid mt-5 v-if="isTaken">
     <div class="d-flex justify-space-between align-center">
-      <div class="d-flex align-center">
+      <div class="d-flex align-center" v-if="psa[article.writer]==null">
         <v-btn text class="pa-0 font-weight-bold text-sm-h5 text-h6" @click="goToUser" x-large><v-icon x-large>mdi-account-circle</v-icon>{{ users[article.writer] }}</v-btn>      
+      </div>
+      <div class="d-flex align-center" v-else>
+        <v-btn text class="pa-0 font-weight-bold text-sm-h5 text-h6" @click="goToUser" x-large>
+          <v-avatar><img :src="psa[article.writer]" alt="프로필 사진"></v-avatar>
+          {{ users[article.writer] }}
+        </v-btn>      
       </div>
       <div class="d-flex align-center">
         <div class="grey--text">{{ article.created_at }}</div>
@@ -112,6 +118,7 @@ export default {
         else { 
           const response = confirm('정말로 삭제 하시겠습니까?')
           if (response) { 
+            firebase.storage().ref().child(`articles/${this.article.id}`).delete()
             axios.delete(`${this.$store.state.api_server}/articles/${this.article.id}`)
               .then(() => this.$router.push('/main'))
           }
@@ -204,7 +211,8 @@ export default {
     ...mapState([
       'userInfo',
       'users',
-      'api_server'
+      'api_server',
+      'psas'
     ])
   },
   created() {

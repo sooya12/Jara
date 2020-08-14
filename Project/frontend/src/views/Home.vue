@@ -4,7 +4,8 @@
     <div class="text-center text-sm-h6 text-subtitle-2">{{ weather.fore }}<v-icon :color="weatherIcon[weather.pic].color">mdi-{{ weatherIcon[weather.pic].icon }}</v-icon>{{ weather.back }}</div>
     <div v-if="isPlus" class="text-center text-sm-h6 text-subtitle-2"><v-icon>mdi-{{ weather.plus.icon }}</v-icon>{{ weather.plus.tip }}</div>
     <div class="mt-10 d-flex justify-center align-center">
-      <v-icon x-large>mdi-account-circle</v-icon>
+      <v-icon x-large v-if="userInfo.img_src==null">mdi-account-circle</v-icon>
+      <v-avatar v-else><img :src="userInfo.img_src" alt="프로필 사진"></v-avatar>
       <v-btn text class="grey--text font-weight-bold text-sm-h5 text-body1" @click="write">어떤 이야기를 공유해 볼까요?</v-btn>
     </div>
     <v-divider class="mt-5 mb-5"></v-divider>
@@ -12,11 +13,21 @@
       <v-card v-for="item in articles" :key="item.id" class="my-5">
         <v-card-title>
           <v-btn
+            v-if="psas[item.writer]==null"
             text
             class="px-0 font-weight-bold text-sm-h6"
             @click="goToUser(item.writer)"
           >
             <v-icon x-large>mdi-account-circle</v-icon>{{ users[item.writer] }}
+          </v-btn>
+          <v-btn
+            v-else
+            text
+            class="px-0 font-weight-bold text-sm-h6"
+            @click="goToUser(item.writer)"
+          >
+            <v-avatar><img :src="psas[item.writer]" alt="프로필 사진"></v-avatar>
+            {{ users[item.writer] }}
           </v-btn>
           <div class="d-flex align-center ml-auto">
             <v-card-subtitle>
@@ -86,7 +97,8 @@ export default {
       'week',
       'userInfo',
       'users',
-      'api_server'
+      'api_server',
+      'psas'
     ]),
     ...mapGetters([
       'isLoggedIn',

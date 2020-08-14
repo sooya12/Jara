@@ -8,7 +8,8 @@
       ></v-progress-circular>
     </div>
     <div class="d-flex align-center">
-      <v-icon x-large>mdi-account-circle</v-icon>
+      <v-icon x-large v-if="psas[userInfo.id]">mdi-account-circle</v-icon>
+      <v-avatar v-else><img :src="psas[userInfo.id]"></v-avatar>
       <div class="ml-2 font-weight-bold">{{ userInfo.nickname }}</div>
       <v-btn fixed bottom right fab color="green lighten-1" @click="createArticle" small dark><v-icon>mdi-pencil</v-icon></v-btn>
     </div>
@@ -44,7 +45,8 @@ export default {
   computed: {
     ...mapState([
       'userInfo',
-      'api_server'
+      'api_server',
+      'psas'
     ])
   },
   mounted() {
@@ -86,14 +88,14 @@ export default {
       }
     },
     uploadImg() {
-      firebase.storage().ref(`images/${this.id}`).put(this.file).then(() => {
-        firebase.storage().ref(`images/${this.id}`).getDownloadURL().then(url => {
+      firebase.storage().ref(`articles/${this.id}`).put(this.file).then(() => {
+        firebase.storage().ref(`articles/${this.id}`).getDownloadURL().then(url => {
           axios.put(`${this.$store.state.api_server}/articles/${this.id}/img`, { id: this.id, img_src: url })
             .then(()=> this.$router.push('/main'))
         })
       })
     }
-  }
+  },
 }
 </script>
 
