@@ -97,11 +97,17 @@ public class ArticleController {
 	@ApiOperation(value = "게시글 및 댓글, 좋아요 사용자 조회", response = Article.class)
 	@GetMapping("/{id}")
 	private ResponseEntity<Article> selectArticle(@PathVariable("id") int id) {
-		Article article = articleService.selectArticle(id);
-		article.setComments(articleCommentService.selectArticleComments(article.getId()));
-		article.setLikeAccounts(articleService.selectArticleLikeAccount(article.getId()));
-		
-		return new ResponseEntity<Article>(article, HttpStatus.OK);
+		try {
+			Article article = articleService.selectArticle(id);
+			article.setComments(articleCommentService.selectArticleComments(article.getId()));
+			article.setLikeAccounts(articleService.selectArticleLikeAccount(article.getId()));
+			System.out.println("article: "+article);
+			return new ResponseEntity<Article>(article, HttpStatus.OK);
+		} catch (NullPointerException e) {
+			e.printStackTrace();
+			System.out.println("ERROR: 해당하는 글이 존재하지 않습니다.");
+			return new ResponseEntity<Article>(HttpStatus.NOT_FOUND);
+		}
 	}
 	
 	@ApiOperation(value = "게시글 수정", response = String.class)
