@@ -478,7 +478,7 @@ public class AccountController extends HttpServlet {
 	
 	@ApiOperation(value = "네이버 로그인으로 회원가입 시 주소 수정")
 	@PutMapping("/signin/naver/access")
-	private ResponseEntity<Account> updateNaverAccount(Account account) {
+	private ResponseEntity<Account> updateNaverAccount(@RequestBody Account account) {
 		HashMap<String, Object> hashMap = new HashMap<String, Object>();
 		hashMap.put("id", account.getId());
 		hashMap.put("location", account.getLocation());
