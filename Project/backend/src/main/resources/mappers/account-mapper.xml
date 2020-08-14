@@ -67,7 +67,7 @@
 	
 	<!-- 회원 정보 조회 - 민감 정보 제외 -->
 	<select id="findPartAccount" resultType="com.ssafy.jara.dto.Account">
-		SELECT id, email, nickname, sex, birthday, location, bio, status
+		SELECT id, nickname, sex, birthday, location, bio, status
 		FROM user
 		WHERE id=#{id}
 	</select>

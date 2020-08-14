@@ -39,7 +39,6 @@ import org.springframework.web.bind.annotation.RestController;
 import com.ssafy.jara.common.service.jwt.JwtService;
 import com.ssafy.jara.common.weather.WeatherService;
 import com.ssafy.jara.dto.Account;
-import com.ssafy.jara.dto.AccountId;
 import com.ssafy.jara.dto.Article;
 import com.ssafy.jara.dto.Follow;
 import com.ssafy.jara.dto.Tip;
