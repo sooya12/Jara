@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div class="mt-5" v-if="comments.length > 0">
+    <div v-if="comments.length > 0">
       <div v-for="(comment, index) in comments" :key="index">
         <v-chip
           class="mt-2"

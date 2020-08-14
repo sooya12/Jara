@@ -141,7 +141,7 @@ export default {
       },
       currentPWDRules: {
         required: value => !!value || '현재 비밀번호를 입력해주세요.',
-        same: v => v == this.user.password || '비밀번호가 일치하지 않습니다.'
+        same: v => v == this.$store.state.userInfo.password || '비밀번호가 일치하지 않습니다.'
       },
       passwordRules: {
         required: value => !!value || '변경하실 비밀번호를 입력해주세요.',

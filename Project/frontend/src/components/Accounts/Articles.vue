@@ -7,8 +7,8 @@
       >
         <v-img
           :src="article.img_src"
-          height="150px"
-          contain
+          width="100%"
+          height="150"
         >
           <v-dialog
             v-model="dialog"
@@ -45,7 +45,9 @@
               </v-card-title>
 
               <v-card-text>
-                <v-img aspect-ratio="1" width="300" height="300" contain :src="article.img_src"></v-img>
+                <div id="imgBox">
+                  <img width="100%" height="300" :src="article.img_src">
+                </div>
                 <div class="d-flex mt-3">
                   <v-icon v-if="article.likeAccounts.includes(userInfo.id)" color="red darken-1" class="mr-3">mdi-heart</v-icon>
                   <v-icon v-else class="mr-3">mdi-heart-outline</v-icon>
@@ -113,18 +115,23 @@ export default {
 </script>
 
 <style scoped>
-.back {
-  width: 100%;
-  height: 150px;
-  position: absolute;
-}
+  .back {
+    width: 100%;
+    height: 150px;
+    position: absolute;
+  }
 
-.back:hover {
-  background-color: rgba(0, 0, 0, 0.4);
-  cursor: pointer;
-}
+  .back:hover {
+    background-color: rgba(0, 0, 0, 0.4);
+    cursor: pointer;
+  }
 
-.show-btns {
-  color: rgba(255, 255, 255, 1) !important;
-}
+  .show-btns {
+    color: rgba(255, 255, 255, 1) !important;
+  }
+
+  #imgBox {
+    height: 300;
+    width: 300;
+  }
 </style>

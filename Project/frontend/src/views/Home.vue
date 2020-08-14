@@ -44,36 +44,26 @@
             </v-menu>
           </div>
         </v-card-title>
-        <v-img v-if="item.img_src!=null" aspect-ratio="4/3" height="300" contain :src="item.img_src"></v-img>
-        <v-card-text class="text-subtitle-1 black--text mx-1">
+        <v-img v-if="item.img_src!=null" id="img" max-width="100%" height="auto" :src="item.img_src"></v-img>
+        <div class="text-subtitle-1 black--text mx-5 mt-5">
           {{ item.contents }}
-        </v-card-text>
-        <v-card-actions>
-          <div class="mt-5 mx-3 d-flex ml-auto">
-            <div v-if="!isLike(item.likeAccounts)">
-              <v-btn icon @click="like(item)">
-                <v-icon>mdi-heart-outline</v-icon>
-              </v-btn>
-              {{ item.likeAccounts.length }}
-            </div>
-            <div v-else-if="item.likeAccounts.length==1&&isLike(item.likeAccounts)">
-              <v-btn icon @click="dislike(item)"><v-icon color="red darken-1">mdi-account-heart</v-icon></v-btn>
-              {{ userInfo.nickname }}님이 이 글을 좋아합니다.
-            </div>
-            <div v-else>
-              <v-btn icon @click="dislike(item)"><v-icon color="red darken-1">mdi-account-heart</v-icon></v-btn>
-              {{ userInfo.nickname }}님 외 {{ item.likeAccounts.length-1 }}명이 이 글을 좋아합니다.
-            </div>
-            <div>
-              <v-btn icon @click="goToDetail(item.id)"><v-icon>mdi-comment-processing-outline</v-icon></v-btn>
-              {{ item.comments.length }}
-            </div>
-            <div>
-              <v-btn icon @click="share(item.id)"><v-icon color="teal">mdi-share-variant</v-icon></v-btn>
-              {{ item.shares }}
-            </div>
+        </div>
+        <div class="mx-5 pb-3 d-flex justify-end align-center">
+          <div v-if="!isLike(item.likeAccounts)">
+            <v-btn icon @click="like(item)">
+              <v-icon>mdi-heart-outline</v-icon>
+            </v-btn>
+            {{ item.likeAccounts.length }}
           </div>
-        </v-card-actions>
+          <div v-else>
+            <v-btn icon @click="dislike(item)"><v-icon color="red darken-1">mdi-account-heart</v-icon></v-btn>
+            {{ item.likeAccounts.length }}
+          </div>
+          <div>
+            <v-btn icon @click="goToDetail(item.id)"><v-icon>mdi-comment-processing-outline</v-icon></v-btn>
+            {{ item.comments.length }}
+          </div>
+        </div>
       </v-card>
       <div v-if="isLoad&&(articles.length < numOfArticles)" v-view="loadArticles" id="bottom"></div>
     </div>
@@ -130,6 +120,10 @@ export default {
         눈: {
           icon: 'weather-pouring',
           color: 'blue-grey'
+        },
+        빗방울: {
+          icon: 'weather-rainy',
+          color: 'blue'
         }
       },
       items: [],
@@ -242,10 +236,10 @@ export default {
             back: '이며, 기온은 ' + `${this.$store.state.userInfo.T1H}` + '도 입니다.',
           }
         }
-      } else if (this.$store.state.userInfo.PTY=='비') {
+      } else if (this.$store.state.userInfo.PTY == '비') {
         this.weather = {
           pic: this.$store.state.userInfo.PTY,
-          fore: '현재 ' + `${this.$store.state.userInfo.location}` + '는 ' + `${this.$store.userInfo.PTY}`,
+          fore: '현재 ' + `${this.$store.state.userInfo.location}` + '는 ' + `${this.$store.state.userInfo.PTY}`,
           back: '가 내리고 있으며, 기온은 ' + `${this.$store.state.userInfo.T1H}` + '도 입니다.',
           plus: {
             icon: 'umbrella-closed-variant',
@@ -253,7 +247,18 @@ export default {
           }
         }
         this.isPlus=true
-      } 
+      } else if (this.$store.state.userInfo.PTY == '빗방울') {
+          this.weather = {
+            pic: this.$store.state.userInfo.PTY,
+            fore: '현재 ' + `${this.$store.state.userInfo.location}` + '는 ' + `${this.$store.state.userInfo.PTY}`,
+            back: '이 내리고 있으며, 기온은 ' + `${this.$store.state.userInfo.T1H}` + '도 입니다.',
+            plus: {
+              icon: 'umbrella-closed-variant',
+              tip: '우산을 꼭 챙겨주세요 :D'
+            }
+        }
+        this.isPlus=true
+      }
     }
   },
   created() {

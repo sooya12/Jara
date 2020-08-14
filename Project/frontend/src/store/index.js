@@ -23,7 +23,7 @@ export default new Vuex.Store({
     userInfo: null,
     results: [],
     showSearch: false,
-    users: null,
+    users: [],
     today: new Date(),
     week: ['일', '월', '화', '수', '목', '금', '토'],
     error: false,
@@ -166,14 +166,19 @@ export default new Vuex.Store({
     },
     report({ commit, getters, state }) {
       if (getters.isLoggedIn) {
-        if (state.userInfo.id === 8) {
-          router.push('/admin')
-        } else {
-          commit('SET_DIALOG', true)
-          commit('SET_DRAWER', false)
+        commit('SET_DRAWER', false)
+        const requestHeaders = {
+          headers: {
+            token: VueCookies.get('auth-token')
+          }
         }
+        Axios.get(`${state.api_server}/admin`, requestHeaders)
+          .then(() => router.push('/admin'))
+          .catch(() => {
+            commit('SET_DIALOG', true)
+          })
       } else {
-        alert('로그인한 자라만 사용할 수 있어요!')
+        alert('로그인한 회원님만 사용할 수 있어요!')
         commit('SET_DRAWER', false)
       }
     },

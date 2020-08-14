@@ -5,17 +5,18 @@
       max-width="400"
     >
       <v-img
+        id="img"
         class="white--text align-end"
         height="200px"
-        src="https://cdn.vuetifyjs.com/images/cards/docks.jpg"
+        :src="tip.img_src"
+        contain
       >
-        <v-card-title>{{ tip.title }}</v-card-title>
       </v-img>
-
+      <v-card-title class="text-center font-weight-bold">{{ tip.title }}</v-card-title>
       <v-card-subtitle class="pb-0">{{ tip.created_at }}</v-card-subtitle>
 
       <v-card-text class="text--primary" align="left">
-        <div>subheading</div>
+        <!-- <div>subheading</div> -->
 
         <div class="box">{{ tip.contents }}</div>
       </v-card-text>
@@ -55,7 +56,7 @@ export default {
   },
   data() {
     return {
-      show: false
+      show: false,
     } 
   },
   methods: {
@@ -71,7 +72,7 @@ export default {
         .catch(err => {
           console.log(err)
         })
-    }
+    },
   },
   computed: {
     ...mapState([
@@ -79,7 +80,7 @@ export default {
       'users',
       'userInfo'
     ])
-  }
+  },
 }
 </script>
 
@@ -89,4 +90,5 @@ export default {
   text-overflow: ellipsis;
   white-space: nowrap;
  }
+
 </style>

@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div class="mt-5" v-if="comments.length > 0">
+    <div v-if="comments.length > 0">
       <div v-for="(comment, index) in comments" :key="index" >
         <div class="d-flex justify-space-between align-center">
           <v-btn text x-large class="pa-0 font-weight-bold" @click="goToUser(comment.writer)"><v-icon class="mr-1">mdi-account-circle</v-icon>{{ users[comment.writer] }}</v-btn>
@@ -29,7 +29,7 @@
             </v-menu>
           </div>
         </div>
-        <div class="ml-5">{{ comment.contents }}</div>
+        <div class="mx-5">{{ comment.contents }}</div>
         <v-divider class="mt-5"></v-divider>
       </div>  
     </div>

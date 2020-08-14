@@ -42,7 +42,12 @@ export default {
   },
   methods: {
     fetchReports() {
-      axios.get(`${this.$store.state.api_server}/reports/admin`)
+      const requestHeaders = {
+        headers: {
+          token: this.$cookies.get('auth-token')
+        }
+      }
+      axios.get(`${this.$store.state.api_server}/reports/admin`, requestHeaders)
         .then(res => this.reports = res.data)
     }
   },
@@ -50,7 +55,7 @@ export default {
     this.fetchReports()
   },
   beforeEnter(to, from, next) {
-    if (this.$store.state.userInfo.id === 8) {
+    if (this.$store.state.userInfo.id === 0) {
       next()
     } else { next({name: 'PageNotFound'}) }
   }

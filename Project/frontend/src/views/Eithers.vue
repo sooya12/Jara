@@ -1,8 +1,7 @@
 <template>
   <v-container fluid class="mt-5">
-    <div class="text-sm-h3 text-h4 font-weight-bold ml-3">JARA's Choice<v-icon x-large class="ml-2">mdi-checkbox-multiple-marked-outline</v-icon></div>
+    <div class="text-sm-h3 text-h4 font-weight-bold ml-3">신중한 자라<v-icon x-large class="ml-2">mdi-checkbox-multiple-marked-outline</v-icon></div>
     <div class="mt-10">
-
       <v-card
         class="mx-auto my-5"
         v-for="either in eithers"

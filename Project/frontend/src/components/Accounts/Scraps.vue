@@ -7,8 +7,8 @@
       >
         <v-img
           src=""
-          height="150px"
-          contain
+          max-width="100%"
+          height="150"
         >
           <v-dialog
             v-model="dialog"
@@ -45,7 +45,7 @@
               </v-card-title>
 
               <v-card-text>
-                <v-img aspect-ratio="1" width="300" height="300" contain src=""></v-img>
+                <v-img aspect-ratio="1" width="100%" height="auto" contain src=""></v-img>
                 <div class="font-weight-bold">{{ scrap.title }}</div>
                 <div class="text-truncate mt-2">{{ scrap.contents }}</div>
                 <div class="d-flex mt-3">

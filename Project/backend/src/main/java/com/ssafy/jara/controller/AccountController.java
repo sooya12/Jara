@@ -177,7 +177,7 @@ public class AccountController extends HttpServlet {
 	}
 
 	@ApiOperation(value = "비밀번호 변경하기 전 인증 코드 발송", response = String.class)
-	@PostMapping("changepw")
+	@PostMapping("changepwd")
 	private void changePassword(@RequestParam String email) throws MessagingException, UnsupportedEncodingException {
 
 		// 인증코드 변경하기
