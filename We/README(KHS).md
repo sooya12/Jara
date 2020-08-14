@@ -264,3 +264,41 @@
 :woman_technologist: ㅎr........... axios 요청이 비동기인 줄은 물론 알고 있던거지만, .then에서 .catch로 갈 수도 있다는 걸, 굳이 알 필요가 없는 것 까지 오늘 알아버렸다........
 
 :file_cabinet: 최근 검색 유저 때 사용해보려고했던 로컬 스토리지를 custom Checks를 위해 사용해보려고 하는데 일일이 넣어주고 꺼내 오는 작업이 굉장히 번거롭다. 어떻게 해결해야할 지 감이 잡히지 않는다.
+
+
+
+# 2020.08.13 Day :nine:
+
+### :computer:
+
+:closed_lock_with_key: 어드민 페이지 작성
+
+:turtle: Default이미지 작성
+
+:ballot_box_with_check: Checks 페이지 완성
+
+:abc: 메뉴 한글화
+
+:woman_technologist: 코치님 지적사항 수정(UI)
+
+
+
+### :blonde_woman:
+
+:paintbrush: 개발보다 그림 그리는 게 더 재밌다.
+
+
+
+# 2020.08.14 Day :one::zero:
+
+### :computer:
+
+:ballot_box_with_check: Checks 저장되도록 구현
+
+:blush: 프로필 사진 구현
+
+
+
+### :blonde_woman:
+
+:file_cabinet: localStorage를 통해 Checks가 저장되도록 구현을 했다. 굉장한 하드타이핑 작업이었다고 생각한다. 파이썬 문법에 익숙해서였는지 for문을 제대로 돌지 못하길래 뭐지? 했는데 JS는 `1 <= i && i <= 6` 이렇게 써야함을 한참 이것저것 해보다 깨달았다.
