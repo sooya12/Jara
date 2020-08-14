@@ -302,3 +302,32 @@
 ### :blonde_woman:
 
 :file_cabinet: localStorage를 통해 Checks가 저장되도록 구현을 했다. 굉장한 하드타이핑 작업이었다고 생각한다. 파이썬 문법에 익숙해서였는지 for문을 제대로 돌지 못하길래 뭐지? 했는데 JS는 `1 <= i && i <= 6` 이렇게 써야함을 한참 이것저것 해보다 깨달았다.
+
+:mag_right: 사실 유저 검색이 1번 밖에 안됐었는데... 왜인지 사실 잘 몰랐다... url은 맞게 변하는데 데이터를 불러오지 못하는 거 같았다. 그냥 그러려니 했었는데 완성도를 높이기 위해서 하나하나 고쳐나가던 중 우연히(?) 해결하게 됐다 :relaxed:
+
+> 참고한 해결 방법
+>
+> https://router.vuejs.org/kr/guide/essentials/dynamic-matching.html
+>
+> 매개 변수와 함께 라우트를 사용할 때 주의 해야할 점은 사용자가 `/user/foo`에서 `/user/bar`로 이동할 때 **동일한 컴포넌트 인스턴스가 재사용된다는 것입니다.** 두 라우트 모두 동일한 컴포넌트를 렌더링하므로 이전 인스턴스를 삭제 한 다음 새 인스턴스를 만드는 것보다 효율적입니다. **그러나 이는 또한 컴포넌트의 라이프 사이클 훅이 호출되지 않음을 의미합니다.**
+>
+> > 다큐먼트를 보고 watch에 원래 만들었던 함수를 실행하도록 했는데 제대로 작동하지 않았다.
+> >
+> > > 이건 왜 그런지 아직도 모르겠다. :woman_shrugging:
+> >
+> > 그래서 새로 함수를 만들어서 호출했다.
+> >
+> > ```js
+> > methods: {
+> >   ...
+> >   reGetUserData() {
+> >   axios.get(`${this.$store.state.api_server}/accounts/${this.$route.params.user_id}`)
+> >     .then(res => this.user = res.data)
+> >   }
+> > },
+> > watch: {
+> >   $route (to, from) {
+> >     this.reGetUserData()
+> >   }
+> > }
+> > ```
