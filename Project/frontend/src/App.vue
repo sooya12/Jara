@@ -101,7 +101,7 @@
         >
           <v-list-item two-line>
             <v-list-item-avatar>
-              <v-icon v-if="userInfo.img_src==null">mdi-account-circle</v-icon>
+              <v-icon v-if="!isLoggedIn||userInfo.img_src==null">mdi-account-circle</v-icon>
               <v-avatar v-else><img :src="userInfo.img_src"></v-avatar>
             </v-list-item-avatar>
             <v-list-item-content v-if="!isLoggedIn">

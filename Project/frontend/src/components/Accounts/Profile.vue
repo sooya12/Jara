@@ -11,7 +11,7 @@
         </v-avatar>
         {{ user.nickname }}
       </div>
-      <div class="d-flex text-sm-h6 text-subtitle-2">
+      <div class="d-flex text-sm-h6 text-subtitle-2 text-center">
         <div>게시글 <div class="text-center"><v-btn text class="text-h6">0</v-btn></div></div>
         <div class='ml-3'>
           팔로워

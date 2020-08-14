@@ -30,7 +30,12 @@ Vue.use(VueRouter)
   {
     path: '/',
     name: 'Entrance',
-    component: Entrance
+    component: Entrance,
+    beforeEnter(to, from, next) {
+      if (!Vue.$cookies.isKey('auth-token')) {
+        next({name: 'Home'})
+      }
+    }
   },
   {
     path: '/admin',
