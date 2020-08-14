@@ -63,6 +63,11 @@ public class AccountServiceImpl implements AccountService {
 	}
 
 	@Override
+	public Account findPartAccount(int id) {
+		return accountDao.findPartAccount(id);
+	}
+	
+	@Override
 	public int findEmail(String email) {
 		return accountDao.findEmail(email);
 	}
@@ -125,6 +130,8 @@ public class AccountServiceImpl implements AccountService {
 		
 		return accountDao.findFollowing(follower);
 	}
+
+
 
 	
 }

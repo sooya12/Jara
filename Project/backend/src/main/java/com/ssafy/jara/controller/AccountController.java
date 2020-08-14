@@ -39,6 +39,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.ssafy.jara.common.service.jwt.JwtService;
 import com.ssafy.jara.common.weather.WeatherService;
 import com.ssafy.jara.dto.Account;
+import com.ssafy.jara.dto.AccountId;
 import com.ssafy.jara.dto.Article;
 import com.ssafy.jara.dto.Follow;
 import com.ssafy.jara.dto.Tip;
@@ -226,11 +227,11 @@ public class AccountController extends HttpServlet {
 	@GetMapping("{id}")
 	private ResponseEntity<Account> findAccount(@PathVariable int id) {
 		
-		Account account = accountService.findAccount(id); // 해당 id 유저 값
+		Account account = accountService.findPartAccount(id); // 해당 id 유저 값
 
 		account.setFollowerList(accountService.findFollowing(id));
 		account.setFollowingList(accountService.findFollower(id));
-
+		
 		account.setMyArticleList(articleService.selectListMyArticle(id));
 		
 		for (int i = 0; i < account.getMyArticleList().size(); i++) {
@@ -238,10 +239,11 @@ public class AccountController extends HttpServlet {
 
 			article.setComments(articleCommentService.selectArticleComments(article.getId())); // 전체 댓글 조회
 			article.setLikeAccounts(articleService.selectArticleLikeAccount(article.getId())); // 전체 좋아요 사용자 조회
+					
 		}
 
 		account.setScrapTipList(tipService.selectListTipScrap(id));
-
+		
 		for (int i = 0; i < account.getScrapTipList().size(); i++) {
 			Tip tip = account.getScrapTipList().get(i);
 
@@ -250,6 +252,7 @@ public class AccountController extends HttpServlet {
 		}
 
 		System.out.println(account.getId() + "+" + account.getNickname());
+		
 		if (account.equals(null) || account.getId() == 0) {
 			return new ResponseEntity(HttpStatus.NO_CONTENT);
 

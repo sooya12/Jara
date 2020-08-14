@@ -29,6 +29,8 @@ public interface AccountDao {
 	
 	public Account findAccount(int id);
 	
+	public Account findPartAccount(int id);
+	
 	public int findEmail(String email);
 	
 	public List<Account> findAllAccount();
