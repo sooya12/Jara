@@ -141,6 +141,16 @@ export default {
           this.isLoad = !this.isLoad
         })
     },
+    reGetUserData() {
+      axios.get(`${this.$store.state.api_server}/accounts/${this.$route.params.user_id}`)
+        .then(res => {
+          this.user = res.data
+          if (this.user.id == this.$store.state.userInfo.id) {this.isUser = !this.isUser}
+          if (this.user.followerList.length > 0 && this.user.followerList.includes(this.$store.state.userInfo.id)) {this.isFollow = !this.isFollow}
+          this.articles = res.data.myArticleList
+          this.scraps = res.data.scrapTipList
+        })
+    },
     updateUserInfo() {
       this.$router.push(`/accounts/${this.user.id}/info`)
     },
@@ -170,6 +180,13 @@ export default {
   },
   created() {
     this.getUserData()
+  },
+  watch: {
+    $route(to, from) {
+      if (to != from) {
+        this.reGetUserData()
+      }
+    }
   }
 }
 </script>
