@@ -107,11 +107,16 @@ public class TipController {
 	@ApiOperation(value = "해당 팁 조회", response = Tip.class)
 	@GetMapping("/{id}")
 	private ResponseEntity<Tip> selectTip(@PathVariable("id") int id) {
-		Tip tip = tipService.selectTip(id);
-		tip.setComments(tipCommentService.selectTipComments(id));
-		tip.setLikeAccounts(tipService.selectTipLikeAccounts(id));
-		
-		return new ResponseEntity<Tip>(tip, HttpStatus.OK);
+		try {
+			Tip tip = tipService.selectTip(id);
+			tip.setComments(tipCommentService.selectTipComments(id));
+			tip.setLikeAccounts(tipService.selectTipLikeAccounts(id));
+			return new ResponseEntity<Tip>(tip, HttpStatus.OK);
+		} catch (NullPointerException e) {
+			e.printStackTrace();
+			System.out.println("ERROR: 해당하는 글이 존재하지 않습니다.");
+			return new ResponseEntity<Tip>(HttpStatus.NOT_FOUND);
+		}
 	}
 	
 	@ApiOperation(value = "팁 제목/내용 수정", response = String.class)
