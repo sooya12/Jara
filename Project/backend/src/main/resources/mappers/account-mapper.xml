@@ -89,7 +89,7 @@
 	
 	<!-- 모든 회원 정보(유저) 조회 -->
 	<select id="findAllAccount" resultType="com.ssafy.jara.dto.Account">
-		SELECT id, nickname
+		SELECT id, nickname, img_src
 		FROM user
 		ORDER BY nickname
 	</select>
