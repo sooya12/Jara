@@ -20,7 +20,10 @@
     </div>
     <div class="d-flex justify-space-between align-center">
       <div>
-        <v-btn text class="pa-0 font-weight-bold text-sm-h5 text-h6" @click="goToUser" x-large><v-icon x-large>mdi-account-circle</v-icon>{{ users[either.writer] }}</v-btn>
+        <v-btn text class="pa-0 font-weight-bold text-sm-h5 text-h6" @click="goToUser" x-large>
+          <v-icon x-large v-if="psas[either.writer]==null">mdi-account-circle</v-icon>
+          <v-avatar v-else><img :src="psas[either.writer]"></v-avatar>
+          {{ users[either.writer] }}</v-btn>
       </div>
       <div class="grey--text d-flex align-center">
         <div>{{ either.created_at }}</div>
@@ -226,6 +229,7 @@ export default {
       'api_server',
       'userInfo',
       'users',
+      'psas'
     ])
   },
   mounted() {

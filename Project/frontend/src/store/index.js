@@ -24,6 +24,7 @@ export default new Vuex.Store({
     results: [],
     showSearch: false,
     users: [],
+    psas: [],
     today: new Date(),
     week: ['일', '월', '화', '수', '목', '금', '토'],
     error: false,
@@ -62,8 +63,11 @@ export default new Vuex.Store({
     SET_USERINFO(state, val) {
       state.userInfo = val
     },
-    SET_USERS(state, val) {
+    SET_NICKNAMES(state, val) {
       state.users = val
+    },
+    SET_PSAS(state, val) {
+      state.psas = val
     },
     SET_DRAWER(state, status) {
       state.drawer = status
@@ -124,14 +128,17 @@ export default new Vuex.Store({
     getUsers({ commit, state }) {
       Axios.get(`${state.api_server}/accounts`)
         .then(res => {
+          const imgs = {}
           const nicks = {}
           state.results.push({ header: '모든 유저' })
           state.results.push({ divider: true })
           res.data.forEach(function(user) {
             nicks[user.id] = user.nickname
+            imgs[user.id] = user.img_src
             state.results.push({ nickname: user.nickname, id: user.id })
           })
-          commit('SET_USERS', nicks)
+          commit('SET_NICKNAMES', nicks)
+          commit('SET_PSAS', imgs)
         })
     },
     draw({ commit, state }) {
@@ -172,7 +179,7 @@ export default new Vuex.Store({
             token: VueCookies.get('auth-token')
           }
         }
-        Axios.get(`${state.api_server}/admin`, requestHeaders)
+        Axios.get(`${state.api_server}/reports/admin`, requestHeaders)
           .then(() => router.push('/admin'))
           .catch(() => {
             commit('SET_DIALOG', true)
@@ -203,7 +210,7 @@ export default new Vuex.Store({
         contents: state.reportData.contents,
         reporter_id: state.userInfo.id
       }
-      Axios.post(`${state.api_server}/reports`, data)
+      Axios.post(`${state.api_server}/reports/`, data)
       .then(() => {
         alert('신고 내역이 성공적으로 접수되었습니다.')
         state.reportData.accused_nickname = ''

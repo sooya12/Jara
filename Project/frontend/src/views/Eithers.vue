@@ -10,7 +10,9 @@
         <v-card-text>
           <div class="d-flex justify-space-between">
             <div>
-              <v-icon class="mr-2">mdi-account-circle</v-icon>{{ users[either.writer] }}
+              <v-icon class="mr-2" v-if="psas[either.writer]==null">mdi-account-circle</v-icon>
+              <v-avatar class="mr-2" v-else><img :src="psas[either.writer]"></v-avatar>
+              {{ users[either.writer] }}
             </div>
             <v-chip
               v-if="either.status==0"
@@ -174,7 +176,8 @@ export default {
     ...mapState([
       'userInfo',
       'users',
-      'api_server'
+      'api_server',
+      'psas'
     ])
   },
   
