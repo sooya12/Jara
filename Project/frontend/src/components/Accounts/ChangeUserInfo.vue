@@ -7,7 +7,7 @@
     <div class="font-weight-bold mt-5 px-3">프로필 사진<v-icon class="ml-1">mdi-camera</v-icon></div>
     <div v-if="file==null" class="d-flex justify-center">
       <v-icon v-if="user.img_src==null" x-large>mdi-account-circle</v-icon>
-      <v-avartar v-else><img :src="user.img_src"></v-avartar>
+      <v-avatar v-else><img :src="user.img_src"></v-avatar>
     </div>
     <div v-else class="d-flex justify-center"><v-avatar><img :src="imgURL" alt="프로필 사진"></v-avatar></div>
     <v-file-input
@@ -100,15 +100,16 @@
       ></v-text-field>
 
       <div class="font-weight-bold d-flex align-center">주소<v-icon class="ml-2">mdi-map-search</v-icon></div>
-      <v-text-field
-        v-model="user.location"
-        label="예) 서울특별시 강남구"
-        :rules="[locationRules.required]"
-        background-color="white"
+      <v-select
+        :items="districts"
+        :rules="[districtsRules.required]"
         outlined
-        color="green darken-2"
+        background-color="white"
         class="my-2"
-      ></v-text-field>
+        color="green darken-2"
+        item-color="green darken-2"
+        v-model="user.location"
+      ></v-select>
     </v-form>
     <div class="text-right px-3">
       <v-btn color="grey darken-1 white--text" class="mr-2" @click="cancle">취소</v-btn>
@@ -154,6 +155,32 @@ export default {
       showCurrentPWD: false,
       showPWD: false,
       showConfirmPWD: false,
+      districts: [
+        '강남구',
+        '강동구',
+        '강북구',
+        '강서구',
+        '관악구',
+        '광진구',
+        '구로구',
+        '금천구',
+        '노원구',
+        '도봉구',
+        '동대문구',
+        '동작구',
+        '마포구',
+        '서대문구',
+        '서초구',
+        '성동구',
+        '송파구',
+        '양천구',
+        '영등포구',
+        '용산구',
+        '은평구',
+        '종로구',
+        '중구',
+        '중랑구'
+      ],
       nickNameRules: {
         required: value => !!value || '닉네임을 입력해주세요.',
         max: v => v.length <= 8 || '닉네임은 8자리 이하이어야 합니다.'
@@ -170,8 +197,8 @@ export default {
         required: value => !!value || '입력하신 비밀번호를 한번 더 입력해주세요.',
         same: v => v == this.changePWD || '비밀번호가 일치하지 않습니다.'
       },
-      locationRules: {
-        required: value => !!value || '주소를 입력해주세요.',
+      districtsRules: {
+        required: value => !!value || '주소를 선택해주세요.',
       },
     }
   },
