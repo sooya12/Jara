@@ -3,24 +3,19 @@ package com.ssafy.jara.controller;
 import java.io.UnsupportedEncodingException;
 import java.security.InvalidAlgorithmParameterException;
 import java.security.InvalidKeyException;
-import java.security.Key;
 import java.security.NoSuchAlgorithmException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import javax.crypto.BadPaddingException;
-import javax.crypto.Cipher;
 import javax.crypto.IllegalBlockSizeException;
 import javax.crypto.NoSuchPaddingException;
-import javax.crypto.spec.IvParameterSpec;
-import javax.crypto.spec.SecretKeySpec;
 import javax.mail.MessagingException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.mindrot.jbcrypt.BCrypt;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -50,10 +45,6 @@ import com.ssafy.jara.service.TipCommentService;
 import com.ssafy.jara.service.TipService;
 
 import io.swagger.annotations.ApiOperation;
-
-import java.security.KeyPair;
-import java.security.PrivateKey;
-import java.security.PublicKey;
 
 @CrossOrigin(origins = { "*" }, maxAge = 6000)
 @RestController
