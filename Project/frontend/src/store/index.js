@@ -63,9 +63,11 @@ export default new Vuex.Store({
     SET_USERINFO(state, val) {
       state.userInfo = val
     },
-    SET_USERS(state, val1, val2) {
-      state.users = val1
-      state.psas = val2
+    SET_NICKNAMES(state, val) {
+      state.users = val
+    },
+    SET_PSAS(state, val) {
+      state.psas = val
     },
     SET_DRAWER(state, status) {
       state.drawer = status
@@ -135,7 +137,8 @@ export default new Vuex.Store({
             imgs[user.id] = user.img_src
             state.results.push({ nickname: user.nickname, id: user.id })
           })
-          commit('SET_USERS', nicks, imgs)
+          commit('SET_NICKNAMES', nicks)
+          commit('SET_PSAS', imgs)
         })
     },
     draw({ commit, state }) {
@@ -176,7 +179,7 @@ export default new Vuex.Store({
             token: VueCookies.get('auth-token')
           }
         }
-        Axios.get(`${state.api_server}/admin`, requestHeaders)
+        Axios.get(`${state.api_server}/reports/admin`, requestHeaders)
           .then(() => router.push('/admin'))
           .catch(() => {
             commit('SET_DIALOG', true)
@@ -207,7 +210,7 @@ export default new Vuex.Store({
         contents: state.reportData.contents,
         reporter_id: state.userInfo.id
       }
-      Axios.post(`${state.api_server}/reports`, data)
+      Axios.post(`${state.api_server}/reports/`, data)
       .then(() => {
         alert('신고 내역이 성공적으로 접수되었습니다.')
         state.reportData.accused_nickname = ''
