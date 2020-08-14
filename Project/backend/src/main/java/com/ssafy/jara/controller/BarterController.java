@@ -47,11 +47,13 @@ public class BarterController {
 	@GetMapping("/{id}")
 	private ResponseEntity<Barter> selectBarter(@PathVariable int id) {
 		Barter barter = barterService.selectBarter(id);
-		if (barter != null) {
-			return new ResponseEntity<Barter>(barter, HttpStatus.OK);
-		} else {
-			return new ResponseEntity<Barter>(HttpStatus.BAD_REQUEST);
+		
+		if (barter == null) {
+			System.out.println("ERROR: 해당하는 글이 존재하지 않습니다.");
+			return new ResponseEntity<Barter>(HttpStatus.NOT_FOUND);
 		}
+		
+		return new ResponseEntity<Barter>(barter, HttpStatus.OK);
 	}
 	
 	@ApiOperation(value = "해당 물물교환 수정 (title, price, contents, status)", response = String.class)
