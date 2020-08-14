@@ -101,7 +101,6 @@ public class ArticleController {
 			Article article = articleService.selectArticle(id);
 			article.setComments(articleCommentService.selectArticleComments(article.getId()));
 			article.setLikeAccounts(articleService.selectArticleLikeAccount(article.getId()));
-			System.out.println("article: "+article);
 			return new ResponseEntity<Article>(article, HttpStatus.OK);
 		} catch (NullPointerException e) {
 			e.printStackTrace();
