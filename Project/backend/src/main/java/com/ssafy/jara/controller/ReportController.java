@@ -1,6 +1,8 @@
 package com.ssafy.jara.controller;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -10,9 +12,11 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.ssafy.jara.common.service.jwt.JwtService;
 import com.ssafy.jara.dto.Report;
 import com.ssafy.jara.service.AccountService;
 import com.ssafy.jara.service.ReportService;
@@ -29,6 +33,9 @@ public class ReportController {
 
 	@Autowired
 	AccountService accountService;
+	
+	@Autowired
+	private JwtService jwtService;
 
 	@ApiOperation(value = "사용자 신고 등록", response = String.class)
 	@PostMapping("")
@@ -60,32 +67,57 @@ public class ReportController {
 
 	@ApiOperation(value = "관리자 페이지 - 신고 리스트", response = String.class)
 	@GetMapping("admin")
-	private ResponseEntity<List<Report>> selectListReport() {
+	private ResponseEntity<List<Report>> selectListReport(@RequestHeader(value="token") String token) {
+		Map<String, Object> tokenMap = new HashMap<>();
+		Map<String, Object> accountMap = new HashMap<>();
 		
-		List<Report> report = reportService.selectListReport();
-
-		if (!reportService.selectListReport().equals(null)) {
-			return new ResponseEntity<List<Report>>(report, HttpStatus.OK);
+		System.out.println("token: " + token);
+		
+		tokenMap.putAll(jwtService.get(token));
+		accountMap = (Map<String, Object>) tokenMap.get("Account");
+		String nickname = (String) accountMap.get("nickname");
+		
+		if (nickname.equals("관리자")) {
+			List<Report> report = reportService.selectListReport();
+			if (!reportService.selectListReport().equals(null)) {
+				System.out.println(report);
+				return new ResponseEntity<List<Report>>(report, HttpStatus.OK);
+			} else {
+				System.out.println("내역이 없습니다.");
+				return new ResponseEntity<List<Report>>(HttpStatus.NO_CONTENT);
+			}
+		} else {
+			System.out.println("Error: 권한이 없습니다.");
+			return new ResponseEntity<List<Report>>(HttpStatus.FORBIDDEN);
 		}
-
-		return new ResponseEntity<List<Report>>(report, HttpStatus.NO_CONTENT);
 	}
 	
 	@ApiOperation(value = "관리자 페이지 - 계정 삭제", response = String.class)
 	@DeleteMapping("admin")
-	private ResponseEntity<List<Report>> deleteAccount(@RequestBody Report report) {
+	private ResponseEntity<List<Report>> deleteAccount(@RequestBody Report report, @RequestHeader(value="token") String token) {
+		Map<String, Object> tokenMap = new HashMap<>();
+		Map<String, Object> accountMap = new HashMap<>();
 		
+		System.out.println("token: " + token);
 		
-		int id = reportService.findAccusedId(report.getAccused_nickname());
+		tokenMap.putAll(jwtService.get(token));
+		accountMap = (Map<String, Object>) tokenMap.get("Account");
+		String nickname = (String) accountMap.get("nickname");
 		
-		accountService.deleteAllFollow(id); // 팔로잉 팔로워일때 삭제
-				
-		if(accountService.deleteAccount(id) > 0) { // 회원 삭제
-		
-			return new ResponseEntity<List<Report>>(reportService.selectListReport(), HttpStatus.OK);
+		if (nickname.equals("관리자")) {
+			int id = reportService.findAccusedId(report.getAccused_nickname());
+			
+			accountService.deleteAllFollow(id); // 팔로잉 팔로워일때 삭제
+					
+			if(accountService.deleteAccount(id) > 0) { // 회원 삭제
+			
+				return new ResponseEntity<List<Report>>(reportService.selectListReport(), HttpStatus.OK);
+			} else {
+				return new ResponseEntity<List<Report>>(HttpStatus.BAD_REQUEST);
+			}
+		} else {
+			System.out.println("Error: 권한이 없습니다.");
+			return new ResponseEntity<List<Report>>(HttpStatus.FORBIDDEN);
 		}
-		
-		return new ResponseEntity<List<Report>>(HttpStatus.NO_CONTENT);
-
 	}
 }
