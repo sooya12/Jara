@@ -60,14 +60,14 @@
 	
 	<!-- 회원 정보 조회 -->
 	<select id="findAccount" resultType="com.ssafy.jara.dto.Account">
-		SELECT id, nickname, sex, birthday, location, bio, status
+		SELECT id, nickname, sex, birthday, location, bio, status, img_src
 		FROM user
 		WHERE id=#{id}
 	</select>
 	
 	<!-- 회원 정보 조회 - 민감 정보 제외 -->
 	<select id="findPartAccount" resultType="com.ssafy.jara.dto.Account">
-		SELECT id, nickname, sex, birthday, location, bio, status
+		SELECT id, nickname, sex, birthday, location, bio, status, img_src
 		FROM user
 		WHERE id=#{id}
 	</select>
@@ -83,7 +83,7 @@
 	<update id="updateAccount">
 		UPDATE user SET
 		nickname=#{nickname}, password=#{password}, 
-		sex=#{sex}, birthday=#{birthday}, location=#{location}, bio=#{bio}
+		sex=#{sex}, birthday=#{birthday}, location=#{location}, bio=#{bio}, img_src=#{img_src}
 		WHERE id=#{id}
 	</update>
 	

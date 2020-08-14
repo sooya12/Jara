@@ -25,11 +25,13 @@ public class Account {
 	private String SKY;			// 하늘상태 - 맑음(1), 구름많음(3), 흐림(4) 
 	private String T1H;			// 기온
 	
+	private String img_src;		// 프로필 사진
+	
 	public Account() {}
 
 	public Account(int id, String nickname, String email, String password, boolean sex, Date birthday, String location,
 			String bio, boolean status, String code, List<Integer> followerList, List<Integer> followingList,
-			List<Article> myArticleList, List<Tip> scrapTipList, String PTY, String SKY, String T1H) {
+			List<Article> myArticleList, List<Tip> scrapTipList, String PTY, String SKY, String T1H, String img_src) {
 		super();
 		this.id = id;
 		this.nickname = nickname;
@@ -48,6 +50,7 @@ public class Account {
 		this.PTY = PTY;
 		this.SKY = SKY;
 		this.T1H = T1H;
+		this.img_src = img_src;
 	}
 
 	public String getPTY() {
@@ -185,6 +188,14 @@ public class Account {
 	public void setScrapTipList(List<Tip> scrapTipList) {
 		this.scrapTipList = scrapTipList;
 	}
+	
+	public String getImg_src() {
+		return img_src;
+	}
+
+	public void setImg_src(String img_src) {
+		this.img_src = img_src;
+	}
 
 	@Override
 	public String toString() {
@@ -192,8 +203,7 @@ public class Account {
 				+ sex + ", birthday=" + birthday + ", location=" + location + ", bio=" + bio + ", status=" + status
 				+ ", code=" + code + ", followerList=" + followerList + ", followingList=" + followingList
 				+ ", myArticleList=" + myArticleList + ", scrapTipList=" + scrapTipList + ", PTY=" + PTY + ", SKY="
-				+ SKY + ", T1H=" + T1H + "]";
+				+ SKY + ", T1H=" + T1H + ", img_src=" + img_src + "]";
 	}
-
-
+	
 }
