@@ -478,13 +478,21 @@ public class AccountController extends HttpServlet {
 	
 	@ApiOperation(value = "네이버 로그인으로 회원가입 시 주소 수정")
 	@PutMapping("/signin/naver/access")
-	private ResponseEntity<Account> updateNaverAccount(@RequestBody Account account) {
+	private ResponseEntity<Account> updateNaverAccount(@RequestBody Account account, HttpServletResponse response) {
 		HashMap<String, Object> hashMap = new HashMap<String, Object>();
 		hashMap.put("id", account.getId());
 		hashMap.put("location", account.getLocation());
 		
 		if(accountService.updateNaverAccount(hashMap) > 0) {
-			return new ResponseEntity<Account>(accountService.findPartAccount(account.getId()), HttpStatus.OK);
+			
+			account = accountService.findPartAccount(account.getId());
+			
+			if(!account.equals(null)) {
+				String token = jwtService.create(account);
+				response.setHeader("jwt-auth-token", token);
+			}
+			
+			return new ResponseEntity<Account>(account, HttpStatus.OK);
 		}
 		
 		return new ResponseEntity<Account>(HttpStatus.NO_CONTENT);
