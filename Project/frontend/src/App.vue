@@ -102,7 +102,7 @@
           <v-list-item two-line>
             <v-list-item-avatar>
               <v-icon v-if="!isLoggedIn||userInfo.img_src==null">mdi-account-circle</v-icon>
-              <v-avatar v-else><img :src="userInfo.img_src"></v-avatar>
+              <v-avatar v-else><img :src="psas[userInfo.id]"></v-avatar>
             </v-list-item-avatar>
             <v-list-item-content v-if="!isLoggedIn">
               <v-list-item-title>방문자 님</v-list-item-title>
@@ -246,7 +246,6 @@ export default {
     this.$store.dispatch('getUsers')
     if (this.$route.path != "/") {this.$store.commit('SET_ENTRANCE', false)}
     if (this.$store.state.authToken&&this.$store.state.userInfo==null) {this.$store.dispatch('getUser')}
-    // if (this.$store.state.userInfo!=null) {this.isTaken = true}
     if (this.$store.state.authToken) {this.$store.commit('SET_ENTRANCE', false)}
   },
   computed: {
@@ -262,7 +261,8 @@ export default {
       'nickNameRules',
       'contentsRules',
       'entrance',
-      'requestData'
+      'requestData',
+      'psas'
     ]),
     ...mapGetters([
       'isLoggedIn',
@@ -342,7 +342,6 @@ export default {
   },
   data() {
     return {
-      // isTaken: false,
       searched: null,
       searchWord: null,
     }
