@@ -50,6 +50,12 @@ public class EitherController {
 	@GetMapping("/{id}")
 	private ResponseEntity<Map<String, Object>> selectEither(@PathVariable int id) {
 		Either either = eitherService.selectEither(id);
+		
+		if (either == null) {
+			System.out.println("ERROR: 해당하는 글이 존재하지 않습니다.");
+			return new ResponseEntity<Map<String, Object>>(HttpStatus.NOT_FOUND);
+		}
+		
 		List<EitherComment> eitherComments = eitherCommentService.selectListEitherComment(id);
 		List<Integer> choiceA = eitherService.selectChoiceAList(id);
 		List<Integer> choiceB = eitherService.selectChoiceBList(id);
@@ -59,11 +65,8 @@ public class EitherController {
 		resultMap.put("choiceA", choiceA);
 		resultMap.put("choiceB", choiceB);
 		resultMap.put("eitherComments", eitherComments);
-		if (either != null) {
-			return new ResponseEntity<Map<String, Object>>(resultMap, HttpStatus.OK);
-		} else {
-			return new ResponseEntity<Map<String, Object>>(resultMap, HttpStatus.BAD_REQUEST);
-		}
+		
+		return new ResponseEntity<Map<String, Object>>(resultMap, HttpStatus.OK);
 	}
 	
 	@ApiOperation(value = "투표 수정", response = String.class)
