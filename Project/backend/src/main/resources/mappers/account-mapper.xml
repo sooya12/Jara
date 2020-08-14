@@ -60,7 +60,7 @@
 	
 	<!-- 회원 정보 조회 -->
 	<select id="findAccount" resultType="com.ssafy.jara.dto.Account">
-		SELECT *
+		SELECT id, nickname, sex, birthday, location, bio, status
 		FROM user
 		WHERE id=#{id}
 	</select>
@@ -89,7 +89,7 @@
 	
 	<!-- 모든 회원 정보(유저) 조회 -->
 	<select id="findAllAccount" resultType="com.ssafy.jara.dto.Account">
-		SELECT *
+		SELECT id, nickname
 		FROM user
 		ORDER BY nickname
 	</select>
