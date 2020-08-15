@@ -7,7 +7,7 @@
       <div>
         <v-flex class="sm6 offset-sm3 justify-center">
           <v-text-field
-            label="Search Tips..."
+            label="팁 게시글 검색..."
             v-model="search"
             class="col-12"
           >
@@ -25,7 +25,7 @@
           :length="numOfPages">
         </v-pagination>
       </div>
-      <v-btn @click="write" style="position: fixed; bottom:3vh; right: 3vh" color="primary" fab small dark absolute bottom right>
+      <v-btn @click="write" style="position: fixed; bottom:3vh; right: 3vh" color="success" fab small dark absolute bottom right>
         <v-icon>mdi-pencil</v-icon>
       </v-btn>
     </div>
