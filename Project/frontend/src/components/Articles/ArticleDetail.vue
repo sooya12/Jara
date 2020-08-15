@@ -1,12 +1,12 @@
 <template>
   <v-container fluid mt-5 v-if="isTaken">
     <div class="d-flex justify-space-between align-center">
-      <div class="d-flex align-center" v-if="psa[article.writer]==null">
+      <div class="d-flex align-center" v-if="psas[article.writer]==null">
         <v-btn text class="pa-0 font-weight-bold text-sm-h5 text-h6" @click="goToUser" x-large><v-icon x-large>mdi-account-circle</v-icon>{{ users[article.writer] }}</v-btn>      
       </div>
       <div class="d-flex align-center" v-else>
         <v-btn text class="pa-0 font-weight-bold text-sm-h5 text-h6" @click="goToUser" x-large>
-          <v-avatar><img :src="psa[article.writer]" alt="프로필 사진"></v-avatar>
+          <v-avatar><img :src="psas[article.writer]" alt="프로필 사진"></v-avatar>
           {{ users[article.writer] }}
         </v-btn>      
       </div>
