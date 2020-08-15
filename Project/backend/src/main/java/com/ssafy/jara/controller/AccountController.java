@@ -447,12 +447,13 @@ public class AccountController extends HttpServlet {
 				System.out.println(nickname + " " + sex + " " + email + " " + birthday);
 
 				HashMap<Object, Object> hashMap = new HashMap<Object, Object>();
-
+				String token = "";
+				
 				if (accountService.findEmail(email) > 0) {
 					Account account = accountService.findPartAccount(accountService.findIdByEmail(email));
 
 					if (!account.equals(null)) {
-						String token = jwtService.create(account);
+						token = jwtService.create(account);
 						response.setHeader("jwt-auth-token", token);
 					}
 
@@ -461,7 +462,7 @@ public class AccountController extends HttpServlet {
 
 					System.out.println(hashMap.toString());
 
-					response.sendRedirect("http://localhost:3030/accounts/signin"); // vue로 이동
+					response.sendRedirect("http://localhost:3030/accounts/social/login?token=" + token); // vue로 이동
 
 					return new ResponseEntity<HashMap<Object, Object>>(hashMap, HttpStatus.OK); // 처음 소셜 로그인 사용자가 아닌 경우
 				}
@@ -479,10 +480,13 @@ public class AccountController extends HttpServlet {
 
 				hashMap.put("account", resultAccount);
 				hashMap.put("flag", false);
+				
+				if (!resultAccount.equals(null)) {
+					token = jwtService.create(resultAccount);
+					response.setHeader("jwt-auth-token", token);
+				}
 
-				System.out.println(hashMap.toString());
-
-				response.sendRedirect("http://localhost:3030/accounts/signin"); // vue로 이동
+				response.sendRedirect("http://localhost:3030/accounts/social/login?token=" + token); // vue로 이동
 
 				return new ResponseEntity<HashMap<Object, Object>>(hashMap, HttpStatus.OK); // 처음 소셜 로그인 사용자인 경우 -> 지역 입력 페이지로 가야함
 			}
@@ -499,7 +503,7 @@ public class AccountController extends HttpServlet {
 		HashMap<String, Object> hashMap = new HashMap<String, Object>();
 		hashMap.put("id", account.getId());
 		hashMap.put("location", account.getLocation());
-
+		
 		if (accountService.updateNaverAccount(hashMap) > 0) {
 
 			account = accountService.findPartAccount(account.getId());

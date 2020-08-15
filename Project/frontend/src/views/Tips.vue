@@ -1,13 +1,14 @@
 <template>
   <v-container fluid style="potition: relative">
     <div class="mt-5">
-      <div class="mx-3 font-weight-bold text-center text-sm-h3 text-h4">
-        꿀 Tips
+      <div class="mx-3 font-weight-bold text-sm-h3 text-h4">
+        유익한 자라
+        <v-icon x-large class="ml-2">mdi-lightbulb</v-icon>
       </div>
       <div>
         <v-flex class="sm6 offset-sm3 justify-center">
           <v-text-field
-            label="Search Tips..."
+            label="팁 게시글 검색..."
             v-model="search"
             class="col-12"
           >
@@ -25,7 +26,7 @@
           :length="numOfPages">
         </v-pagination>
       </div>
-      <v-btn @click="write" style="position: fixed; bottom:3vh; right: 3vh" color="primary" fab small dark absolute bottom right>
+      <v-btn @click="write" style="position: fixed; bottom:3vh; right: 3vh" color="success" fab small dark absolute bottom right>
         <v-icon>mdi-pencil</v-icon>
       </v-btn>
     </div>

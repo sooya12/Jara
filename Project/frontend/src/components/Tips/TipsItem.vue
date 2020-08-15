@@ -4,40 +4,48 @@
       class="d-flex align-start flex-column mx-3 my-3"
       max-width="400"
     >
-      <v-img
-        id="img"
-        class="white--text align-end"
-        height="200px"
-        :src="tip.img_src"
-        contain
+      <v-container
+        class="px-0 py-0"
+        @click="goTipDetail(tip.id)"
+        :tip="tip"
       >
-      </v-img>
-      <v-card-title class="text-center font-weight-bold">{{ tip.title }}</v-card-title>
-      <v-card-subtitle class="pb-0">{{ tip.created_at }}</v-card-subtitle>
-
-      <v-card-text class="text--primary" align="left">
-        <!-- <div>subheading</div> -->
-
-        <div class="box">{{ tip.contents }}</div>
-      </v-card-text>
-
-      <v-card-actions style="width: 100%;">
-        <v-btn
-          color="orange"
-          text
-          @click="goTipDetail(tip.id)"
-          :tip="tip"
+        <v-img
+          id="img"
+          class="white--text align-end"
+          height="200px"
+          :src="tip.img_src"
+          contain
         >
-          Show
-        </v-btn>
+        </v-img>
+        
+        <v-card-title class="text-center font-weight-bold">{{ tip.title }}</v-card-title>
+        <v-card-subtitle class="pb-0 text-start">{{ tip.created_at }}</v-card-subtitle>
+
+        <v-card-text class="text--primary" align="left">
+          <!-- <div>subheading</div> -->
+
+          <div class="box">{{ tip.contents }}</div>
+        </v-card-text>
+      </v-container>
+      <v-card-actions style="width: 100%;">
+        <v-chip href="javascript:false" class="tag">#{{ tag[tip.tag_id] }}</v-chip>
         <v-spacer></v-spacer>
-        <v-btn color="orange" icon>
+        <v-btn color="teel" icon>
           <v-icon> mdi-share-variant </v-icon>
         </v-btn>
 
-        <v-btn @click="scrapTip(tip.id)" color="orange" icon>
-          <v-icon>mdi-bookmark-multiple-outline</v-icon>
+        <v-btn @click="scrapTip(tip.id)" color="teel" icon>
+          <v-icon>mdi-bookmark-outline</v-icon>
         </v-btn>
+
+        <v-btn v-if="!liked" @click="like" icon>
+          <v-icon>mdi-heart-outline</v-icon>
+        </v-btn>
+
+        <v-btn v-else @click="like" icon>
+          <v-icon color="red darken-1">mdi-heart</v-icon>
+        </v-btn>
+
       </v-card-actions>
     </v-card>
   </div>
@@ -57,6 +65,8 @@ export default {
   data() {
     return {
       show: false,
+      tag: {1:'요리',2:'세탁',3:'청소',4:'보관'},
+      liked: false
     } 
   },
   methods: {
@@ -71,6 +81,25 @@ export default {
         })
         .catch(err => {
           console.log(err)
+        })
+    },
+    like() {
+      axios.post(`${this.$store.state.api_server}/tips/${this.tip.id}/like`, '',{ params : { user_id: this.$store.state.userInfo.id }})
+        .then(() => {
+          // console.log(res)
+          if (this.liked) {
+            this.liked = false
+            // console.log(this.tip.likeAccounts)
+            this.tip.likeAccounts.splice(this.tip.likeAccounts.indexOf(this.$store.state.userInfo.id),1)
+            // console.log(this.tip.likeAccounts)
+          } else {
+            this.liked = true
+            this.tip.likeAccounts.push(this.$store.state.userInfo.id)
+            // console.log(this.tip.likeAccounts)
+          }
+        })
+        .catch(err => {
+          console.log(err.message)
         })
     },
   },
