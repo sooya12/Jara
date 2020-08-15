@@ -23,6 +23,7 @@ import Tips from '../views/Tips.vue'
 import TipsItemDetail from '../components/Tips/TipsItemDetail.vue'
 import NewTip from '../components/Tips/NewTip.vue'
 import PageNotFound from '../views/PageNotFound.vue'
+import SocialLogin from '../components/Accounts/SocialLogin.vue'
 
 Vue.use(VueRouter)
 
@@ -34,7 +35,7 @@ Vue.use(VueRouter)
     beforeEnter(to, from, next) {
       if (Vue.$cookies.isKey('auth-token')) {
         next({name: 'Home'})
-      }
+      } else { next() }
     }
   },
   {
@@ -252,6 +253,11 @@ Vue.use(VueRouter)
     path: '*',
     name: 'PageNotFound',
     component: PageNotFound,
+  },
+  {
+    path: '/social/login',
+    name: 'SocialLogin',
+    component: SocialLogin
   }
 ]
 

@@ -49,8 +49,7 @@
         <v-divider class="align-self-center ml-2"></v-divider>
       </div>
       <div class="text-right">
-        <v-btn icon outlined><v-icon>mdi-google</v-icon></v-btn>
-        <v-btn icon oulined><v-icon></v-icon></v-btn> 
+        <v-btn icon :href="naverLoginURL" style="background-color: #1EC800;"><v-icon x-large color="white">mdi-alpha-n</v-icon></v-btn> 
       </div>
       <v-divider class="my-5"></v-divider>
       <div class="mt-5 d-flex align-center">
@@ -69,6 +68,10 @@
 
 <script>
 import { mapMutations, mapGetters, mapActions } from 'vuex'
+
+const naverKey = process.env.VUE_APP_NAVER_API_KEY
+const redirectURL= 'http://localhost:8081/jara/accounts/signin/naver/access'
+const state = 20200708
 
 export default {
   name: 'SignIn',
@@ -99,6 +102,7 @@ export default {
       },
       isValid: false,
       showPWD: false,
+      naverLoginURL: `https://nid.naver.com/oauth2.0/authorize?response_type=code&client_id=${naverKey}&redirect_uri=${redirectURL}&state=${state}`
     }
   },
   methods: {
