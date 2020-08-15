@@ -28,21 +28,14 @@
         </v-card-text>
       </v-container>
       <v-card-actions style="width: 100%;">
-        <v-btn
-          color="teel"
-          text
-          @click="goTipDetail(tip.id)"
-          :tip="tip"
-        >
-          상세보기
-        </v-btn>
+        <v-chip href="javascript:false" class="tag">#{{ tag[tip.tag_id] }}</v-chip>
         <v-spacer></v-spacer>
         <v-btn color="teel" icon>
           <v-icon> mdi-share-variant </v-icon>
         </v-btn>
 
         <v-btn @click="scrapTip(tip.id)" color="teel" icon>
-          <v-icon>mdi-bookmark-multiple-outline</v-icon>
+          <v-icon>mdi-bookmark-outline</v-icon>
         </v-btn>
       </v-card-actions>
     </v-card>
@@ -63,6 +56,7 @@ export default {
   data() {
     return {
       show: false,
+      tag: {1:'요리',2:'세탁',3:'청소',4:'보관'}
     } 
   },
   methods: {
