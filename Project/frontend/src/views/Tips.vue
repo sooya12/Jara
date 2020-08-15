@@ -1,8 +1,9 @@
 <template>
   <v-container fluid style="potition: relative">
     <div class="mt-5">
-      <div class="mx-3 font-weight-bold text-center text-sm-h3 text-h4">
-        꿀 Tips
+      <div class="mx-3 font-weight-bold text-sm-h3 text-h4">
+        유익한 자라
+        <v-icon x-large class="ml-2">mdi-lightbulb</v-icon>
       </div>
       <div>
         <v-flex class="sm6 offset-sm3 justify-center">

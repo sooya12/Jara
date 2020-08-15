@@ -37,6 +37,15 @@
         <v-btn @click="scrapTip(tip.id)" color="teel" icon>
           <v-icon>mdi-bookmark-outline</v-icon>
         </v-btn>
+
+        <v-btn v-if="!liked" @click="like" icon>
+          <v-icon>mdi-heart-outline</v-icon>
+        </v-btn>
+
+        <v-btn v-else @click="like" icon>
+          <v-icon color="red darken-1">mdi-heart</v-icon>
+        </v-btn>
+
       </v-card-actions>
     </v-card>
   </div>
@@ -56,7 +65,8 @@ export default {
   data() {
     return {
       show: false,
-      tag: {1:'요리',2:'세탁',3:'청소',4:'보관'}
+      tag: {1:'요리',2:'세탁',3:'청소',4:'보관'},
+      liked: false
     } 
   },
   methods: {
@@ -71,6 +81,25 @@ export default {
         })
         .catch(err => {
           console.log(err)
+        })
+    },
+    like() {
+      axios.post(`${this.$store.state.api_server}/tips/${this.tip.id}/like`, '',{ params : { user_id: this.$store.state.userInfo.id }})
+        .then(() => {
+          // console.log(res)
+          if (this.liked) {
+            this.liked = false
+            // console.log(this.tip.likeAccounts)
+            this.tip.likeAccounts.splice(this.tip.likeAccounts.indexOf(this.$store.state.userInfo.id),1)
+            // console.log(this.tip.likeAccounts)
+          } else {
+            this.liked = true
+            this.tip.likeAccounts.push(this.$store.state.userInfo.id)
+            // console.log(this.tip.likeAccounts)
+          }
+        })
+        .catch(err => {
+          console.log(err.message)
         })
     },
   },
