@@ -4,38 +4,44 @@
       class="d-flex align-start flex-column mx-3 my-3"
       max-width="400"
     >
-      <v-img
-        id="img"
-        class="white--text align-end"
-        height="200px"
-        :src="tip.img_src"
-        contain
+      <v-container
+        class="px-0 py-0"
+        @click="goTipDetail(tip.id)"
+        :tip="tip"
       >
-      </v-img>
-      <v-card-title class="text-center font-weight-bold">{{ tip.title }}</v-card-title>
-      <v-card-subtitle class="pb-0">{{ tip.created_at }}</v-card-subtitle>
+        <v-img
+          id="img"
+          class="white--text align-end"
+          height="200px"
+          :src="tip.img_src"
+          contain
+        >
+        </v-img>
+        
+        <v-card-title class="text-center font-weight-bold">{{ tip.title }}</v-card-title>
+        <v-card-subtitle class="pb-0 text-start">{{ tip.created_at }}</v-card-subtitle>
 
-      <v-card-text class="text--primary" align="left">
-        <!-- <div>subheading</div> -->
+        <v-card-text class="text--primary" align="left">
+          <!-- <div>subheading</div> -->
 
-        <div class="box">{{ tip.contents }}</div>
-      </v-card-text>
-
+          <div class="box">{{ tip.contents }}</div>
+        </v-card-text>
+      </v-container>
       <v-card-actions style="width: 100%;">
         <v-btn
-          color="orange"
+          color="teel"
           text
           @click="goTipDetail(tip.id)"
           :tip="tip"
         >
-          Show
+          상세보기
         </v-btn>
         <v-spacer></v-spacer>
-        <v-btn color="orange" icon>
+        <v-btn color="teel" icon>
           <v-icon> mdi-share-variant </v-icon>
         </v-btn>
 
-        <v-btn @click="scrapTip(tip.id)" color="orange" icon>
+        <v-btn @click="scrapTip(tip.id)" color="teel" icon>
           <v-icon>mdi-bookmark-multiple-outline</v-icon>
         </v-btn>
       </v-card-actions>
