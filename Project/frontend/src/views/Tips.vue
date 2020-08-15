@@ -3,7 +3,7 @@
     <div class="mt-5">
       <div class="mx-3 font-weight-bold text-sm-h3 text-h4">
         유익한 자라
-        <v-icon x-large class="ml-2">mdi-lightbulb</v-icon>
+        <v-icon x-large class="ml-2">mdi-lightbulb-outline</v-icon>
       </div>
       <div>
         <v-flex class="sm6 offset-sm3 justify-center">

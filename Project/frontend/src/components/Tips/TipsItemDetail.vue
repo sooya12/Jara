@@ -73,7 +73,7 @@
           </v-flex>
           <v-flex xs12>
             <!-- <v-subheader class='pl-0' >댓글 ({{tip.comments.length}})</v-subheader> -->
-            <v-subheader class='pl-0' >댓글 ({{tip.comments.length}})</v-subheader>
+            <v-subheader class='pl-0' >댓글</v-subheader>
             <v-card ref='comments'>
               <v-card-text class="pb-0">
                 <v-text-field

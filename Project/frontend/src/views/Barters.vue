@@ -1,13 +1,14 @@
 <template>
   <v-container fluid>
     <div class="mt-5">
-      <div class="mx-3 font-weight-bold text-center text-sm-h3 text-h4">
-        Barters
+      <div class="mx-3 font-weight-bold text-sm-h3 text-h4">
+        합리적인 자라
+        <v-icon x-large class="ml-2">mdi-shopping-outline</v-icon>
       </div>
       <div>
         <v-flex class="sm6 offset-sm3 justify-center">
           <v-text-field
-            label="Search Items..."
+            label="필요한 물품 검색..."
             v-model="search"
             class="col-12"
           >
@@ -27,7 +28,7 @@
                   v-bind="attrs"
                   v-on="on"
                 >
-                  New Item
+                  새 글 쓰기
                 </v-btn>
               </template>
               <v-card>

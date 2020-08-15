@@ -24,10 +24,51 @@
                   </v-icon>
                 <!-- </v-btn> -->
                 <v-spacer></v-spacer>
+                
+              </v-card-title>
+              <v-layout>
+                <v-flex xs7 class='pr-0'>
+                  <v-list class='pt-0'>
+                    <v-list-item>
+                      <v-list-item-avatar>
+                      <!-- <img :src="'https://steemitimages.com/u/' + author + '/avatar/small'" alt="avatar" onerror="this.src='https://steemitimages.com/u/monawoo/avatar/small'"> -->
+                      <img :src="psas[barter.writer]" alt="avatar">
+                      </v-list-item-avatar>
+                      <v-list-item-content>
+                        <v-list-item-title>{{users[barter.writer]}}
+                        </v-list-item-title>
+                        <v-list-item-title v-if="!barter.updated_at">{{barter.created_at | filterCreated }}</v-list-item-title>
+                        <v-list-item-title v-else>{{barter.updated_at | filterCreated }}<p style="font-size: x-small; display: inline-block; margin: 0;">(수정됨)</p></v-list-item-title>
+                      </v-list-item-content>
+                    </v-list-item>
+                  </v-list>
+                </v-flex>
+                <v-flex xs5 text-xs-right class='pr-4 pt-3'>
+                  <div>
+                    <v-btn icon>
+                      <v-icon>mdi-comment-processing-outline</v-icon>
+                    </v-btn> {{ comments.length }}
+                  </div>
+                </v-flex>
+              </v-layout>
+              <v-divider></v-divider>
+              <v-card-text>
+                <article>{{ barter.contents }}</article>
+              </v-card-text>
+              <v-card-text>
                 <v-toolbar v-if="$store.state.userInfo.id === barter.writer" flat color="white">
-                  <v-row justify="end">
+                  <v-row justify="center" align="center">
+                    <template>
+                      <v-chip href='javascript:false' class='tag'>#{{ tag_name[barter.tag_id] }}</v-chip>
+                    </template>
+                    <v-spacer></v-spacer>
                     <v-dialog v-model="dialog" persistent max-width="600px">
                       <template v-slot:activator="{ on, attrs }">
+                        <v-btn icon @click="deleteItem">
+                          <v-icon>
+                            mdi-delete
+                          </v-icon>
+                        </v-btn>
                         <v-btn
                           v-if="!barter.status"
                           v-bind="attrs"
@@ -37,11 +78,7 @@
                         >
                           <v-icon>mdi-pencil</v-icon>
                         </v-btn>
-                        <v-btn icon @click="deleteItem">
-                          <v-icon>
-                            mdi-delete
-                          </v-icon>
-                        </v-btn>
+                        
                       </template>
                       <v-card>
                         <v-card-title>
@@ -79,49 +116,16 @@
                     </v-dialog>
                   </v-row>
                 </v-toolbar>
-              </v-card-title>
-              <v-layout>
-                <v-flex xs7 class='pr-0'>
-                  <v-list class='pt-0'>
-                    <v-list-item>
-                      <v-list-item-avatar>
-                      <!-- <img :src="'https://steemitimages.com/u/' + author + '/avatar/small'" alt="avatar" onerror="this.src='https://steemitimages.com/u/monawoo/avatar/small'"> -->
-                      <img :src="require('../../../src/assets/Totodile.jpg')" alt="avatar">
-                      </v-list-item-avatar>
-                      <v-list-item-content>
-                        <v-list-item-title>{{users[barter.writer]}}
-                        </v-list-item-title>
-                        <v-list-item-title v-if="!barter.updated_at">{{barter.created_at | filterCreated }}</v-list-item-title>
-                        <v-list-item-title v-else>{{barter.updated_at | filterCreated }}<p style="font-size: x-small; display: inline-block; margin: 0;">(수정됨)</p></v-list-item-title>
-                      </v-list-item-content>
-                    </v-list-item>
-                  </v-list>
-                </v-flex>
-                <v-flex xs5 text-xs-right class='pr-4 pt-3'>
-                  <div>
-                    · 댓글 {{ comments.length }}명
-                  </div>
-                </v-flex>
-              </v-layout>
-              <v-divider></v-divider>
-              <v-card-text>
-                <article>{{ barter.contents }}</article>
-              </v-card-text>
-              <v-card-text>
-                <template>
-                  <v-chip href='javascript:false' class='tag'>#{{ tag_name[barter.tag_id] }}</v-chip>
-                </template>
               </v-card-text>
             </v-card>
           </v-flex>
           <v-flex xs12>
-            <v-subheader class='pl-0' >댓글 ({{comments.length}})</v-subheader>
+            <v-subheader class='pl-0' >댓글</v-subheader>
             <v-card ref='comments'>
               <v-card-text>
                 <v-text-field
                   ref="contents"
                   v-model="new_comment.contents"
-                  label="Content"
                   placeholder="댓글을 입력해 주세요."
                   required
                   @keyup.enter="newComment"
@@ -314,7 +318,8 @@ export default {
     ...mapState([
       'api_server',
       'users',
-      'userInfo'
+      'userInfo',
+      'psas'
     ])
   }
 }
