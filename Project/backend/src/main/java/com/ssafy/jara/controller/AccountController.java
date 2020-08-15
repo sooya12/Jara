@@ -378,7 +378,7 @@ public class AccountController extends HttpServlet {
 
 	@ApiOperation(value = "네이버 로그인 접근 토큰")
 	@GetMapping("/signin/naver/access")
-	private ResponseEntity<HashMap<Object, Object>> accessTokenNaver(HttpServletRequest request, HttpServletResponse response) throws UnsupportedEncodingException {
+	private ResponseEntity<String> accessTokenNaver(HttpServletRequest request, HttpServletResponse response) throws UnsupportedEncodingException {
 		String clientId = "y_9J6LuNu9tyN5tgnmEN";// 애플리케이션 클라이언트 아이디값";
 		String clientSecret = "8bMro7T5Dt";// 애플리케이션 클라이언트 시크릿값";
 		String code = request.getParameter("code");
@@ -395,8 +395,6 @@ public class AccountController extends HttpServlet {
 
 		String access_token = "";
 		String refresh_token = "";
-
-		System.out.println(apiURL);
 
 		try {
 			URL url = new URL(apiURL);
@@ -442,11 +440,7 @@ public class AccountController extends HttpServlet {
 				String nickname = URLDecoder.decode((String) resObj.get("nickname"));
 				String sex = (String) resObj.get("gender");
 				String email = (String) resObj.get("email");
-				String birthday = (String) resObj.get("birthday");
 
-				System.out.println(nickname + " " + sex + " " + email + " " + birthday);
-
-				HashMap<Object, Object> hashMap = new HashMap<Object, Object>();
 				String token = "";
 				
 				if (accountService.findEmail(email) > 0) {
@@ -457,14 +451,9 @@ public class AccountController extends HttpServlet {
 						response.setHeader("jwt-auth-token", token);
 					}
 
-					hashMap.put("account", account);
-					hashMap.put("flag", true);
-
-					System.out.println(hashMap.toString());
-
 					response.sendRedirect("http://localhost:3030/accounts/social/login?token=" + token); // vue로 이동
 
-					return new ResponseEntity<HashMap<Object, Object>>(hashMap, HttpStatus.OK); // 처음 소셜 로그인 사용자가 아닌 경우
+					return new ResponseEntity<String>("success", HttpStatus.OK); // 처음 소셜 로그인 사용자가 아닌 경우
 				}
 
 				Account account = new Account();
@@ -478,9 +467,6 @@ public class AccountController extends HttpServlet {
 
 				Account resultAccount = accountService.findPartAccount(account.getId());
 
-				hashMap.put("account", resultAccount);
-				hashMap.put("flag", false);
-				
 				if (!resultAccount.equals(null)) {
 					token = jwtService.create(resultAccount);
 					response.setHeader("jwt-auth-token", token);
@@ -488,13 +474,13 @@ public class AccountController extends HttpServlet {
 
 				response.sendRedirect("http://localhost:3030/accounts/social/login?token=" + token); // vue로 이동
 
-				return new ResponseEntity<HashMap<Object, Object>>(hashMap, HttpStatus.OK); // 처음 소셜 로그인 사용자인 경우 -> 지역 입력 페이지로 가야함
+				return new ResponseEntity<String>("success", HttpStatus.OK); // 처음 소셜 로그인 사용자인 경우 -> 지역 입력 페이지로 가야함
 			}
 		} catch (Exception e) {
 			System.out.println(e);
 		}
 
-		return new ResponseEntity<HashMap<Object, Object>>(HttpStatus.BAD_REQUEST);
+		return new ResponseEntity<String>("fail", HttpStatus.BAD_REQUEST);
 	}
 
 	@ApiOperation(value = "네이버 로그인으로 회원가입 시 주소 수정")
