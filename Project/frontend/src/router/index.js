@@ -129,6 +129,11 @@ Vue.use(VueRouter)
     component: SignUpCertification
   },
   {
+    path: '/accounts/social/login',
+    name: 'SocialLogin',
+    component: SocialLogin
+  },
+  {
     path: '/accounts/:user_id',
     name: 'User',
     component: User,
@@ -254,11 +259,6 @@ Vue.use(VueRouter)
     name: 'PageNotFound',
     component: PageNotFound,
   },
-  {
-    path: '/social/login',
-    name: 'SocialLogin',
-    component: SocialLogin
-  }
 ]
 
 const router = new VueRouter({
