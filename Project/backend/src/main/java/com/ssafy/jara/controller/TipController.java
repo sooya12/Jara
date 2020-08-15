@@ -37,23 +37,11 @@ public class TipController {
 	@ApiOperation(value = "팁 등록", response = String.class)
 	@PostMapping("")
 	private ResponseEntity<Integer> insertTip(@RequestBody Tip tip) {
-		if(tipService.insertTip(tip) > 0) {
-			return new ResponseEntity<Integer>(tip.getId(), HttpStatus.OK);
-		} 
-		
-		return new ResponseEntity<Integer>(0, HttpStatus.INTERNAL_SERVER_ERROR);
-	}
-	
-	@ApiOperation(value = "팁 이미지 경로 등록", response = String.class)
-	@PutMapping("/{id}/img")
-	private ResponseEntity<String> insertTipImg(@RequestBody Tip tip) {
-		HashMap<String, Object> hashMap = new HashMap<String, Object>();
-		hashMap.put("id", tip.getId());
 		
 		String img_src = tip.getImg_src();
 		
-		// 작성자가 이미지를 등록하지 않은 경우, 기본 이미지 자라로 설정 
-		if(img_src.equals(null) || img_src == null || img_src.trim().equals("")) {
+		// 작성자가 이미지를 등록하지 않은 경우, 기본 이미지 자라로 설정
+		if (img_src == null) {
 			switch (tip.getTag_id()) { // 1 요리 2 세탁 3 청소 4 보관
 			case 1:
 				img_src = "https://firebasestorage.googleapis.com/v0/b/jara-8c5be.appspot.com/o/default%2Fyorijara.png?alt=media&token=99862c57-acdd-46f8-a3d5-992eab8582c8";
@@ -70,7 +58,21 @@ public class TipController {
 			}
 		}
 		
-		hashMap.put("img_src", img_src);
+		tip.setImg_src(img_src);
+		
+		if(tipService.insertTip(tip) > 0) {
+			return new ResponseEntity<Integer>(tip.getId(), HttpStatus.OK);
+		} 
+		
+		return new ResponseEntity<Integer>(0, HttpStatus.INTERNAL_SERVER_ERROR);
+	}
+	
+	@ApiOperation(value = "팁 이미지 경로 등록", response = String.class)
+	@PutMapping("/{id}/img")
+	private ResponseEntity<String> insertTipImg(@RequestBody Tip tip) {
+		HashMap<String, Object> hashMap = new HashMap<String, Object>();
+		hashMap.put("id", tip.getId());
+		hashMap.put("img_src", tip.getImg_src());
 		
 		if(tipService.updateTipImg(hashMap) > 0) {
 			return new ResponseEntity<String>("success", HttpStatus.OK);
