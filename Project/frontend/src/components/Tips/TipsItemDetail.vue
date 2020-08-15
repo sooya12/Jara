@@ -20,7 +20,7 @@
                     <v-list-item>
                       <v-list-item-avatar>
                       <!-- <img :src="'https://steemitimages.com/u/' + author + '/avatar/small'" alt="avatar" onerror="this.src='https://steemitimages.com/u/monawoo/avatar/small'"> -->
-                      <img :src="require('../../../src/assets/Totodile.jpg')" alt="avatar">
+                      <img :src="psas[tip.writer]" alt="avatar">
                       </v-list-item-avatar>
                       <v-list-item-content>
                         <v-list-item-title>{{users[tip.writer]}}
@@ -227,7 +227,8 @@ export default {
     ...mapState([
       'api_server',
       'users',
-      'userInfo'
+      'userInfo',
+      'psas'
     ])
   }
 }
