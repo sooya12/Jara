@@ -15,7 +15,6 @@ import java.security.InvalidAlgorithmParameterException;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
-import java.sql.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -379,13 +378,13 @@ public class AccountController extends HttpServlet {
 	
 	@ApiOperation(value = "네이버 로그인 접근 토큰")
 	@GetMapping("/signin/naver/access")
-	private ResponseEntity<Account> accessTokenNaver(HttpServletRequest request, HttpServletResponse response) throws UnsupportedEncodingException {
+	private ResponseEntity<HashMap<Object, Object>> accessTokenNaver(HttpServletRequest request, HttpServletResponse response) throws UnsupportedEncodingException {
 		String clientId = "y_9J6LuNu9tyN5tgnmEN";// 애플리케이션 클라이언트 아이디값";
 		String clientSecret = "8bMro7T5Dt";// 애플리케이션 클라이언트 시크릿값";
 		String code = request.getParameter("code");
 		String state = request.getParameter("state");
 //		String redirectURI = URLEncoder.encode("https://i3a308.p.ssafy.io/accounts/signin/naver", "UTF-8");
-		String redirectURI = URLEncoder.encode("http://localhost:8081/jara/signin/naver", "UTF-8");
+		String redirectURI = URLEncoder.encode("http://localhost:8081/jara/accounts/signin/naver", "UTF-8");
 		String apiURL;
 		apiURL = "https://nid.naver.com/oauth2.0/token?grant_type=authorization_code&";
 		apiURL += "client_id=" + clientId;
@@ -396,6 +395,8 @@ public class AccountController extends HttpServlet {
 		
 		String access_token = "";
 		String refresh_token = "";
+		
+		System.out.println(apiURL);
 		
 		try {
 			URL url = new URL(apiURL);
@@ -445,6 +446,14 @@ public class AccountController extends HttpServlet {
 				
 				System.out.println(nickname + " " + sex + " " + email + " " + birthday);
 				
+				HashMap<Object, Object> hashMap = new HashMap<Object, Object>();
+				
+//				HttpHeaders httpHeaders = new HttpHeaders();
+//				URI redirectUrl = new URI("http://localhost:3030/")
+//				httpHeaders.setLocation(redirectUrl);
+				
+//				response.sendRedirect("http://localhost:3030;");
+				
 				if(accountService.findEmail(email) > 0) {
 					Account account = accountService.findPartAccount(accountService.findIdByEmail(email));
 					
@@ -453,7 +462,14 @@ public class AccountController extends HttpServlet {
 						response.setHeader("jwt-auth-token", token);
 					}
 					
-					return new ResponseEntity<Account>(account, HttpStatus.OK); // 처음 소셜 로그인 사용자가 아닌 경우
+					hashMap.put("account", account);
+					hashMap.put("flag", true);
+					
+					System.out.println(hashMap.toString());
+					
+					response.sendRedirect("http://localhost:3030/social/login"); // vue로 이동
+					
+					return new ResponseEntity<HashMap<Object, Object>>(hashMap, HttpStatus.OK); // 처음 소셜 로그인 사용자가 아닌 경우
 				} 
 				
 				Account account = new Account();
@@ -467,13 +483,20 @@ public class AccountController extends HttpServlet {
 				
 				Account resultAccount = accountService.findPartAccount(account.getId());
 				
-				return new ResponseEntity<Account>(resultAccount, HttpStatus.OK); // 처음 소셜 로그인 사용자인 경우 -> 지역 입력 페이지로 가야한다!!!!!!
+				hashMap.put("account", resultAccount);
+				hashMap.put("flag", false);
+				
+				System.out.println(hashMap.toString());
+				
+				response.sendRedirect("http://localhost:3030/social/login"); // vue로 이동
+				
+				return new ResponseEntity<HashMap<Object, Object>>(hashMap, HttpStatus.OK); // 처음 소셜 로그인 사용자인 경우 -> 지역 입력 페이지로 가야함
 			}
 		} catch (Exception e) {
 			System.out.println(e);
 		}
 		
-		return new ResponseEntity<Account>(HttpStatus.BAD_REQUEST);
+		return new ResponseEntity<HashMap<Object, Object>>(HttpStatus.BAD_REQUEST);
 	}
 	
 	@ApiOperation(value = "네이버 로그인으로 회원가입 시 주소 수정")
