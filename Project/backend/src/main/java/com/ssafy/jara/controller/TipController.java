@@ -172,14 +172,10 @@ public class TipController {
 		return new ResponseEntity<String>("fail", HttpStatus.BAD_REQUEST);
 	}
 	
-	@ApiOperation(value = "해당 사용자의 팁 좋아요 여부 확인", response = Boolean.class)
-	@GetMapping("/{id}/like/{user_id}")
-	private ResponseEntity<Boolean> checkTipLike(@PathVariable("id") int tip_id, @PathVariable("user_id") int user_id) {
-		HashMap<String, Integer> hashMap = new HashMap<>();
-		hashMap.put("tip_id", tip_id);
-		hashMap.put("user_id", user_id);
-		
-		return new ResponseEntity<Boolean>(tipService.selectTipLike(hashMap) > 0, HttpStatus.OK);
+	@ApiOperation(value = "팁 좋아요 사용자 목록 조회", response = Boolean.class)
+	@GetMapping("/{id}/like")
+	private ResponseEntity<List<Integer>> checkTipLike(@PathVariable("id") int tip_id) {
+		return new ResponseEntity<List<Integer>>(tipService.selectTipLikeAccounts(tip_id), HttpStatus.OK);
 	}
 	
 	@ApiOperation(value = "팁 좋아요 여부 확인 후 좋아요 삭제/등록", response = String.class)
