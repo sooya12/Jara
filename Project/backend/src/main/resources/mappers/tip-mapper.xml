@@ -4,8 +4,8 @@
 	
 	<!-- 팁 등록 -->
 	<insert id="insertTip" useGeneratedKeys="true" keyProperty="id">
-		INSERT INTO tip (writer, title, contents, tag_id)
-		VALUES (#{writer}, #{title}, #{contents}, #{tag_id})
+		INSERT INTO tip (writer, title, contents, tag_id, img_src)
+		VALUES (#{writer}, #{title}, #{contents}, #{tag_id}, #{img_src})
 	</insert>
 	
 	<!-- 전체 팁 조회 -->
