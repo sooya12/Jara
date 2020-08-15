@@ -461,7 +461,7 @@ public class AccountController extends HttpServlet {
 
 					System.out.println(hashMap.toString());
 
-					response.sendRedirect("http://localhost:3030/accounts/signin"); // vue로 이동
+					response.sendRedirect("http://localhost:3030/accounts/social/login"); // vue로 이동
 
 					return new ResponseEntity<HashMap<Object, Object>>(hashMap, HttpStatus.OK); // 처음 소셜 로그인 사용자가 아닌 경우
 				}
@@ -482,7 +482,7 @@ public class AccountController extends HttpServlet {
 
 				System.out.println(hashMap.toString());
 
-				response.sendRedirect("http://localhost:3030/accounts/signin"); // vue로 이동
+				response.sendRedirect("http://localhost:3030/accounts/social/login"); // vue로 이동
 
 				return new ResponseEntity<HashMap<Object, Object>>(hashMap, HttpStatus.OK); // 처음 소셜 로그인 사용자인 경우 -> 지역 입력 페이지로 가야함
 			}
