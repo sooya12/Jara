@@ -26,5 +26,5 @@ public interface EitherService {
 
 	public List<Integer> selectChoiceBList(int either_id);
 	
-	public List<Either> selectListEitherTop5();
+	public List<Either> selectListEitherTop3();
 }

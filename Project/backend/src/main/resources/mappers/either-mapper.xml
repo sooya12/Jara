@@ -63,14 +63,14 @@
 	</select>
 
 	<!-- 투표순 정렬 상위 5개 -->
-	<select id="selectListEitherTop5" resultType="com.ssafy.jara.dto.Either">
+	<select id="selectListEitherTop3" resultType="com.ssafy.jara.dto.Either">
 		SELECT *, (SELECT count(*) 
 				   FROM either_choice 
 				   WHERE either_id=either.id) AS count
 		FROM either
 		WHERE status=0
 		ORDER BY count DESC
-		LIMIT 5
+		LIMIT 3
 	</select>
 
 </mapper>

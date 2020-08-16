@@ -124,9 +124,9 @@ public class EitherController {
 		return new ResponseEntity<List<EitherChoice>>(eitherService.selectEitherPickList(either_id), HttpStatus.OK);
 	}
 	
-	@ApiOperation(value = "이더 Top 5 조회", response = String.class)
-	@GetMapping("/top5")
-	private ResponseEntity<List<Either>> selectListEitherTop5() {
-		return new ResponseEntity<List<Either>>(eitherService.selectListEitherTop5(), HttpStatus.OK);
+	@ApiOperation(value = "이더 Top 3 조회", response = String.class)
+	@GetMapping("/top3")
+	private ResponseEntity<List<Either>> selectListEitherTop3() {
+		return new ResponseEntity<List<Either>>(eitherService.selectListEitherTop3(), HttpStatus.OK);
 	}
 }

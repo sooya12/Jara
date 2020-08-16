@@ -88,7 +88,7 @@ public class EitherServiceImpl implements EitherService {
 	}
 
 	@Override
-	public List<Either> selectListEitherTop5() {
-		return eitherDao.selectListEitherTop5();
+	public List<Either> selectListEitherTop3() {
+		return eitherDao.selectListEitherTop3();
 	}
 }
