@@ -162,8 +162,12 @@ public class BarterController {
 	private ResponseEntity<String> updateBarterImg(@PathVariable int id, @RequestBody String img_src) {
 		Barter originalBarter = barterService.selectBarter(id);
 		HashMap<String, Object> hashMap = new HashMap<String, Object>();
+		hashMap.put("id", id);
 		hashMap.put("img_src", img_src);
 		hashMap.put("original_updated_at", originalBarter.getUpdated_at());
+		
+		HashMap<String, Object> imgSrc = new HashMap<String, Object>();
+		imgSrc.put("img_src", img_src);
 		
 		if (barterService.updateBarterImgSrc(hashMap) > 0) {
 			return new ResponseEntity<String>(img_src, HttpStatus.OK);
