@@ -144,6 +144,7 @@ export default {
       file: null,
       imgURL: '',
       src: '',
+      password: '',
       currentPWD: '',
       changePWD: '',
       confirmPWD: '',
@@ -187,7 +188,7 @@ export default {
       },
       currentPWDRules: {
         required: value => !!value || '현재 비밀번호를 입력해주세요.',
-        same: v => v == this.$store.state.userInfo.password || '비밀번호가 일치하지 않습니다.'
+        same: v => v == this.password || '비밀번호가 일치하지 않습니다.'
       },
       passwordRules: {
         required: value => !!value || '변경하실 비밀번호를 입력해주세요.',
@@ -211,6 +212,9 @@ export default {
       axios.get(`${this.$store.state.api_server}/accounts/${this.$route.params.user_id}`)
         .then(res => {
           this.user = res.data
+          if (this.$store.state.userInfo.password == null) {
+            this.password = 'jara0708'
+          } else {this.password = this.$store.state.userInfo.password}
           this.isLoad = !this.isLoad
         })
     },
