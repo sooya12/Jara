@@ -649,7 +649,7 @@ public class AccountController extends HttpServlet {
 			e.printStackTrace();
 		}
 
-		return authorize_code;
+		return access_token;
 
 	}
 	
