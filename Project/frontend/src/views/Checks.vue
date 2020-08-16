@@ -92,6 +92,9 @@
         <v-btn @click="del(idx)" icon><v-icon>mdi-close-circle</v-icon></v-btn>
       </div>
     </div> 
+    <v-btn fab fixed small dark bottom right @click="scrollToTop" color="light-green">
+      <v-icon>mdi-apple-keyboard-control</v-icon>
+    </v-btn>
   </v-container>
 </template>
 
@@ -342,6 +345,9 @@ export default {
           }
         }
       }
+    },
+    scrollToTop() {
+      this.$vuetify.goTo(0)
     }
   },
   created() {
