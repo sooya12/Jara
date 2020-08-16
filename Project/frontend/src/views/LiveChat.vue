@@ -76,7 +76,8 @@ export default {
   computed: {
     ...mapState([
       'users',
-      'userInfo'
+      'userInfo',
+      'api_server'
     ])
   },
   data() {
@@ -104,7 +105,7 @@ export default {
       }
     },   
     connect() {
-      const serverURL = "http://localhost:8081"
+      const serverURL = this.$store.state.api_server
       let socket = new SockJS(serverURL)
       this.stompClient = Stomp.over(socket)
       this.stompClient.connect(

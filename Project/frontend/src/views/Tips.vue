@@ -18,6 +18,50 @@
           </v-text-field>
         </v-flex>
       </div>
+      <div v-if="!search" class="mx-3 font-weight-bold text-sm-h4 text-h5">인기 팁</div>
+      <v-container d-flex justify="center" align="center" class="pt-0">
+        <v-slide-group
+          class="pa-0"
+          active-class="success"
+          :show-arrows="false"
+        >
+          <v-slide-item
+            v-for="(top,i) in top5"
+            :key="i"
+          >
+            <v-card
+              class="ma-4"
+              height="200"
+              width="150"
+              @click="goToDetail(top.id)"
+            >
+              <v-img
+                id="img"
+                v-if="top.img_src!=null"
+                class="white--text align-end"
+                :src="top.img_src"
+                height="120"
+                widht="100%"
+              >
+              </v-img>
+              <v-card-title class="py-1"><p class="text-truncate box mb-0">{{ top.title }}</p></v-card-title>
+              <v-container py-0><v-divider></v-divider></v-container>
+              <div class="d-flex justify-space-around">
+                <div>
+                  <v-btn icon><v-icon>mdi-heart-outline</v-icon></v-btn>{{ top.likes }}
+                </div>
+                <div v-if="!top.comments">
+                  <v-btn icon><v-icon>mdi-comment-processing</v-icon></v-btn>0
+                </div>
+                <div v-else>
+                  <v-btn icon><v-icon>mdi-comment-processing</v-icon></v-btn>{{ top.comments.length }}
+                </div>
+              </div>
+            </v-card>
+          </v-slide-item>
+        </v-slide-group>
+      </v-container>
+      <v-divider></v-divider>
       <div align="center" justify="center">
         <TipsItem
           v-for="(tip, index) in calData"
@@ -57,6 +101,7 @@ export default {
       search: '',
       tipPerPage: 5,
       curPageNum: 1,
+      top5: [],
     }
   },
   created() {
@@ -68,10 +113,17 @@ export default {
       .catch(err => {
         console.log(err)
       })
+    axios.get(`${this.$store.state.api_server}/tips/top5`)
+      .then(res => {
+        this.top5 = res.data
+      })
   },
   methods: {
     write() {
       this.$router.push('/tips/new')
+    },
+    goToDetail(id) {
+      this.$router.push(`/tips/${id}`)
     }
   },
   computed: {
@@ -101,8 +153,7 @@ export default {
 
 <style scoped>
  .box {
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
+   font-size: 0.8em;
+   font-weight: bold;
  }
 </style>
