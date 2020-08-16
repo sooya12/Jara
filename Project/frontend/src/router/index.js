@@ -24,6 +24,7 @@ import TipsItemDetail from '../components/Tips/TipsItemDetail.vue'
 import NewTip from '../components/Tips/NewTip.vue'
 import PageNotFound from '../views/PageNotFound.vue'
 import SocialLogin from '../components/Accounts/SocialLogin.vue'
+import SocialLoginFirst from '../components/Accounts/SocialLoginFirst.vue'
 
 Vue.use(VueRouter)
 
@@ -127,6 +128,11 @@ Vue.use(VueRouter)
     path: '/accounts/certification',
     name: 'SignUpCertification',
     component: SignUpCertification
+  },
+  {
+    path: '/accounts/social/first',
+    name: 'SocialLoginFirst',
+    component: SocialLoginFirst
   },
   {
     path: '/accounts/social/login',

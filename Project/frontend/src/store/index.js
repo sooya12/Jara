@@ -104,7 +104,7 @@ export default new Vuex.Store({
     SET_INIT(state) {
       state.requestData.notification = []
       state.requestData.request = []
-    }
+    },
   },
   actions: {
     signIn({ commit, state, dispatch }, data) {
@@ -122,6 +122,7 @@ export default new Vuex.Store({
     signOut({ commit }) {
       commit('SET_TOKEN', null)
       commit('SET_INIT')
+      commit('SET_USERINFO', null)
       VueCookies.remove('auth-token')
       router.push('/accounts/signin')
     },
