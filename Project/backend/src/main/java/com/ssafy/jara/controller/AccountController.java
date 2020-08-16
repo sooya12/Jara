@@ -599,6 +599,8 @@ public class AccountController extends HttpServlet {
 		String email = (String) userInfo.get("email"); 
 		String nickname = (String)userInfo.get("nickname"); 
 		String gender = (String) userInfo.get("gender");
+		String profile_image = (String)userInfo.get("profile_image");
+		
 
 //		System.out.println("token : "+token);
 //		System.out.println("userInfo : "+userInfo);
@@ -624,6 +626,7 @@ public class AccountController extends HttpServlet {
 		account.setEmail(email);
 		account.setAccess_token(access_token);
 		account.setRefresh_token(refresh_token);
+		account.setImg_src(profile_image);
 
 		accountService.insertKakaoAccount(account);
 
@@ -743,8 +746,9 @@ public class AccountController extends HttpServlet {
 
 			String nickname = properties.getAsJsonObject().get("nickname").getAsString();
 			String email = kakao_account.getAsJsonObject().get("email").getAsString();
+			String profile_image = properties.getAsJsonObject().get("profile_image").getAsString();
 
-			Boolean has_gender = kakao_account.getAsJsonObject().get("has_gender").getAsBoolean();
+			boolean has_gender = kakao_account.getAsJsonObject().get("has_gender").getAsBoolean();
 			String gender = "male"; // female/male
 			if(has_gender) { // 성별 값이 들어온다면
 				gender = kakao_account.getAsJsonObject().get("gender").getAsString();
@@ -755,6 +759,7 @@ public class AccountController extends HttpServlet {
 			userInfo.put("nickname", nickname);
 			userInfo.put("email",email);
 			userInfo.put("gender",gender);
+			userInfo.put("profile_image",profile_image);
 			
 		} catch(IOException e) {
 			System.out.println("사용자 정보 가져오기 오류");
