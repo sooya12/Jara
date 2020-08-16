@@ -71,6 +71,7 @@ import { mapMutations, mapGetters, mapActions } from 'vuex'
 
 const naverKey = process.env.VUE_APP_NAVER_API_KEY
 const redirectURL= 'https://i3a308.p.ssafy.io/jara/accounts/signin/naver/access'
+// const redirectURL = 'http://localhost:8081/jara/accounts/signin/naver/access'
 const state = 20200708
 
 export default {
