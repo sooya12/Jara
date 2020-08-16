@@ -54,6 +54,7 @@ sudo date
 ### AWS & Docker
 - AWS 서버 접속
     - `ssh -i [pem key] ubuntu@[URL]`
+        - ex) `ssh -i "I3A308T.pem" ubuntu@i3a308.p.ssafy.io`
 - AWS 서버 timezone 설정 (맨 처음에 한 번만 설정)
 ```
 // 기존 시간 설정 제거
