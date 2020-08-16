@@ -78,9 +78,52 @@
       </v-card>
       <div v-if="isLoad&&(articles.length < numOfArticles)" v-view="loadArticles" id="bottom"></div>
     </div>
-    <v-btn @click="scrollToTop" class="top" color="light-green" fab small dark>
-      <v-icon>mdi-apple-keyboard-control</v-icon>
-    </v-btn>
+    <v-speed-dial
+      v-model="fab"
+      bottom
+      right
+      direction="top"
+      transition="slide-y-reverse-transition"
+    >
+      <template v-slot:activator>
+        <v-btn
+          v-model="fab"
+          color="green darken-2"
+          dark
+          fab
+        >
+          <v-icon v-if="fab">mdi-close</v-icon>
+          <v-icon v-else>mdi-turtle</v-icon>
+        </v-btn>
+      </template>
+      <v-btn
+        fab
+        dark
+        small
+        color="green lighten-1"
+        @click="write"
+      >
+        <v-icon>mdi-pencil</v-icon>
+      </v-btn>
+      <v-btn
+        fab
+        dark
+        small
+        color="green lighten-2"
+        @click="goToChat"
+      >
+        <v-icon>mdi-chat</v-icon>
+      </v-btn>
+      <v-btn
+        fab
+        dark
+        small
+        color="light-green"
+        @click="scrollToTop"
+      >
+        <v-icon>mdi-apple-keyboard-control</v-icon>
+      </v-btn>
+    </v-speed-dial>
   </v-container>
 </template>
 
@@ -109,6 +152,7 @@ export default {
     return {
       isLoad: false,
       isPlus: false,
+      fab: false,
       date: `오늘은 ${this.$store.state.today.getMonth()+1}월 ${this.$store.state.today.getDate()}일`,
       day: `${this.$store.state.week[this.$store.state.today.getDay()]}요일 입니다.`,
       weather: '',
@@ -218,7 +262,7 @@ export default {
           if (response) { 
             this.articles.splice(val, 1)
             axios.delete(`${this.$store.state.api_server}/articles/${val.id}`) 
-            firebase.storage().ref().child(`images/${val.id}`).delete()
+            firebase.storage().ref().child(`articles/${val.id}`).delete()
           }
         }
       } else { alert('작성자만 사용할 수 있어요.') }
@@ -271,6 +315,9 @@ export default {
         }
         this.isPlus=true
       }
+    },
+    goToChat() {
+      this.$router.push('/live-chat')
     }
   },
   created() {
@@ -296,5 +343,9 @@ export default {
 
   #bottom {
     height: 50px;
+  }
+  
+  .v-speed-dial {
+    position: fixed;
   }
 </style>
