@@ -49,7 +49,8 @@
         <v-divider class="align-self-center ml-2"></v-divider>
       </div>
       <div class="text-right">
-        <v-btn icon :href="naverLoginURL" style="background-color: #1EC800;"><v-icon x-large color="white">mdi-alpha-n</v-icon></v-btn> 
+        <v-btn icon :href="naverLoginURL" style="background-color: #1EC800;"><v-icon x-large color="white">mdi-alpha-n</v-icon></v-btn>
+        <v-btn icon :href="kakaoLoginURL" style="background-color: #FDD835;"><v-icon color="brown darken-1">mdi-chat</v-icon></v-btn>  
       </div>
       <v-divider class="my-5"></v-divider>
       <div class="mt-5 d-flex align-center">
@@ -68,11 +69,6 @@
 
 <script>
 import { mapMutations, mapGetters, mapActions } from 'vuex'
-
-const naverKey = process.env.VUE_APP_NAVER_API_KEY
-const redirectURL= 'https://i3a308.p.ssafy.io/jara/accounts/signin/naver/access'
-// const redirectURL = 'http://localhost:8081/jara/accounts/signin/naver/access'
-const state = 20200708
 
 export default {
   name: 'SignIn',
@@ -103,7 +99,8 @@ export default {
       },
       isValid: false,
       showPWD: false,
-      naverLoginURL: `https://nid.naver.com/oauth2.0/authorize?response_type=code&client_id=${naverKey}&redirect_uri=${redirectURL}&state=${state}`
+      naverLoginURL: 'https://nid.naver.com/oauth2.0/authorize?response_type=code&client_id=y_9J6LuNu9tyN5tgnmEN&redirect_uri=https://i3a308.p.ssafy.io/jara/accounts/signin/naver/access&state=20200708',
+      kakaoLoginURL: 'https://kauth.kakao.com/oauth/authorize?client_id=2e50ed388c52dc3ef17eb1c332285923&redirect_uri=https://i3a308.p.ssafy.io/jara/accounts/signin/kakao/access&response_type=code'
     }
   },
   methods: {
