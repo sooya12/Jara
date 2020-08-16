@@ -25,6 +25,7 @@ import NewTip from '../components/Tips/NewTip.vue'
 import PageNotFound from '../views/PageNotFound.vue'
 import SocialLogin from '../components/Accounts/SocialLogin.vue'
 import SocialLoginFirst from '../components/Accounts/SocialLoginFirst.vue'
+import LiveChat from '../views/LiveChat.vue'
 
 Vue.use(VueRouter)
 
@@ -265,6 +266,11 @@ Vue.use(VueRouter)
     name: 'PageNotFound',
     component: PageNotFound,
   },
+  {
+    path: '/live-chat',
+    name: 'LiveChat',
+    component: LiveChat
+  }
 ]
 
 const router = new VueRouter({
