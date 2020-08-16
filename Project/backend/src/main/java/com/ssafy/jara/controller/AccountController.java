@@ -97,16 +97,16 @@ public class AccountController extends HttpServlet {
 	
 	/* 네이버 소셜 로그인 URI */
 	/* Back */
-	// private final String naverRedirectBackURI = "http://localhost:8081/jara/accounts/signin/naver/access"; // local 
-	private final String naverRedirectBackURI = "https://i3a308.p.ssafy.io/jara/accounts/signin/naver/access"; // server
+	 private final String naverRedirectBackURI = "http://localhost:8081/jara/accounts/signin/naver/access"; // local 
+//	private final String naverRedirectBackURI = "https://i3a308.p.ssafy.io/jara/accounts/signin/naver/access"; // server
 	/* Front */
-	// private final String naverRedirectFrontURI = "http://localhost:3030/accounts/social/login"; // local
-//	private final String naverRedirectFrontURI = https://i3a308.p.ssafy.io/accounts/social/login"; // server
+	private final String naverRedirectFrontURI = "http://localhost:3030/accounts/social/login"; // local
+//	private final String naverRedirectFrontURI = "https://i3a308.p.ssafy.io/accounts/social/login"; // server
 	
 	/* 카카오 소셜 로그인 URI */
 	/* Back */
 	private final String kakaoRedirectBackURI = "http://localhost:8081/jara/accounts/signin/kakao/access"; // local 
-//	private final String kakaoRedirectBackURI = "https://i3a308.p.ssafy.io/accounts/signin/kakao/access"; // server
+//	private final String kakaoRedirectBackURI = "https://i3a308.p.ssafy.io/jara/accounts/signin/kakao/access"; // server
 	/* Front */
 	
 	@ApiOperation(value = "닉네임과 이메일 중복 체크하여 회원가입 처리", response = String.class)
