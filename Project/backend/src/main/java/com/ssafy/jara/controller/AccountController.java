@@ -611,6 +611,8 @@ public class AccountController extends HttpServlet {
 			sb.append("&client_id=2e50ed388c52dc3ef17eb1c332285923");
 			sb.append("&redirect_uri=http://localhost:8081/jara/accounts/signin/kakao/access");
 			sb.append("&code=" + authorize_code);
+			sb.append("&client_secret=xoKGm0MyGUK9fZ6HO436hWPhqS67MNbJ");
+			
 			bw.write(sb.toString());
 			bw.flush();
 
