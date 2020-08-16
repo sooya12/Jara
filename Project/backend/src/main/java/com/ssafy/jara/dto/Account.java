@@ -18,18 +18,20 @@ public class Account {
 	private List<Integer> followerList;
 	private List<Integer> followingList;
 	
-	private double x;
-	private double y;
-	
 	private List<Article> myArticleList;	// 작성한 게시글 목록
 	private List<Tip> scrapTipList;			// 스크랩한 팁 목록 
-
+	
+	private String PTY;			// 강수형태 - 없음(0), 비(1), 비/눈(2), 눈(3), 소나기(4), 빗방울(5), 빗방울/눈날림(6), 눈날림(7)
+	private String SKY;			// 하늘상태 - 맑음(1), 구름많음(3), 흐림(4) 
+	private String T1H;			// 기온
+	
+	private String img_src;		// 프로필 사진
 	
 	public Account() {}
 
 	public Account(int id, String nickname, String email, String password, boolean sex, Date birthday, String location,
-			String bio, boolean status, String code, List<Integer> followerList, List<Integer> followingList, double x,
-			double y, List<Article> myArticleList, List<Tip> scrapTipList) {
+			String bio, boolean status, String code, List<Integer> followerList, List<Integer> followingList,
+			List<Article> myArticleList, List<Tip> scrapTipList, String PTY, String SKY, String T1H, String img_src) {
 		super();
 		this.id = id;
 		this.nickname = nickname;
@@ -43,13 +45,37 @@ public class Account {
 		this.code = code;
 		this.followerList = followerList;
 		this.followingList = followingList;
-		this.x = x;
-		this.y = y;
 		this.myArticleList = myArticleList;
 		this.scrapTipList = scrapTipList;
+		this.PTY = PTY;
+		this.SKY = SKY;
+		this.T1H = T1H;
+		this.img_src = img_src;
 	}
 
+	public String getPTY() {
+		return PTY;
+	}
 
+	public void setPTY(String PTY) {
+		this.PTY = PTY;
+	}
+
+	public String getSKY() {
+		return SKY;
+	}
+
+	public void setSKY(String SKY) {
+		this.SKY = SKY;
+	}
+
+	public String getT1H() {
+		return T1H;
+	}
+
+	public void setT1H(String T1H) {
+		this.T1H = T1H;
+	}
 
 	public String getCode() {
 		return code;
@@ -65,22 +91,6 @@ public class Account {
 
 	public void setStatus(boolean status) {
 		this.status = status;
-	}
-
-	public double getX() {
-		return x;
-	}
-
-	public void setX(double x) {
-		this.x = x;
-	}
-
-	public double getY() {
-		return y;
-	}
-
-	public void setY(double y) {
-		this.y = y;
 	}
 
 	public String getBio() {
@@ -178,14 +188,22 @@ public class Account {
 	public void setScrapTipList(List<Tip> scrapTipList) {
 		this.scrapTipList = scrapTipList;
 	}
+	
+	public String getImg_src() {
+		return img_src;
+	}
+
+	public void setImg_src(String img_src) {
+		this.img_src = img_src;
+	}
 
 	@Override
 	public String toString() {
 		return "Account [id=" + id + ", nickname=" + nickname + ", email=" + email + ", password=" + password + ", sex="
 				+ sex + ", birthday=" + birthday + ", location=" + location + ", bio=" + bio + ", status=" + status
-				+ ", code=" + code + ", followerList=" + followerList + ", followingList=" + followingList + ", x=" + x
-				+ ", y=" + y + ", myArticleList=" + myArticleList + ", scrapTipList=" + scrapTipList + "]";
+				+ ", code=" + code + ", followerList=" + followerList + ", followingList=" + followingList
+				+ ", myArticleList=" + myArticleList + ", scrapTipList=" + scrapTipList + ", PTY=" + PTY + ", SKY="
+				+ SKY + ", T1H=" + T1H + ", img_src=" + img_src + "]";
 	}
-
-
+	
 }

@@ -1,5 +1,6 @@
 package com.ssafy.jara.controller;
 
+import java.util.HashMap;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,7 +17,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.ssafy.jara.common.service.fileupload.FileUploadService;
 import com.ssafy.jara.dto.Barter;
 import com.ssafy.jara.service.BarterService;
 
@@ -24,22 +24,22 @@ import io.swagger.annotations.ApiOperation;
 
 @CrossOrigin(origins = { "*" }, maxAge = 6000)
 @RestController
-@RequestMapping("/barters")
+@RequestMapping("/jara/barters")
 public class BarterController {
 	
 	@Autowired
 	BarterService barterService;
 	
-	@Autowired
-	FileUploadService fileUploadService;
-	
 	@ApiOperation(value = "새로운 물물교환 등록", response = String.class)
-	@PostMapping("/")
-	private ResponseEntity<Integer> insertBarter(@RequestBody Barter barter) {
-		if (barterService.insertBarter(barter) > 0) {
-			return new ResponseEntity<Integer>(barter.getId(), HttpStatus.OK);
+	@PostMapping("")
+	private ResponseEntity<Barter> insertBarter(@RequestBody Barter barter) {
+		int ret = barterService.insertBarter(barter);
+		if (ret > 0) {
+			int barterId = barter.getId();
+			Barter newBarter = barterService.selectBarter(barterId);
+			return new ResponseEntity<Barter>(newBarter, HttpStatus.OK);
 		} else {
-			return new ResponseEntity<Integer>(0, HttpStatus.INTERNAL_SERVER_ERROR);
+			return new ResponseEntity<Barter>(HttpStatus.BAD_REQUEST);
 		}
 	}
 	
@@ -47,21 +47,51 @@ public class BarterController {
 	@GetMapping("/{id}")
 	private ResponseEntity<Barter> selectBarter(@PathVariable int id) {
 		Barter barter = barterService.selectBarter(id);
-		if (barter != null) {
-			barter.setStored_file_name(fileUploadService.selectBarterFileName(id));
-			return new ResponseEntity<Barter>(barter, HttpStatus.OK);
-		} else {
-			return new ResponseEntity<Barter>(HttpStatus.BAD_REQUEST);
+		
+		if (barter == null) {
+			System.out.println("ERROR: 해당하는 글이 존재하지 않습니다.");
+			return new ResponseEntity<Barter>(HttpStatus.NOT_FOUND);
 		}
+		
+		return new ResponseEntity<Barter>(barter, HttpStatus.OK);
 	}
 	
 	@ApiOperation(value = "해당 물물교환 수정 (title, price, contents, status)", response = String.class)
 	@PutMapping("/{id}")
-	private ResponseEntity<String> updateBarter(@PathVariable int id, @RequestBody Barter barter) {
-		if (barterService.updateBarter(barter) > 0) {
-			return new ResponseEntity<String>("success", HttpStatus.OK);
+	private ResponseEntity<Barter> updateBarter(@PathVariable int id, @RequestBody Barter barter) {
+		Barter originalBarter = barterService.selectBarter(id);
+		
+		HashMap<String, Object> hashMap = new HashMap<String, Object>();
+		hashMap.put("id", id);
+		hashMap.put("status", barter.getStatus());
+		hashMap.put("img_src", barter.getImg_src());
+		hashMap.put("original_updated_at", originalBarter.getUpdated_at());
+		
+		int ret = -1;
+		
+		if (barter.getStatus()) {	// status(상태)를 false(거래중)에서 true(거래완료)로 변경
+			ret = barterService.updateBarterStatus(hashMap);
 		} else {
-			return new ResponseEntity<String>("fail", HttpStatus.BAD_REQUEST);
+			if (originalBarter.getImg_src() == null) {	// img_src만 변경
+				if (barter.getImg_src() != null) {
+					ret = barterService.updateBarterImgSrc(hashMap);
+				} else {
+					ret = barterService.updateBarter(barter);
+				}
+			} else {
+				if (originalBarter.getImg_src().equals(barter.getImg_src())) {	// 게시글 변경
+					ret = barterService.updateBarter(barter);
+				} else {	// img_src만 변경
+					ret = barterService.updateBarterImgSrc(hashMap);
+				}
+			}
+		}
+		
+		if (ret > 0) {
+			Barter updatedBarter = barterService.selectBarter(id);
+			return new ResponseEntity<Barter>(updatedBarter, HttpStatus.OK);
+		} else {
+			return new ResponseEntity<Barter>(HttpStatus.BAD_REQUEST);
 		}
 	}
 	
@@ -76,7 +106,7 @@ public class BarterController {
 	}
 	
 	@ApiOperation(value = "전체 물물교환 조회", response = String.class)
-	@GetMapping("/")
+	@GetMapping("")
 	private ResponseEntity<List<Barter>> selectListBarter() {
 		return new ResponseEntity<List<Barter>>(barterService.selectListBarter(), HttpStatus.OK);
 	}

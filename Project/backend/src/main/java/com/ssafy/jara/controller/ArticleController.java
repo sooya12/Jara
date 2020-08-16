@@ -18,7 +18,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.ssafy.jara.common.service.fileupload.FileUploadService;
 import com.ssafy.jara.dto.Article;
 import com.ssafy.jara.service.ArticleCommentService;
 import com.ssafy.jara.service.ArticleService;
@@ -27,7 +26,7 @@ import io.swagger.annotations.ApiOperation;
 
 @CrossOrigin(origins = { "*" }, maxAge = 6000)
 @RestController
-@RequestMapping("/articles")
+@RequestMapping("/jara/articles")
 public class ArticleController {
 	
 	@Autowired
@@ -35,9 +34,6 @@ public class ArticleController {
 	
 	@Autowired
 	ArticleCommentService articleCommentService;
-	
-	@Autowired
-	FileUploadService fileUploadService;
 	
 	@ApiOperation(value = "게시글 등록", response = Integer.class)
 	@PostMapping("")
@@ -47,6 +43,20 @@ public class ArticleController {
 		}
 		
 		return new ResponseEntity<Integer>(0, HttpStatus.INTERNAL_SERVER_ERROR);
+	}
+	
+	@ApiOperation(value = "게시글 이미지 경로 등록", response = String.class)
+	@PutMapping("/{id}/img")
+	private ResponseEntity<String> insertArticleImg(@RequestBody Article article) {
+		HashMap<String, Object> hashMap = new HashMap<String, Object>();
+		hashMap.put("id", article.getId());
+		hashMap.put("img_src", article.getImg_src());
+		
+		if(articleService.updateArticleImg(hashMap) > 0) {
+			return new ResponseEntity<String>("success", HttpStatus.OK);
+		}
+		
+		return new ResponseEntity<String>("fail", HttpStatus.BAD_REQUEST);
 	}
 	
 	@ApiOperation(value = "사용자가 작성한 전체 게시글 및 사용자가 팔로우하는 다른 사용자의 전체 게시글 및 댓글, 좋아요 사용자 조회", response = List.class)
@@ -87,12 +97,16 @@ public class ArticleController {
 	@ApiOperation(value = "게시글 및 댓글, 좋아요 사용자 조회", response = Article.class)
 	@GetMapping("/{id}")
 	private ResponseEntity<Article> selectArticle(@PathVariable("id") int id) {
-		Article article = articleService.selectArticle(id);
-		article.setComments(articleCommentService.selectArticleComments(article.getId()));
-		article.setLikeAccounts(articleService.selectArticleLikeAccount(article.getId()));
-		article.setStored_file_name(fileUploadService.selectArticleFileName(id));
-		
-		return new ResponseEntity<Article>(article, HttpStatus.OK);
+		try {
+			Article article = articleService.selectArticle(id);
+			article.setComments(articleCommentService.selectArticleComments(article.getId()));
+			article.setLikeAccounts(articleService.selectArticleLikeAccount(article.getId()));
+			return new ResponseEntity<Article>(article, HttpStatus.OK);
+		} catch (NullPointerException e) {
+			e.printStackTrace();
+			System.out.println("ERROR: 해당하는 글이 존재하지 않습니다.");
+			return new ResponseEntity<Article>(HttpStatus.NOT_FOUND);
+		}
 	}
 	
 	@ApiOperation(value = "게시글 수정", response = String.class)
@@ -108,14 +122,6 @@ public class ArticleController {
 	@ApiOperation(value = "게시글 및 게시글 댓글, 좋아요 모두 삭제", response = String.class)
 	@DeleteMapping("/{id}")
 	private ResponseEntity<String> deleteArticle(@PathVariable("id") int id) {
-		if(articleCommentService.selectArticleComments(id).size() > 0) { // 게시글의 댓글 모두 삭제
-			articleCommentService.deleteArticleComments(id); 
-		}
-		
-		if(articleService.selectArticleLikes(id) > 0) { // 게시글의 좋아요 모두 삭제
-			articleService.deleteArticleLikes(id);
-		}
-		
 		if(articleService.deleteArticle(id) > 0) {
 			return new ResponseEntity<String>("success", HttpStatus.OK);
 		}

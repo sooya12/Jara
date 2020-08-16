@@ -1,5 +1,6 @@
 package com.ssafy.jara.service;
 
+import java.util.HashMap;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -59,5 +60,16 @@ public class BarterServiceImpl implements BarterService {
 		System.out.println("id=" + id);
 		return barterDao.updateBarterHits(id);
 	}
-
+	
+	@Override
+	public int updateBarterStatus(HashMap<String, Object> hashMap) {
+		System.out.println("hashMap=" + hashMap);
+		return barterDao.updateBarterStatus(hashMap);
+	}
+	
+	@Override
+	public int updateBarterImgSrc(HashMap<String, Object> hashMap) {
+		System.out.println("hashMap=" + hashMap);
+		return barterDao.updateBarterImgSrc(hashMap);
+	}
 }

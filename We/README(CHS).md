@@ -1,3 +1,5 @@
+
+
 ### :feet: 20.08.03
 
 ##### Firebase Cloud Messaging에 대해 공부
@@ -714,6 +716,805 @@ public class JsonFilter extends OncePerRequestFilter {
 }
 
 ```
+
+-----
+
+
+
+### :feet: 20.08.07
+
+##### Json Filter 사용 시, 한글 깨짐 현상 해결
+
+```bash
+package com.ssafy.jara.filter;
+
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
+import java.util.Arrays;
+
+import javax.servlet.FilterChain;
+import javax.servlet.ReadListener;
+import javax.servlet.ServletException;
+import javax.servlet.ServletInputStream;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletRequestWrapper;
+import javax.servlet.http.HttpServletResponse;
+
+import org.apache.commons.lang3.StringEscapeUtils;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.springframework.web.filter.OncePerRequestFilter;
+
+public class JsonFilter extends OncePerRequestFilter {
+	
+	protected static Log log = LogFactory.getLog(JsonFilter.class);
+	
+	// Json value XSS Filter를 위한 필터링 값 리스트
+	public static ArrayList<String> checkList = new ArrayList<String>(Arrays.asList("<script>", "</script>", "#{", "#{}", "${", "${}"));   
+	
+	@Override
+	protected void doFilterInternal(
+		HttpServletRequest req, HttpServletResponse resp, FilterChain chain)
+		throws ServletException, IOException {
+
+		chain.doFilter(new SimpleXssFilterInternal(req), resp);
+	}
+	
+	public static class SimpleXssFilterInternal extends HttpServletRequestWrapper {
+		
+		private byte[] body;
+		
+		public SimpleXssFilterInternal(HttpServletRequest request) {
+			super(request);
+			
+			try {
+				
+				InputStream is = request.getInputStream();
+				
+				InputStreamReader isr = new InputStreamReader(is, "UTF-8"); // 한글 깨짐 해결
+				
+				if(isr != null) {
+					StringBuffer sb = new StringBuffer();
+					
+					while(true) {
+						int data = isr.read();
+						
+						if(data < 0) 
+							break;
+						
+						sb.append((char) data);
+					}
+					
+					String result = doWork(sb.toString());
+					body = result.getBytes(StandardCharsets.UTF_8);
+					
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+		
+		@Override
+		public ServletInputStream getInputStream() throws IOException {
+			ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(this.body);
+			
+			return new ServletInputStream() {
+				
+				@Override
+				public int read() throws IOException {
+					return byteArrayInputStream.read();
+				}
+				
+				@Override
+				public void setReadListener(ReadListener listener) {}
+				
+				@Override
+				public boolean isReady() {
+					return true;
+				}
+				
+				@Override
+				public boolean isFinished() {
+					return byteArrayInputStream.available() == 0;
+				}
+			};
+		}
+		
+		private String doWork(String input) {
+			
+			for (int i = 0; i < checkList.size(); i++) {
+				String s = checkList.get(i);
+				
+				if(input.indexOf(s) >= 0) {
+					input = input.replaceAll(s, StringEscapeUtils.escapeHtml4(s));
+				} 
+			}
+						
+			return input;
+		}
+	}
+	
+}
+```
+
+에서
+
+```bash
+InputStream is = request.getInputStream();
+				
+InputStreamReader isr = new InputStreamReader(is, "UTF-8"); // 한글 깨짐 해결
+```
+
+이 부분의 코드로 해결
+
+
+
+##### Sub3 1차 평가
+
+- 발표자를 맡게 되서 발표 준비
+  - 기존 PPT에 내용을 삭제하고 추가해서 compact한 PPT 자료 준비
+  - AWS 서버를 사용한 시연 준비
+- PPT 자료로 최종 기획안 / 이번주 구현 내용 / AWS 배포 주기 발표 후 시연
+
+-----
+
+
+
+### :feet: 20.08.10
+
+##### Article, Either Comment 수정 시 반환값 수정
+
+##### Location 테이블에 격자 위도/경도 (nx/ny) 정보 추가
+
+##### 기상청 동네기상예보 api 연동
+
+```bash
+package com.ssafy.jara.common.weather;
+
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.net.URLEncoder;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.Locale;
+import java.util.TimeZone;
+
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+@RestController
+@RequestMapping("/weather")
+public class WeatherController {
+
+	@GetMapping("")
+	public String getWeather() throws IOException {
+		StringBuilder urlBuilder = new StringBuilder("http://apis.data.go.kr/1360000/VilageFcstInfoService/getUltraSrtFcst"); /*URL*/
+//		StringBuilder urlBuilder = new StringBuilder("http://apis.data.go.kr/1360000/VilageFcstInfoService/getVilageFcst"); /*URL*/
+//        urlBuilder.append("?" + URLEncoder.encode("ServiceKey","UTF-8") + "=서비스키"); /*Service Key*/
+//        urlBuilder.append("&" + URLEncoder.encode("ServiceKey","UTF-8") + "=" + URLEncoder.encode("DysdYWgqnU55g9Q7PoDso1H3%2BQJFLffwk4YkWWCS4cSluMp9qKnSyq0J0u1PXFITKErf1yqWK%2FrwEUKlHTVePw%3D%3D", "UTF-8")); /*공공데이터포털에서 받은 인증키*/
+        urlBuilder.append("?" + URLEncoder.encode("ServiceKey","UTF-8") + "=" + "DysdYWgqnU55g9Q7PoDso1H3%2BQJFLffwk4YkWWCS4cSluMp9qKnSyq0J0u1PXFITKErf1yqWK%2FrwEUKlHTVePw%3D%3D"); /*공공데이터포털에서 받은 인증키*/
+        urlBuilder.append("&" + URLEncoder.encode("pageNo","UTF-8") + "=" + URLEncoder.encode("1", "UTF-8")); /*페이지번호*/
+        urlBuilder.append("&" + URLEncoder.encode("numOfRows","UTF-8") + "=" + URLEncoder.encode("40", "UTF-8")); /*한 페이지 결과 수*/
+        urlBuilder.append("&" + URLEncoder.encode("dataType","UTF-8") + "=" + URLEncoder.encode("JSON", "UTF-8")); /*요청자료형식(XML/JSON)Default: XML*/
+        
+        Calendar cal = Calendar.getInstance(Locale.KOREA);
+//        System.out.println(cal);
+//        System.out.println(cal.get(cal.YEAR));
+//        System.out.println(cal.get(cal.MONTH) + 1);
+//        System.out.println(cal.get(cal.DATE));
+//        System.out.println(cal.get(cal.HOUR_OF_DAY));
+        
+        String year = String.valueOf(cal.get(cal.YEAR));
+        String month = String.valueOf(cal.get(cal.MONTH) + 1);
+        String day = String.valueOf(cal.get(cal.DATE));
+//        String time = String.valueOf(cal.get(cal.HOUR_OF_DAY)); 
+        
+//        System.out.println(year + ((month.length() < 2)? "0" + month : month) + day);
+//        System.out.println((time.length() < 2 ? "0" + time : time) + "00");
+        
+        urlBuilder.append("&" + URLEncoder.encode("base_date","UTF-8") + "=" + URLEncoder.encode(year + ((month.length() < 2)? "0" + month : month) + day, "UTF-8")); /*현재날짜(20200810) 발표*/
+//        urlBuilder.append("&" + URLEncoder.encode("base_time","UTF-8") + "=" + URLEncoder.encode((time.length() < 2 ? "0" + time : time) + "00", "UTF-8")); /*현재시각 발표(정시단위)*/
+        urlBuilder.append("&" + URLEncoder.encode("base_time","UTF-8") + "=" + URLEncoder.encode("1750", "UTF-8")); /*현재시각 발표(정시단위)*/
+        urlBuilder.append("&" + URLEncoder.encode("nx","UTF-8") + "=" + URLEncoder.encode("61", "UTF-8")); /*예보지점의 X 좌표값*/
+        urlBuilder.append("&" + URLEncoder.encode("ny","UTF-8") + "=" + URLEncoder.encode("129", "UTF-8")); /*예보지점 Y 좌표*/
+       
+        System.out.println(urlBuilder.toString());
+        
+        URL url = new URL(urlBuilder.toString());
+        HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+        conn.setRequestMethod("GET");
+        conn.setRequestProperty("Content-type", "application/json");
+        System.out.println("Response code: " + conn.getResponseCode());
+        BufferedReader rd;
+        if(conn.getResponseCode() >= 200 && conn.getResponseCode() <= 300) {
+            rd = new BufferedReader(new InputStreamReader(conn.getInputStream()));
+        } else {
+            rd = new BufferedReader(new InputStreamReader(conn.getErrorStream()));
+        }
+        StringBuilder sb = new StringBuilder();
+        String line;
+        while ((line = rd.readLine()) != null) {
+            sb.append(line);
+        }
+        rd.close();
+        conn.disconnect();
+        System.out.println(sb.toString());
+        
+        return sb.toString();
+	}
+}
+```
+
+##### Schedule 기능 추가
+
+```bash
+package com.ssafy.jara.config;
+
+import org.springframework.context.annotation.Configuration;
+import org.springframework.scheduling.annotation.SchedulingConfigurer;
+import org.springframework.scheduling.concurrent.ThreadPoolTaskScheduler;
+import org.springframework.scheduling.config.ScheduledTaskRegistrar;
+
+@Configuration
+public class ScheduleConfig implements SchedulingConfigurer {
+
+	@Override
+	public void configureTasks(ScheduledTaskRegistrar taskRegistrar) {
+		ThreadPoolTaskScheduler threadPoolTaskScheduler = new ThreadPoolTaskScheduler();
+
+        threadPoolTaskScheduler.setPoolSize(10);
+        threadPoolTaskScheduler.setThreadNamePrefix("my-scheduled-task-pool-");
+        threadPoolTaskScheduler.initialize();
+
+        taskRegistrar.setTaskScheduler(threadPoolTaskScheduler);
+	}
+
+}
+```
+
+```bash
+package com.ssafy.jara.common.weather;
+
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.web.servlet.support.SpringBootServletInitializer;
+import org.springframework.scheduling.annotation.EnableScheduling;
+
+@SpringBootApplication
+@EnableScheduling
+public class WeatherServer extends SpringBootServletInitializer {
+	public static void main(String[] args) {
+		SpringApplication.run(WeatherServer.class, args);
+	}
+}
+```
+
+
+
+### :sweat_smile: 어려웠던 점
+
+##### 공공데이터포털에서 Service Key를 UTF-8로 인코딩한 값을 줘서 SERVICE ERROR SERVICE_KEY_IS_NOT_REGISTERED_ERROR 30 발생
+
+##### api 호출 시, 위도/경도 값이 격자 위도/경도라서 기존 Location 테이블 위도/경도 값과 맞지 않음
+
+##### Spring boot Schedule에 대한 구현 경험 부족
+
+-----
+
+
+
+### :feet: 20.08.11
+
+##### 기상청 api에서 위도/경도와 시간에 맞는 강수형태, 하늘상태, 기온 정보 추출해서 Location 테이블 수정
+
+```bash
+package com.ssafy.jara.common.weather;
+
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.net.URLEncoder;
+import java.util.Calendar;
+import java.util.List;
+import java.util.Locale;
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Scheduled;
+import org.springframework.stereotype.Component;
+
+import com.ssafy.jara.dao.WeatherDao;
+import com.ssafy.jara.dto.Location;
+
+@Component
+public class WeatherService {
+
+	protected static Log log = LogFactory.getLog(WeatherService.class);
+	
+	@Autowired
+	WeatherDao weatherDao;
+	
+	// 강수형태(PTY) 코드 : 없음(0), 비(1), 비/눈(2), 눈(3), 소나기(4), 빗방울(5), 빗방울/눈날림(6), 눈날림(7)
+	private static String[] PTYCode = new String[] {"없음", "비", "비/눈", "눈", "소나기", "빗방울", "빗방울/눈날림", "눈날림"};
+	
+	// 하늘상태(SKY) 코드 : 맑음(1), 구름많음(3), 흐림(4) 
+	private static String[] SKYCode = new String[] {"", "맑음", "", "구름많음", "흐림"};
+	
+	// 0시 6시 12시 18시에 자동 실행
+	@Scheduled(cron = "0 0 0,6,12,18 * * *")
+	public void WeatherScheduled() throws IOException, ParseException {
+		log.info("Weather 정보");
+		
+		Calendar cal = Calendar.getInstance(Locale.KOREA);
+        
+        String year = String.valueOf(cal.get(cal.YEAR));
+        String month = String.valueOf(cal.get(cal.MONTH) + 1);
+        String day = String.valueOf(cal.get(cal.DATE));
+        String time = String.valueOf(cal.get(cal.HOUR_OF_DAY) - 1); // 해당 시간 예보 검색을 위한 (현재 시간 - 1)
+        String originTime = String.valueOf(cal.get(cal.HOUR_OF_DAY)); // 현재 시간
+        
+        String base_date = year + ((month.length() < 2)? "0" + month : month) + day; // (200811 201225 형태)
+        String base_time = (time.length() < 2 ? "0" + time : time) + "00"; // 현재 시간 - 1 기준 (0900 1200 형태) 
+        String orgTime = (originTime.length() < 2 ? "0" + originTime : originTime) + "00"; // 현재 시간 기준
+		
+		List<Location> locationList = (List<Location>) weatherDao.selectLocation(); // Location에 저장되어 있는 구 정보 받아옴
+		
+		for (int i = 0; i < locationList.size(); i++) {
+			Location location = locationList.get(i);
+			
+			// 받아온 기상 정보를 JSON parsing을 통해 원하는 시간의 원하는 정보(강수형태, 하늘상태, 기온)만 추출
+			jsonParse(apiConnection(base_date, base_time, location.getNx(), location.getNy()), location.getName(), orgTime);
+		}
+	}
+
+	// 발표날짜, 발표시각, 격자위도, 격자경도로 기상청 api와 통신하여 해당 위치의 기상 정보를 JSON으로 받아옴
+	public String apiConnection(String base_date, String base_time, String nx, String ny) throws IOException {
+		StringBuilder urlBuilder = new StringBuilder("http://apis.data.go.kr/1360000/VilageFcstInfoService/getUltraSrtFcst"); /*URL*/
+        urlBuilder.append("?" + URLEncoder.encode("ServiceKey","UTF-8") + "=" + "DysdYWgqnU55g9Q7PoDso1H3%2BQJFLffwk4YkWWCS4cSluMp9qKnSyq0J0u1PXFITKErf1yqWK%2FrwEUKlHTVePw%3D%3D"); /*공공데이터포털에서 받은 인증키*/
+        urlBuilder.append("&" + URLEncoder.encode("pageNo","UTF-8") + "=" + URLEncoder.encode("1", "UTF-8")); /*페이지번호*/
+        urlBuilder.append("&" + URLEncoder.encode("numOfRows","UTF-8") + "=" + URLEncoder.encode("100", "UTF-8")); /*한 페이지 결과 수*/
+        urlBuilder.append("&" + URLEncoder.encode("dataType","UTF-8") + "=" + URLEncoder.encode("JSON", "UTF-8")); /*요청자료형식(XML/JSON)Default: XML*/
+        
+        urlBuilder.append("&" + URLEncoder.encode("base_date","UTF-8") + "=" + URLEncoder.encode(base_date, "UTF-8")); /*현재날짜(20200810) 발표*/
+        urlBuilder.append("&" + URLEncoder.encode("base_time","UTF-8") + "=" + URLEncoder.encode(base_time, "UTF-8")); /*현재시각 발표(정시단위)*/
+        urlBuilder.append("&" + URLEncoder.encode("nx","UTF-8") + "=" + URLEncoder.encode(nx, "UTF-8")); /*예보지점의 X 좌표값*/
+        urlBuilder.append("&" + URLEncoder.encode("ny","UTF-8") + "=" + URLEncoder.encode(ny, "UTF-8")); /*예보지점 Y 좌표*/
+       
+        URL url = new URL(urlBuilder.toString());
+        HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+        conn.setRequestMethod("GET");
+        conn.setRequestProperty("Content-type", "application/json");
+        
+        BufferedReader rd;
+        
+        if(conn.getResponseCode() >= 200 && conn.getResponseCode() <= 300) {
+            rd = new BufferedReader(new InputStreamReader(conn.getInputStream()));
+        } else {
+            rd = new BufferedReader(new InputStreamReader(conn.getErrorStream()));
+        }
+        
+        StringBuilder sb = new StringBuilder();
+        
+        String line;
+        while ((line = rd.readLine()) != null) {
+            sb.append(line);
+        }
+        rd.close();
+        conn.disconnect();
+        
+		return sb.toString();
+	}
+	
+	
+	// JSON에서 원하는 시간의 원하는 정보(강수형태, 하늘상태, 기온)을 추출하여 해당 구(name) 테이블의 기상 정보(컬럼 PTY, SKY, T1H) 수정
+	public void jsonParse(String jsonData, String name, String orgTime) throws ParseException {
+		
+		Location location = new Location();
+		
+		JSONParser jsonParser = new JSONParser();
+		JSONObject jsonObject = (JSONObject)jsonParser.parse(jsonData);
+		JSONObject parse_response = (JSONObject)jsonObject.get("response");
+		JSONObject parse_body = (JSONObject)parse_response.get("body");
+		JSONObject parse_items = (JSONObject)parse_body.get("items");
+		JSONArray parse_item = (JSONArray)parse_items.get("item");
+		
+		JSONObject weather;
+		
+		for (int i = 0; i < parse_item.size(); i++) {
+			weather = (JSONObject)parse_item.get(i);
+			
+			if(weather.get("category").equals("PTY") && weather.get("fcstTime").equals(orgTime)) {
+				log.info(weather.get("category") + " / " + weather.get("fcstTime") + " / " + weather.get("fcstValue"));
+				location.setPTY(PTYCode[Integer.parseInt((String) weather.get("fcstValue"))]); // PTY 정보 추출
+			}
+			
+			if(weather.get("category").equals("SKY") && weather.get("fcstTime").equals(orgTime)) {
+				log.info(weather.get("category") + " / " + weather.get("fcstTime") + " / " + weather.get("fcstValue"));
+				location.setSKY(SKYCode[Integer.parseInt((String)weather.get("fcstValue"))]); // SKY 정보 추출
+			}
+			
+			if(weather.get("category").equals("T1H") && weather.get("fcstTime").equals(orgTime)) {
+				log.info(weather.get("category") + " / " + weather.get("fcstTime") + " / " + weather.get("fcstValue"));
+				location.setT1H((String) weather.get("fcstValue")); // T1H 정보 추출
+			}
+		}
+		
+		location.setName(name);
+		
+		weatherDao.updateLocationWeather(location);
+	}
+}
+```
+
+##### Tips Top 5 목록 기능 구현
+
+-----
+
+
+
+### :feet: 20.08.12
+
+##### Location 테이블이 업데이트가 제대로 됬는지 확인되지 않아서 updated_at 컬럼을 추가하여 수정일 표시
+
+##### Spring Boot에서 WebSocket을 사용해 실시간 채팅 1차 구현
+
+>pom.xml
+
+```bash
+<dependency>
+	<groupId>org.springframework.boot</groupId>
+	<artifactId>spring-boot-starter-websocket</artifactId>
+</dependency>
+
+<!-- View JSP-->
+<dependency>
+	<groupId>javax.servlet</groupId>
+	<artifactId>jstl</artifactId>
+</dependency>
+<dependency>
+	<groupId>org.apache.tomcat.embed</groupId>
+	<artifactId>tomcat-embed-jasper</artifactId>
+	<scope>provided</scope>
+</dependency>
+
+<!-- Json Simple -->
+<dependency>
+	<groupId>com.googlecode.json-simple</groupId>
+	<artifactId>json-simple</artifactId>
+	<version>1.1.1</version>		
+</dependency>
+```
+
+> application.properties
+
+```bash
+# Tomcat Server Port
+server.port=80
+
+# JSP, HTML ModelAndView Path
+spring.mvc.view.prefix=/WEB-INF/view/
+spring.mvc.view.suffix=.jsp
+
+# JSP to Modify Not Restart Server
+server.servlet.jsp.init-parameters.development=true
+```
+
+> ChatController.java
+
+```bash
+package com.chat.controller;
+
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.servlet.ModelAndView;
+
+@Controller
+public class ChatController {
+
+	@RequestMapping("/chat")
+	public ModelAndView chat() {
+		ModelAndView mv = new ModelAndView();
+		mv.setViewName("chat");
+		
+		return mv;
+	}
+	
+}
+```
+
+> SocketHandler.java
+
+```bash
+package com.chat.handler;
+
+import java.util.HashMap;
+
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
+import org.springframework.stereotype.Component;
+import org.springframework.web.socket.CloseStatus;
+import org.springframework.web.socket.TextMessage;
+import org.springframework.web.socket.WebSocketSession;
+import org.springframework.web.socket.handler.TextWebSocketHandler;
+
+@Component
+public class SocketHandler extends TextWebSocketHandler {
+	// TextWebSocketHandler는 handleTextMessage를 실행시킴
+	// 메시지 타입에 따라서 handleBinaryMessage 또는 handleTextMessage 실행
+
+	HashMap<String, WebSocketSession> sessionMap = new HashMap<>(); // 웹소켓 세션을 담아둘 맵
+	
+	// 메시지 발송 시 실행
+	@Override
+	public void handleTextMessage(WebSocketSession session, TextMessage message) {
+		String msg = message.getPayload(); // message.getPayload()로 메시지 전송받음
+		JSONObject obj = JsonToObjectParser(msg); // JSON형태로 전송된 메시지 파싱
+		
+		for(String key : sessionMap.keySet()) {
+			WebSocketSession wss = sessionMap.get(key);
+			try {
+				wss.sendMessage(new TextMessage(obj.toJSONString()));
+			} catch(Exception e) {
+				e.printStackTrace();
+			}
+		}
+	}
+	
+	// 웹소켓 연결 시 동작
+	@SuppressWarnings("unchecked")
+	@Override
+	public void afterConnectionEstablished(WebSocketSession session) throws Exception {
+		super.afterConnectionEstablished(session);
+		sessionMap.put(session.getId(), session);
+		
+		JSONObject obj = new JSONObject();
+		obj.put("type", "getId"); // 발신메시지의 타입
+		obj.put("sessionId", session.getId()); // 생성된 세션 Id
+		
+		session.sendMessage(new TextMessage(obj.toJSONString()));
+	}
+	
+	// 웹소켓 종료 시 동작
+	@Override
+	public void afterConnectionClosed(WebSocketSession session, CloseStatus status) throws Exception {
+		sessionMap.remove(session.getId());
+		super.afterConnectionClosed(session, status);
+	}
+	
+	// JSON 파싱
+	private static JSONObject JsonToObjectParser(String jsonStr) {
+		JSONParser parser = new JSONParser();
+		JSONObject obj = null;
+		
+		try {
+			obj = (JSONObject) parser.parse(jsonStr);
+		} catch (ParseException e) {
+			e.printStackTrace();
+		}
+		
+		return obj;
+	}
+}
+```
+
+> WebSocketConfig.java
+
+```bash
+package com.chat.config;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.web.socket.config.annotation.EnableWebSocket;
+import org.springframework.web.socket.config.annotation.WebSocketConfigurer;
+import org.springframework.web.socket.config.annotation.WebSocketHandlerRegistry;
+
+import com.chat.handler.SocketHandler;
+
+@Configuration
+@EnableWebSocket
+public class WebSocketConfig implements WebSocketConfigurer {
+	// 생성한 구현체 등록
+	
+	@Autowired
+	SocketHandler socketHandler;
+	
+	@Override
+	public void registerWebSocketHandlers(WebSocketHandlerRegistry registry) {
+		registry.addHandler(socketHandler, "/chating");
+	}
+
+}
+```
+
+> chat.jsp
+
+```bash
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+	pageEncoding="UTF-8"%>
+<!DOCTYPE html>
+<html>
+<head>
+<script
+	src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+<meta charset="UTF-8">
+<title>Chat</title>
+<style>
+* {
+	margin: 0;
+	padding: 0;
+}
+
+.container {
+	width: 500px;
+	margin: 0 auto;
+	padding: 25px
+}
+
+.container h1 {
+	text-align: left;
+	padding: 5px 5px 5px 15px;
+	color: #FFBB00;
+	border-left: 3px solid #FFBB00;
+	margin-bottom: 20px;
+}
+
+.chating {
+	background-color: #000;
+	width: 500px;
+	height: 500px;
+	overflow: auto;
+}
+
+.chating p {
+	color: #fff;
+	text-align: left;
+}
+
+.chating .me {
+	color: #F6F6F6;
+	text-align: right;
+}
+
+.chating .others {
+	color: #FFE400;
+	text-align: left;
+}
+
+input {
+	width: 330px;
+	height: 25px;
+}
+
+#yourMsg {
+	display: none;
+}
+</style>
+</head>
+<script type="text/javascript">
+	var ws;
+
+	function wsOpen() {
+		ws = new WebSocket("ws://" + location.host + "/chating");
+		wsEvt();
+	}
+
+	function wsEvt() {
+		ws.onopen = function(data) {
+			// 소켓이 열리면 동작(초기화 세팅)
+		}
+
+		ws.onmessage = function(data) {
+			// 메시지 받으면 동작
+			var msg = data.data;
+			
+			if (msg != null && msg.trim() != '') {
+				var d = JSON.parse(msg);
+				
+				if (d.type == "getId") {
+					var si = d.sessionId != null ? d.sessionId : "";
+
+					if (si != '') {
+						$("#sessionId").val(si);
+					}
+					
+				} else if (d.type == "message") {
+					if (d.sessionId == $("#sessionId").val()) {
+						$("#chating").append("<p class='me'>나 :" + d.msg + "</p>");
+					} else {
+						$("#chating").append("<p class='others'>" + d.userName + " :" + d.msg + "</p>");
+					}
+					
+				} else {
+					console.warn("unknown type!")
+				}
+				/* $("#chating").append("<p>" + msg + "</p>"); */
+			}
+		}
+
+		document.addEventListener("keypress", function(e) {
+			if (e.keyCode == 13) { //enter press
+				send();
+			}
+		});
+	}
+
+	function chatName() {
+		var userName = $("#userName").val();
+		if (userName == null || userName.trim() == "") {
+			alert("사용자 이름을 입력해주세요.");
+			$("#userName").focus();
+		} else {
+			wsOpen();
+			$("#yourName").hide();
+			$("#yourMsg").show();
+		}
+	}
+
+	function send() {
+		/* var uN = $("#userName").val();
+		var msg = $("#chatting").val();
+		ws.send(uN + " : " + msg);
+		$('#chatting').val(""); */
+
+		var option = {
+			type : "message",
+			sessionId : $("#sessionId").val(),
+			userName : $("#userName").val(),
+			msg : $("#chatting").val()
+		}
+		ws.send(JSON.stringify(option))
+		$('#chatting').val("");
+	}
+</script>
+<body>
+	<div id="container" class="container">
+		<h1>채팅</h1>
+		<input type="hidden" id="sessionId" value="">
+		
+		<div id="chating" class="chating"></div>
+
+		<div id="yourName">
+			<table class="inputTable">
+				<tr>
+					<th>사용자명</th>
+					<th><input type="text" name="userName" id="userName"></th>
+					<th><button onclick="chatName()" id="startBtn">이름 등록</button></th>
+				</tr>
+			</table>
+		</div>
+		<div id="yourMsg">
+			<table class="inputTable">
+				<tr>
+					<th>메시지</th>
+					<th><input id="chatting" placeholder="보내실 메시지를 입력하세요."></th>
+					<th><button onclick="send()" id="sendBtn">보내기</button></th>
+				</tr>
+			</table>
+		</div>
+	</div>
+</body>
+</html>
+```
+
+[참고] https://myhappyman.tistory.com/100
 
 -----
 

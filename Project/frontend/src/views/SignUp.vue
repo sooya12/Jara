@@ -39,11 +39,11 @@
                 <div class="green--text text--darken-1">(필수)</div>
               </div>
               <div class="px-5">
-                <v-text-field
+                <v-textarea
                   :value="values.jara"
                   solo
                   readonly
-                ></v-text-field>
+                ></v-textarea>
               </div>
               <div class="d-flex align-center my-5 px-3">
                 <div class="font-weight-bold">개인정보 수집 및 이용에 대한 안내</div>
@@ -208,15 +208,16 @@
                   class="my-2"
                 ></v-text-field>
                 <div class="font-weight-bold d-flex align-center">주소<v-icon class="ml-2">mdi-map-search</v-icon></div>
-                <v-text-field
-                  v-model="signUpData.location"
-                  label="예) 서울특별시 강남구"
-                  :rules="[locationRules.required]"
-                  background-color="white"
+                <v-select
+                  :items="districts"
+                  :rules="[districtsRules.required]"
                   outlined
-                  color="green darken-2"
+                  background-color="white"
                   class="my-2"
-                ></v-text-field>
+                  color="green darken-2"
+                  item-color="green darken-2"
+                  v-model="signUpData.location"
+                ></v-select>
               </v-form>
             </v-container>
           </v-card>
@@ -315,13 +316,39 @@ export default {
     return {
       present: 1,
       values: {
-        jara: '자취 라이프(이하 자라)를 찾아주신 여러분을 환영합니다. 자라를 이용해 주셔서 감사합니다. 블라블라블라블라블라블라블라블라블라블라블라블라블라블라블라블라블라블라블라블라블라블라블라블라블라블라블라블라블라블라블라블라',
+        jara: 'JARA 서비스를 이용해 주셔서 감사합니다. SNS 서비스를 제공하는 JARA가 아래 준비한 약관을 읽어주시면 감사드리겠습니다. \n 계정 관련 \n JARA는 이메일로 계정을 생성하실 수 있습니다. 다만, 실제 이메일의 소유주임을 확인하기 위해서 가입 당시 인증 절차를 거치게 됩니다. 아래의 경우에는 계정 생성을 승인하지 않을 수 있습니다. \n 다른 사람의 개인정보를 이용하여 계정을 생성하려 한 경우 \n 계정 생성시 필요한 정보를 입력하지 않거나 허위 정보를 입력한 경우\n JARA가 과거에 운영원칙 또는 법률 위반 등의 정당한 사유로 해당 계정을 삭제 또는 징계한 경우\n 계정은 본인만 이용할 수 있고, 다른 사람에게 이용을 허락하거나 양도할 수 없습니다. 사용자는 계정과 관련된 정보, 즉 프로필 사진이나 닉네임 등을 수정할 수 있습니다. 이메일이 바뀐 경우에는 서비스 내 설정 메뉴나 고객센터 문의를 통해 새 이메일로 인증절차를 걸쳐 수정할 수 있습니다.',
         privacy: '',
         location: '',
       },
       items: [
         { text: '남성', value: 0 },
         { text: '여성', value: 1 },
+      ],
+      districts: [
+        '강남구',
+        '강동구',
+        '강북구',
+        '강서구',
+        '관악구',
+        '광진구',
+        '구로구',
+        '금천구',
+        '노원구',
+        '도봉구',
+        '동대문구',
+        '동작구',
+        '마포구',
+        '서대문구',
+        '서초구',
+        '성동구',
+        '송파구',
+        '양천구',
+        '영등포구',
+        '용산구',
+        '은평구',
+        '종로구',
+        '중구',
+        '중랑구'
       ],
       signUpData: {
         email: '',
@@ -357,8 +384,8 @@ export default {
       bDayRules: {
         over: value => value < this.current || '유효하지 않은 날짜입니다.'
       },
-      locationRules: {
-        required: value => !!value || '주소를 입력해주세요.',
+      districtsRules: {
+        required: value => !!value || '주소를 선택해주세요.',
       },
       isError: false,
       isAgree: false,

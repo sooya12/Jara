@@ -42,7 +42,7 @@ export default {
   },
   methods: {
     validate() {
-      axios.post(`${this.$store.state.api_server}/accounts/certification`, this.code)
+      axios.post(`${this.$store.state.api_server}/accounts/certification/${this.code}`, '')
         .then(() => {
           alert('인증이 완료되었습니다.')
           this.$router.push('/accounts/signin')

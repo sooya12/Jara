@@ -22,6 +22,7 @@ public class ArticleServiceImpl implements ArticleService {
 
 	@Override
 	public List<Article> selectListMyArticle(int writer) {
+		
 		return articleDao.selectListMyArticle(writer);
 	}
 	
@@ -83,6 +84,11 @@ public class ArticleServiceImpl implements ArticleService {
 	@Override
 	public List<Integer> selectArticleLikeAccount(int article_id) {
 		return articleDao.selectArticleLikeAccount(article_id);
+	}
+
+	@Override
+	public int updateArticleImg(HashMap<String, Object> hashMap) {
+		return articleDao.updateArticleImg(hashMap);
 	}
 
 }

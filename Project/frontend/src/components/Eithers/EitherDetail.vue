@@ -20,7 +20,10 @@
     </div>
     <div class="d-flex justify-space-between align-center">
       <div>
-        <v-btn text class="pa-0 font-weight-bold text-sm-h5 text-h6" @click="goToUser" x-large><v-icon x-large>mdi-account-circle</v-icon>{{ users[either.writer] }}</v-btn>
+        <v-btn text class="pa-0 font-weight-bold text-sm-h5 text-h6" @click="goToUser" x-large>
+          <v-icon x-large v-if="psas[either.writer]==null">mdi-account-circle</v-icon>
+          <v-avatar v-else><img :src="psas[either.writer]"></v-avatar>
+          {{ users[either.writer] }}</v-btn>
       </div>
       <div class="grey--text d-flex align-center">
         <div>{{ either.created_at }}</div>
@@ -78,20 +81,39 @@
           </v-card-title>
 
           <v-card-text class="mt-5">
-            <div>참여자: {{ choiceA.length + choiceB.length }}명</div>
-            <div class="my-5 black--text font-weight-bold text-h6">
-              <v-chip
-                color="red darken-1"
-                text-color="white"
-              >{{ either.choiceA }}</v-chip>
-              {{ ((choiceA.length)/(choiceA.length+choiceB.length))*100 }}% {{ choiceA.length }}명
+            <div v-if="choiceA.length > 0 || choiceB.length > 0">
+              <div>참여자: {{ choiceA.length + choiceB.length }}명</div>
+              <div class="my-5 black--text font-weight-bold text-h6">
+                <v-chip
+                  color="red darken-1"
+                  text-color="white"
+                >{{ either.choiceA }}</v-chip>
+                {{ (((choiceA.length)/(choiceA.length+choiceB.length))*100).toFixed(2) }}% {{ choiceA.length }}명
+              </div>
+              <div class="black--text font-weight-bold text-h6">
+                <v-chip
+                  color="blue darken-2"
+                  text-color="white"
+                >{{ either.choiceB }}</v-chip>
+                {{ (((choiceB.length)/(choiceA.length+choiceB.length))*100).toFixed(2) }}% {{ choiceB.length }}명
+              </div>
             </div>
-            <div class="black--text font-weight-bold text-h6">
-              <v-chip
-                color="blue darken-2"
-                text-color="white"
-              >{{ either.choiceB }}</v-chip>
-              {{ ((choiceB.length)/(choiceA.length+choiceB.length))*100 }}% {{ choiceB.length }}명
+            <div v-else>
+              <div>참여자: {{ choiceA.length + choiceB.length }}명</div>
+              <div class="my-5 black--text font-weight-bold text-h6">
+                <v-chip
+                  color="red darken-1"
+                  text-color="white"
+                >{{ either.choiceA }}</v-chip>
+                0% {{ choiceA.length }}명
+              </div>
+              <div class="black--text font-weight-bold text-h6">
+                <v-chip
+                  color="blue darken-2"
+                  text-color="white"
+                >{{ either.choiceB }}</v-chip>
+                0% {{ choiceB.length }}명
+              </div>
             </div>
           </v-card-text>
 
@@ -113,12 +135,11 @@
     </div>
     <v-divider class="my-5"></v-divider>
     <div class="text-sm-h6 text-subtitle-2">댓글</div>
-    <v-form v-model="isValid" class="mt-5">
+    <v-form class="mt-5">
       <v-row>
         <v-col cols="6" class="py-0">
           <v-select
             :items="choices"
-            :rules="[choiceRules.required]"
             item-text="text"
             item-value="value"
             outlined
@@ -129,14 +150,14 @@
         </v-col>
       </v-row>
       <v-chip
-        v-if="commentData.choice==0"
+        v-if="!commentData.choice&&commentData.choice!=null"
         color="red darken-1"
         text-color="white"
       >
       {{ either.choiceA }}
       </v-chip>
       <v-chip
-        v-else-if="commentData.choice==1"
+        v-else-if="commentData&&commentData.choice!=null"
         color="blue darken-2"
         text-color="white"
       >
@@ -151,11 +172,10 @@
           outlined
           rows="1"
           row-height="15"
-          :rules="[commentRules.min]"
         ></v-textarea>
         <div>
-          <v-btn v-if="!isUpdate" @click="addComment" text class="mt-3 font-weight-bold" :disabled="!isValid" color="green darken-1">등록</v-btn>
-          <v-btn v-else @click="updateComment" text class="mt-3 font-weight-bold" :disabled="!isValid" color="teal">수정</v-btn>
+          <v-btn v-if="!isUpdate" @click="addComment" text class="mt-3 font-weight-bold" color="green darken-1">등록</v-btn>
+          <v-btn v-else @click="updateComment" text class="mt-3 font-weight-bold" color="teal">수정</v-btn>
         </div>
       </div>
     </v-form>
@@ -188,8 +208,8 @@ export default {
         pick: ''
       },
       choices: [
-        { text: '', value: 0 },
-        { text: '', value: 1 },
+        { text: '', value: false },
+        { text: '', value: true },
       ],
       menuItems: [
         {title: '완료'},
@@ -201,12 +221,6 @@ export default {
         either_id: this.$route.params.either_id,
         choice: null
       },
-      commentRules : {
-        min: v => v.trim().length > 0 || '유효한 입력이 아닙니다.'
-      },
-      choiceRules: {
-        required: value => value!=null || '선택지를 선택해주세요.'
-      },
       comments: [],
     }
   },
@@ -215,6 +229,7 @@ export default {
       'api_server',
       'userInfo',
       'users',
+      'psas'
     ])
   },
   mounted() {
@@ -234,16 +249,32 @@ export default {
             this.isVoted = true
           }
         })
+        .catch(() => this.$router.push({ name: 'PageNotFound' }))
     },
     pick(v) {
       if (this.either.status == 0) {
-        this.pickData.pick = v
-        axios.post(`${this.$store.state.api_server}/eithers/${this.$route.params.either_id}/pick`, this.pickData)
-          .then(() => {
-            this.isVoted = true
-            if (v == 0) {this.choiceA.push(this.$store.state.userInfo.id)}
-            else {this.choiceB.push(this.$store.state.userInfo.id)}
-          })
+        if (v == 0) {
+          if (confirm('인생은 낙장불입!' + '\n' + `${this.either.choiceA}` + '을(를) 선택하시겠습니까?')) {
+            this.pickData.pick = v
+            axios.post(`${this.$store.state.api_server}/eithers/${this.$route.params.either_id}/pick`, this.pickData)
+              .then(() => {
+                this.isVoted = true
+                if (v == 0) {this.choiceA.push(this.$store.state.userInfo.id)}
+                else {this.choiceB.push(this.$store.state.userInfo.id)}
+              })
+          }
+        } else {
+          if (confirm('인생은 낙장불입!' + '\n' + `${this.either.choiceB}` + '을(를) 선택하시겠습니까?')) {
+            this.pickData.pick = v
+            axios.post(`${this.$store.state.api_server}/eithers/${this.$route.params.either_id}/pick`, this.pickData)
+              .then(() => {
+                this.isVoted = true
+                if (v == 0) {this.choiceA.push(this.$store.state.userInfo.id)}
+                else {this.choiceB.push(this.$store.state.userInfo.id)}
+              })
+          }
+        }
+
       } else {alert('이미 종료된 투표입니다.')}
     },
     completeOrDelete(val) {
@@ -271,20 +302,29 @@ export default {
       this.$router.push(`/accounts/${this.either.writer}`)
     },
     addComment() {
-      axios.post(`${this.$store.state.api_server}/eithers/${this.either.id}/comments`, this.commentData)
-        .then(res => {
-          this.comments.unshift(res.data)
-          this.commentData.contents = ''
-          this.commentData.choice = null
-          alert('댓글이 성공적으로 작성되었습니다.')
-        })
+      if (this.commentData.contents.trim().length <= 0 || this.commentData.choice == null) {
+        alert('유효한 입력이 아닙니다.')
+        this.commentData.contents = ''
+        this.commentData.choice = null
+      }
+      else {
+        axios.post(`${this.$store.state.api_server}/eithers/${this.either.id}/comments`, this.commentData)
+          .then(res => {
+            this.comments.unshift(res.data)
+            this.commentData.contents = ''
+            this.commentData.choice = null
+            alert('댓글이 성공적으로 작성되었습니다.')
+          })
+      }
     },
     updateOrDelete(comment, item, index) {
       if (item === 0) {
         if (this.$store.state.userInfo.id===comment.writer) {
           this.isUpdate = true
           this.$vuetify.goTo(0)
-          this.commentData = comment
+          this.commentData.contents = comment.contents
+          this.commentData.id = comment.id
+          this.commentData.choice = comment.choice
         } else { alert('작성자만 사용할 수 있어요.')}
       }
       else if (item === 1) {
@@ -298,11 +338,17 @@ export default {
     },
     updateComment() {
       axios.put(`${this.$store.state.api_server}/eithers/${this.either.id}/comments/${this.commentData.id}`, this.commentData)
-        .then(() => {
+        .then(res => {
           this.isUpdate = false
+          const idx = this.comments.findIndex(x => x.id === this.commentData.id)
+          this.comments[idx].updated_at = res.data.updated_at
+          this.comments[idx].contents = res.data.contents
+          this.comments[idx].choice = res.data.choice
           this.commentData = {
             contents: '',
-            writer: this.$store.state.userInfo.id
+            writer: this.$store.state.userInfo.id,
+            either_id: this.either.id,
+            choice: null
           }
         })
     },

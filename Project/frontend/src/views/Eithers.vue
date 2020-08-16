@@ -1,8 +1,7 @@
 <template>
   <v-container fluid class="mt-5">
-    <div class="text-sm-h3 text-h6 font-weight-bold ml-3">JARA's Choice<v-icon x-large class="ml-2">mdi-checkbox-multiple-marked-outline</v-icon></div>
+    <div class="text-sm-h3 text-h4 font-weight-bold ml-3">신중한 자라<v-icon x-large class="ml-2">mdi-checkbox-multiple-marked-outline</v-icon></div>
     <div class="mt-10">
-
       <v-card
         class="mx-auto my-5"
         v-for="either in eithers"
@@ -11,7 +10,9 @@
         <v-card-text>
           <div class="d-flex justify-space-between">
             <div>
-              <v-icon class="mr-2">mdi-account-circle</v-icon>{{ users[either.writer] }}
+              <v-icon class="mr-2" v-if="psas[either.writer]==null">mdi-account-circle</v-icon>
+              <v-avatar class="mr-2" v-else><img :src="psas[either.writer]"></v-avatar>
+              {{ users[either.writer] }}
             </div>
             <v-chip
               v-if="either.status==0"
@@ -135,7 +136,7 @@ export default {
   },
   methods: {
     fetchEithers() {
-      axios.get(`${this.$store.state.api_server}/eithers/`)
+      axios.get(`${this.$store.state.api_server}/eithers`)
         .then(res => {
           this.numOfEithers = res.data.length
           this.isLoad = true
@@ -175,7 +176,8 @@ export default {
     ...mapState([
       'userInfo',
       'users',
-      'api_server'
+      'api_server',
+      'psas'
     ])
   },
   

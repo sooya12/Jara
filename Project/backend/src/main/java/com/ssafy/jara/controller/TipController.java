@@ -17,7 +17,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.ssafy.jara.common.service.fileupload.FileUploadService;
 import com.ssafy.jara.dto.Tip;
 import com.ssafy.jara.service.TipCommentService;
 import com.ssafy.jara.service.TipService;
@@ -26,7 +25,7 @@ import io.swagger.annotations.ApiOperation;
 
 @CrossOrigin(origins = { "*" }, maxAge = 6000)
 @RestController
-@RequestMapping("/tips")
+@RequestMapping("/jara/tips")
 public class TipController {
 
 	@Autowired
@@ -34,9 +33,6 @@ public class TipController {
 	
 	@Autowired
 	TipCommentService tipCommentService;
-	
-	@Autowired
-	FileUploadService fileUploadService;
 	
 	@ApiOperation(value = "팁 등록", response = String.class)
 	@PostMapping("")
@@ -46,6 +42,41 @@ public class TipController {
 		} 
 		
 		return new ResponseEntity<Integer>(0, HttpStatus.INTERNAL_SERVER_ERROR);
+	}
+	
+	@ApiOperation(value = "팁 이미지 경로 등록", response = String.class)
+	@PutMapping("/{id}/img")
+	private ResponseEntity<String> insertTipImg(@RequestBody Tip tip) {
+		HashMap<String, Object> hashMap = new HashMap<String, Object>();
+		hashMap.put("id", tip.getId());
+		
+		String img_src = tip.getImg_src();
+		
+		// 작성자가 이미지를 등록하지 않은 경우, 기본 이미지 자라로 설정 
+		if(img_src.equals(null) || img_src == null || img_src.trim().equals("")) {
+			switch (tip.getTag_id()) { // 1 요리 2 세탁 3 청소 4 보관
+			case 1:
+				img_src = "https://firebasestorage.googleapis.com/v0/b/jara-8c5be.appspot.com/o/default%2Fyorijara.png?alt=media&token=99862c57-acdd-46f8-a3d5-992eab8582c8";
+				break;
+			case 2:
+				img_src = "https://firebasestorage.googleapis.com/v0/b/jara-8c5be.appspot.com/o/default%2Flaundryjara.png?alt=media&token=54fa2d72-dcec-4381-85c9-ffa6f5af4170";
+				break;
+			case 3:
+				img_src = "https://firebasestorage.googleapis.com/v0/b/jara-8c5be.appspot.com/o/default%2Fcleanjara.png?alt=media&token=2f6e3e49-f3a6-408a-b1f8-ae7dc6037595";
+				break;
+			case 4:
+				img_src = "https://firebasestorage.googleapis.com/v0/b/jara-8c5be.appspot.com/o/default%2Fbogwanjara.png?alt=media&token=5eeaa65e-c19c-4f9c-b256-96dec1b1f99e";
+				break;
+			}
+		}
+		
+		hashMap.put("img_src", img_src);
+		
+		if(tipService.updateTipImg(hashMap) > 0) {
+			return new ResponseEntity<String>("success", HttpStatus.OK);
+		}
+		
+		return new ResponseEntity<String>("fail", HttpStatus.BAD_REQUEST);
 	}
 	
 	@ApiOperation(value = "전체 팁 조회", response = List.class)
@@ -97,12 +128,16 @@ public class TipController {
 	@ApiOperation(value = "해당 팁 조회", response = Tip.class)
 	@GetMapping("/{id}")
 	private ResponseEntity<Tip> selectTip(@PathVariable("id") int id) {
-		Tip tip = tipService.selectTip(id);
-		tip.setComments(tipCommentService.selectTipComments(id));
-		tip.setLikeAccounts(tipService.selectTipLikeAccounts(id));
-		tip.setStored_file_name(fileUploadService.selectBarterFileName(id));
-		
-		return new ResponseEntity<Tip>(tip, HttpStatus.OK);
+		try {
+			Tip tip = tipService.selectTip(id);
+			tip.setComments(tipCommentService.selectTipComments(id));
+			tip.setLikeAccounts(tipService.selectTipLikeAccounts(id));
+			return new ResponseEntity<Tip>(tip, HttpStatus.OK);
+		} catch (NullPointerException e) {
+			e.printStackTrace();
+			System.out.println("ERROR: 해당하는 글이 존재하지 않습니다.");
+			return new ResponseEntity<Tip>(HttpStatus.NOT_FOUND);
+		}
 	}
 	
 	@ApiOperation(value = "팁 제목/내용 수정", response = String.class)
@@ -128,14 +163,6 @@ public class TipController {
 	@ApiOperation(value = "팁 삭제", response = String.class)
 	@DeleteMapping("/{id}")
 	private ResponseEntity<String> deleteTip(@PathVariable("id") int id) {
-		if(tipCommentService.selectTipComments(id).size() > 0) {
-			tipCommentService.deleteTipComments(id);
-		}
-		
-		if(tipService.selectTip(id).getLikes() > 0) {
-			tipService.deleteTipLikes(id);
-		}
-		
 		if(tipService.deleteTip(id) > 0) {
 			return new ResponseEntity<String>("success", HttpStatus.OK);
 		}
@@ -178,7 +205,7 @@ public class TipController {
 	
 	@ApiOperation(value = "팁 스크랩 등록", response = String.class)
 	@PostMapping("/{id}/scrap")
-	private ResponseEntity<String> insertTipScrap(@PathVariable("id") int tip_id, @RequestBody int user_id) {
+	private ResponseEntity<String> insertTipScrap(@PathVariable("id") int tip_id, @RequestParam("user_id") int user_id) {
 		HashMap<String, Integer> hashMap = new HashMap<>();
 		hashMap.put("tip_id", tip_id);
 		hashMap.put("user_id", user_id);
@@ -188,6 +215,12 @@ public class TipController {
 		}
 		
 		return new ResponseEntity<String>("fail", HttpStatus.INTERNAL_SERVER_ERROR);
+	}
+	
+	@ApiOperation(value = "팁 Top 5  조회", response = List.class)
+	@GetMapping("/top5")
+	private ResponseEntity<List<Tip>> selectListTipTop5() {
+		return new ResponseEntity<List<Tip>>(tipService.selectListTipTop5(), HttpStatus.OK);
 	}
 	
 }

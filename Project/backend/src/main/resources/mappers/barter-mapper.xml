@@ -3,7 +3,7 @@
 <mapper namespace="com.ssafy.jara.dao.BarterDao">
    
    <!-- 물물교환 등록 -->
-   <insert id="insertBarter" parameterType="com.ssafy.jara.dto.Barter">
+   <insert id="insertBarter" parameterType="com.ssafy.jara.dto.Barter" useGeneratedKeys="true" keyProperty="id">
       INSERT INTO item (writer, title, price, contents, tag_id)
       VALUES (#{writer}, #{title}, #{price}, #{contents}, #{tag_id});
    </insert>
@@ -18,7 +18,7 @@
    <!-- 물물교환 수정 -->
    <update id="updateBarter" parameterType="com.ssafy.jara.dto.Barter">
       UPDATE item
-      SET title=#{title}, price=#{price}, contents=#{contents}, status=#{status}
+      SET title=#{title}, price=#{price}, contents=#{contents}, status=#{status}, tag_id=#{tag_id}
       WHERE id=#{id}
    </update>
    
@@ -53,6 +53,20 @@
    <update id="updateBarterHits" parameterType="int">
       UPDATE item
       SET hits=hits+1
+      WHERE id=#{id}
+   </update>
+   
+   <!-- 물물교환 상태 변경 -->
+   <update id="updateBarterStatus">
+      UPDATE item
+      SET status=#{status}, updated_at=#{original_updated_at}
+      WHERE id=#{id}
+   </update>
+   
+   <!-- 물물교환 이미지 변경 -->
+   <update id="updateBarterImgSrc">
+      UPDATE item
+      SET img_src=#{img_src}, updated_at=#{original_updated_at}
       WHERE id=#{id}
    </update>
    

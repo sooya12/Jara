@@ -63,6 +63,11 @@ public class AccountServiceImpl implements AccountService {
 	}
 
 	@Override
+	public Account findPartAccount(int id) {
+		return accountDao.findPartAccount(id);
+	}
+	
+	@Override
 	public int findEmail(String email) {
 		return accountDao.findEmail(email);
 	}
@@ -75,6 +80,16 @@ public class AccountServiceImpl implements AccountService {
 	@Override
 	public boolean updateAccount(Account account) {
 		return accountDao.updateAccount(account);
+	}
+	
+	@Override
+	public int deleteAccount(int id) {
+		return accountDao.deleteAccount(id);
+	}
+	
+	@Override
+	public int deleteAllFollow(int id) {
+		return accountDao.deleteAllFollow(id);
 	}
 	
 	@Override
@@ -116,25 +131,6 @@ public class AccountServiceImpl implements AccountService {
 		return accountDao.findFollowing(follower);
 	}
 
-	@Override
-	public double findX(String name) {
-		return accountDao.findX(name);
-	}
-
-	@Override
-	public double findY(String name) {
-		return accountDao.findY(name);
-	}
-	
-	@Override
-	public Location findLocation(String name) {
-		return accountDao.findLocation(name);
-	}
-
-	@Override
-	public List<Location> findAllLocation() {
-		return accountDao.findAllLocation();
-	}
 
 
 	

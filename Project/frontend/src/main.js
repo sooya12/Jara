@@ -18,6 +18,7 @@ var firebaseConfig = {
  }
 firebase.initializeApp(firebaseConfig)
 var database = firebase.database()
+var storage = firebase.storage()
 
 Vue.config.productionTip = false
 
@@ -25,7 +26,7 @@ Vue.filter('filterCreated', function (value) {
   if (!value) return ''
   const now = new Date()
   // console.log(now)
-  const created = new Date(value.toString() + 'Z')
+  const created = new Date(value.toString())
   // console.log(created)
   const elapsedSeconds = (now - created) / 1000 // 경과 시간(초)
   // console.log(elapsedSeconds)
@@ -50,5 +51,6 @@ new Vue({
   router,
   vuetify,
   database,
+  storage,
   render: h => h(App)
 }).$mount('#app')

@@ -13,6 +13,21 @@
             <v-card>
               <v-card-title class="headline pb-0">
                 {{ tip.title }}
+                <v-spacer></v-spacer>
+                <v-toolbar v-if="$store.state.userInfo.id === tip.writer" flat color="white">
+                  <v-row justify="end">
+                    <template>
+                      <v-btn @click="goTipsUpdate" icon>
+                        <v-icon>mdi-pencil</v-icon>
+                      </v-btn>
+                      <v-btn icon @click="goTipsDelete">
+                        <v-icon>
+                          mdi-delete
+                        </v-icon>
+                      </v-btn>
+                    </template>
+                  </v-row>
+                </v-toolbar>
               </v-card-title>
               <v-layout>
                 <v-flex xs7 class='pr-0'>
@@ -125,17 +140,23 @@ export default {
   // 아직 등록자와 작성자가 같은지 확인은 안함...
   methods: {
     goTipsDelete() {
-      axios.delete(`${this.$store.state.api_server}/tips/${this.tip.id}`)
-        .then(() => {
-          // console.log(res.data)
-          this.$router.push('/tips')
-        })
-        .catch(err => {
-          console.log(err)
-        })
+      if (this.$store.state.userInfo.id === this.tip.writer) {
+        axios.delete(`${this.$store.state.api_server}/tips/${this.tip.id}`)
+          .then(() => {
+            // console.log(res.data)
+            this.$router.push('/tips')
+          })
+          .catch(err => {
+            console.log(err)
+          })
+      } else {
+        alert('게시글 작성자만 삭제 가능 합니다.')
+      }
     },
     goTipsUpdate() {
-      this.$router.push({ name: 'UpdateTip', params: { tip_id: this.tip.id }})
+      if (this.$store.state.userInfo.id === this.tip.writer) {
+        this.$router.push({ name: 'UpdateTip', params: { tip_id: this.tip.id }})
+      }
     },
     like() {
       axios.post(`${this.$store.state.api_server}/tips/${this.tip.id}/like`, '',{ params : { user_id: this.$store.state.userInfo.id }})
@@ -170,7 +191,7 @@ export default {
         .then(res => {
           // console.log(res.data)
           this.tip.comments.push(res.data)
-          console.log(this.tip.comments)
+          // console.log(this.tip.comments)
           this.new_comment.contents = ''
         })
         .catch(err => {

@@ -11,7 +11,7 @@
 	<!-- 투표 댓글 수정 -->
 	<update id="updateEitherComment" parameterType="com.ssafy.jara.dto.EitherComment">
 		UPDATE either_comment
-		SET contents=#{contents}
+		SET contents=#{contents}, choice=#{choice}
 		WHERE id=#{id};
 	</update>
 
