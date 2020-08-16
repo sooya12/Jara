@@ -276,7 +276,7 @@ export default {
   created() {
     this.fetchArticles()
     this.setWeather()
-  },  
+  },
   updated() {
     if (this.articles.length < this.numOfArticles) {
       setTimeout(() => {
