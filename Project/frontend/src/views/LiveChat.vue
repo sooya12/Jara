@@ -20,18 +20,20 @@
         outlined
         rows="1"
         row-height="15"
+        @keyup.enter="sendChat"
       ></v-textarea>
       <div>
         <v-btn @click="sendChat" text class="mt-3 font-weight-bold" color="green darken-1">등록</v-btn>
       </div>
     </v-form>
     <v-speed-dial
+      id="jara"
       v-model="fab"
       fixed
-      bottom
+      top
       right
-      direction="top"
-      transition="slide-y-reverse-transition"
+      direction="bottom"
+      transition="slide-y-transition"
     >
       <template v-slot:activator>
         <v-btn
@@ -132,7 +134,7 @@ export default {
 </script>
 
 <style scoped>
-  .chatbox {
-    height: 500px;
+  #jara {
+    top: 10vh;
   }
 </style>
