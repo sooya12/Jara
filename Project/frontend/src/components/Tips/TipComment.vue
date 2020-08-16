@@ -5,11 +5,6 @@
           <v-card-title class="grey--text pb-1">
             {{ users[comment.writer] }} · <span v-if="!comment.updated_at">{{comment.created_at | filterCreated}}</span>
             <span v-else>{{comment.updated_at | filterCreated}} <p style="font-size: x-small; display: inline-block; margin: 0;">(수정됨)</p></span>
-            <v-spacer></v-spacer>
-            <v-row justify="end">
-              <v-btn v-if="$store.state.userInfo.id === comment.writer" @click="flagComment" text small color="primary" class="pr-1">수정</v-btn>
-              <v-btn v-if="$store.state.userInfo.id === comment.writer" @click="deleteComment" text small color="error" class="px-1">삭제</v-btn>
-            </v-row>
           </v-card-title>
           <v-card-text v-if="!isChange" class='pt-0 pb-0'> {{ comment.contents }} </v-card-text>
           <v-card-text v-if="isChange" class='pt-0 pb-0'>
@@ -25,6 +20,10 @@
           <v-card-actions class='pr-3'>
             <!-- <v-btn small flat><v-icon left dark class='mr-2'>favorite_border</v-icon> 좋아요({{c.net_votes}})</v-btn> -->
             <v-spacer></v-spacer>
+            <v-row justify="end">
+              <v-btn v-if="$store.state.userInfo.id === comment.writer" @click="flagComment" text small color="primary" class="pr-1">수정</v-btn>
+              <v-btn v-if="$store.state.userInfo.id === comment.writer" @click="deleteComment" text small color="error" class="px-1">삭제</v-btn>
+            </v-row>
           </v-card-actions>
           <v-divider></v-divider>
         </v-card>

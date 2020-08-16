@@ -66,7 +66,8 @@ export default {
     return {
       show: false,
       tag: {1:'요리',2:'세탁',3:'청소',4:'보관'},
-      liked: false
+      liked: false,
+      likeAccounts: []
     } 
   },
   methods: {
@@ -90,11 +91,11 @@ export default {
           if (this.liked) {
             this.liked = false
             // console.log(this.tip.likeAccounts)
-            this.tip.likeAccounts.splice(this.tip.likeAccounts.indexOf(this.$store.state.userInfo.id),1)
+            this.likeAccounts.splice(this.likeAccounts.indexOf(this.$store.state.userInfo.id),1)
             // console.log(this.tip.likeAccounts)
           } else {
             this.liked = true
-            this.tip.likeAccounts.push(this.$store.state.userInfo.id)
+            this.likeAccounts.push(this.$store.state.userInfo.id)
             // console.log(this.tip.likeAccounts)
           }
         })
@@ -102,6 +103,18 @@ export default {
           console.log(err.message)
         })
     },
+  },
+  created() {
+    axios.get(`${this.$store.state.api_server}/tips/${this.tip.id}/like`)
+      .then(res => {
+        this.likeAccounts = res.data
+        if (this.likeAccounts.length>0 && this.likeAccounts.includes(this.$store.state.userInfo.id)) {
+          this.liked = true
+        }
+      })
+      .catch(err => {
+        console.log(err.message)
+      })
   },
   computed: {
     ...mapState([

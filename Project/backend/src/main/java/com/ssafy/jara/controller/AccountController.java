@@ -1,9 +1,11 @@
 package com.ssafy.jara.controller;
 
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
 import java.io.UnsupportedEncodingException;
 import java.math.BigInteger;
 import java.net.HttpURLConnection;
@@ -43,7 +45,10 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.ws.transport.http.HttpUrlConnection;
 
+import com.google.gson.JsonElement;
+import com.google.gson.JsonParser;
 import com.ssafy.jara.common.service.jwt.JwtService;
 import com.ssafy.jara.common.weather.WeatherService;
 import com.ssafy.jara.dto.Account;
@@ -553,6 +558,98 @@ public class AccountController extends HttpServlet {
 		} catch (IOException e) {
 			throw new RuntimeException("API 응답을 읽는데 실패했습니다.", e);
 		}
+	}
+	
+	@ApiOperation(value = "카카오 로그인")
+	@GetMapping("/signin/kakao")
+	private ResponseEntity<String> loginKakao() throws UnsupportedEncodingException {
+		String clientId = "2e50ed388c52dc3ef17eb1c332285923"; // REST API 키
+//		String redirectURI = URLEncoder.encode("https://i3a308.p.ssafy.io/accounts/signin/kakao/access", "UTF-8");
+		String redirectURI = URLEncoder.encode("http://localhost:8081/jara/accounts/signin/kakao/access", "UTF-8");
+		
+		String apiURL = "https://kauth.kakao.com/oauth/authorize?";
+		apiURL += "client_id=" + clientId;
+		apiURL += "&redirect_uri=" + redirectURI;
+		apiURL += "&response_type=code";
+
+		System.out.println(apiURL);
+
+		return new ResponseEntity<String>(apiURL, HttpStatus.OK);
+	}
+	
+	@ApiOperation(value = "카카오 로그인 접근 토큰")
+	@GetMapping("/signin/kakao/access")
+	private ResponseEntity<String> accessTokenKakao(HttpServletRequest request, HttpServletResponse response) throws UnsupportedEncodingException {
+		String clientId = "2e50ed388c52dc3ef17eb1c332285923"; // REST API 키
+		String code = request.getParameter("code"); // authorize_code
+		String access_token = "";
+		String refresh_token = "";
+		
+		String apiURL = "https://kauth.kakao.com/oauth/token";
+		
+		try {
+			URL url = new URL(apiURL);
+			HttpURLConnection con = (HttpURLConnection) url.openConnection();			
+			
+			// POST 요청을 위해 기본값이 false인 setDoOutput을 true로
+			con.setRequestMethod("POST");
+			con.setDoOutput(true);
+			
+			// POST 요청에 필요로 요구하는 파라미터 스트림을 통해 전송
+			BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(con.getOutputStream()));
+			StringBuilder sb= new StringBuilder();
+			sb.append("grant_type=authorization_code");
+			sb.append("&client_id=2e50ed388c52dc3ef17eb1c332285923");
+			sb.append("&redirect_uri=http://localhost:8081/jara/accounts/signin/kakao/access");
+			sb.append("&code="+code);
+			bw.write(sb.toString());
+			bw.flush();
+			
+			// 결과 코드가 200이라면 성공
+			int responseCode = con.getResponseCode();
+			System.out.println("responseCode : "+responseCode);
+			
+			// 요청을 통해 얻은 json 타입의 response 메세지 읽어오기
+			BufferedReader br = new BufferedReader(new InputStreamReader(con.getInputStream()));
+			String line="";
+			String result ="";
+			
+			while((line=br.readLine())!=null) {
+				result +=line;
+			}
+			System.out.println("response body : "+result);
+			
+			// gson 라이브러리에 포함된 클래스로 json 파싱 객체 생성
+			JsonParser parser = new JsonParser();
+			JsonElement element = parser.parse(result);
+			
+			access_token = element.getAsJsonObject().get("access_token").getAsString();
+			refresh_token = element.getAsJsonObject().get("refresh_token").getAsString();
+			
+			System.out.println("access_token : "+access_token);
+			System.out.println("refresh_token : "+refresh_token);
+			
+			br.close();
+			bw.close();
+			
+		} catch(IOException e) {
+			e.printStackTrace();
+		}
+		
+
+//		String redirectURI = URLEncoder.encode("https://i3a308.p.ssafy.io/accounts/signin/kakao", "UTF-8");
+		String redirectURI = URLEncoder.encode("http://localhost:8081/jara/accounts/signin/kakao", "UTF-8");
+
+		apiURL += "client_id=" + clientId;
+		apiURL += "&redirect_uri=" + redirectURI;
+		apiURL += "&response_type="+code;
+
+		System.out.println("code :"+code);
+		
+		
+		
+
+		return new ResponseEntity<String>(access_token, HttpStatus.OK);
 	}
 
 }
