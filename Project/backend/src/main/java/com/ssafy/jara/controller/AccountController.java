@@ -45,7 +45,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.ws.transport.http.HttpUrlConnection;
 
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
@@ -95,7 +94,21 @@ public class AccountController extends HttpServlet {
 
 	@Autowired
 	WeatherService weatherService;
-
+	
+	/* 네이버 소셜 로그인 URI */
+	/* Back */
+	private final String naverRedirectBackURI = "http://localhost:8081/jara/accounts/signin/naver/access"; // local 
+//	private final String naverRedirectBackURI = "https://i3a308.p.ssafy.io/accounts/signin/naver/access"; // server
+	/* Front */
+	private final String naverRedirectFrontURI = "http://localhost:3030/accounts/social/login"; // local
+//	private final String naverRedirectFrontURI = https://i3a308.p.ssafy.io/accounts/social/login"; // server
+	
+	/* 카카오 소셜 로그인 URI */
+	/* Back */
+	private final String kakaoRedirectBackURI = "http://localhost:8081/jara/accounts/signin/kakao/access"; // local 
+//	private final String kakaoRedirectBackURI = "https://i3a308.p.ssafy.io/accounts/signin/kakao/access"; // server
+	/* Front */
+	
 	@ApiOperation(value = "닉네임과 이메일 중복 체크하여 회원가입 처리", response = String.class)
 	@PostMapping("signup")
 	private ResponseEntity<String> signupAccount(@RequestBody Account account)
@@ -358,8 +371,7 @@ public class AccountController extends HttpServlet {
 	@GetMapping("/signin/naver")
 	private ResponseEntity<String> loginNaver() throws UnsupportedEncodingException {
 		String clientId = "y_9J6LuNu9tyN5tgnmEN";
-//		String redirectURI = URLEncoder.encode("https://i3a308.p.ssafy.io/accounts/signin/naver/access", "UTF-8");
-		String redirectURI = URLEncoder.encode("http://localhost:8081/jara/accounts/signin/naver/access", "UTF-8");
+		String redirectURI = URLEncoder.encode(naverRedirectBackURI, "UTF-8");
 		SecureRandom random = new SecureRandom();
 		String state = new BigInteger(130, random).toString();
 		String apiURL = "https://nid.naver.com/oauth2.0/authorize?response_type=code";
@@ -380,8 +392,7 @@ public class AccountController extends HttpServlet {
 		String clientSecret = "8bMro7T5Dt";// 애플리케이션 클라이언트 시크릿값";
 		String code = request.getParameter("code");
 		String state = request.getParameter("state");
-//		String redirectURI = URLEncoder.encode("https://i3a308.p.ssafy.io/accounts/signin/naver", "UTF-8");
-		String redirectURI = URLEncoder.encode("http://localhost:8081/jara/accounts/signin/naver", "UTF-8");
+		String redirectURI = URLEncoder.encode(naverRedirectBackURI, "UTF-8");
 		String apiURL;
 		apiURL = "https://nid.naver.com/oauth2.0/token?grant_type=authorization_code&";
 		apiURL += "client_id=" + clientId;
@@ -448,7 +459,7 @@ public class AccountController extends HttpServlet {
 						response.setHeader("jwt-auth-token", token);
 					}
 
-					response.sendRedirect("http://localhost:3030/accounts/social/login?token=" + token); // vue로 이동
+					response.sendRedirect(naverRedirectFrontURI + "?token=" + token); // vue로 이동
 
 					return new ResponseEntity<String>("success", HttpStatus.OK); // 처음 소셜 로그인 사용자가 아닌 경우
 				}
@@ -469,7 +480,7 @@ public class AccountController extends HttpServlet {
 					response.setHeader("jwt-auth-token", token);
 				}
 
-				response.sendRedirect("http://localhost:3030/accounts/social/login?token=" + token); // vue로 이동
+				response.sendRedirect(naverRedirectFrontURI + "?token=" + token); // vue로 이동
 
 				return new ResponseEntity<String>("success", HttpStatus.OK); // 처음 소셜 로그인 사용자인 경우 -> 지역 입력 페이지로 가야함
 			}
@@ -556,8 +567,7 @@ public class AccountController extends HttpServlet {
 	@GetMapping("/signin/kakao")
 	private ResponseEntity<String> loginKakao() throws UnsupportedEncodingException {
 		String clientId = "2e50ed388c52dc3ef17eb1c332285923"; // REST API 키
-//		String redirectURI = URLEncoder.encode("https://i3a308.p.ssafy.io/accounts/signin/kakao/access", "UTF-8");
-		String redirectURI = URLEncoder.encode("http://localhost:8081/jara/accounts/signin/kakao/access", "UTF-8");
+		String redirectURI = URLEncoder.encode(kakaoRedirectBackURI, "UTF-8");
 
 		String apiURL = "https://kauth.kakao.com/oauth/authorize?";
 		apiURL += "client_id=" + clientId;
@@ -609,7 +619,7 @@ public class AccountController extends HttpServlet {
 			StringBuilder sb = new StringBuilder();
 			sb.append("grant_type=authorization_code");
 			sb.append("&client_id=2e50ed388c52dc3ef17eb1c332285923");
-			sb.append("&redirect_uri=http://localhost:8081/jara/accounts/signin/kakao/access");
+			sb.append("&redirect_uri=" + kakaoRedirectBackURI);
 			sb.append("&code=" + authorize_code);
 			sb.append("&client_secret=xoKGm0MyGUK9fZ6HO436hWPhqS67MNbJ");
 			
