@@ -45,7 +45,8 @@
               </v-layout>
               <v-divider></v-divider>
               <v-card-text>
-                <article>{{ tip.contents }}</article>
+                <v-img v-if="tip.img_src!=null" class="mt-3" width="100%" height="auto" :src="tip.img_src"></v-img>
+                <article class="mt-5">{{ tip.contents }}</article>
               </v-card-text>
               <v-card-text class="pb-1">
                 <template>
