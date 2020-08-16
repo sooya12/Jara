@@ -165,11 +165,24 @@
 	<!-- 네이버 소셜 로그인 회원가입 (password는 랜덤값 삽입) -->
 	<insert id="insertNaverAccount" useGeneratedKeys="true" keyProperty="id">
 		INSERT INTO user (nickname, password, email, sex, status, access_token, refresh_token)
-		VALUES(#{nickname}, LEFT(MD5(RAND()), 10), #{email}, #{sex}, 1, #{access_token}, #{refresh_token})
+		VALUES(#{nickname}, "jara0708", #{email}, #{sex}, 1, #{access_token}, #{refresh_token})
 	</insert>
 	
 	<!-- 네이버 소셜 로그인 처음인 경우 주소 따로 받아서 수정 -->
 	<update id="updateNaverAccount">
+		UPDATE user
+		SET location=#{location}
+		WHERE id=#{id}
+	</update>
+	
+	<!-- 카카오 소셜 로그인 회원가입 (password 랜덤값) -->
+	<insert id="insertKakaoAccount" useGeneratedKeys="true" keyProperty="id">
+		INSERT INTO user (nickname, password, email, sex, status, access_token, refresh_token)
+		VALUES(#{nickname}, "jara0708", #{email}, #{sex}, 1, #{access_token}, #{refresh_token})
+	</insert>
+	
+	<!-- 카카오 소셜 로그인 처음인 경우 주소 따로 받아서 수정 -->
+	<update id="updateKakaoAccount">
 		UPDATE user
 		SET location=#{location}
 		WHERE id=#{id}

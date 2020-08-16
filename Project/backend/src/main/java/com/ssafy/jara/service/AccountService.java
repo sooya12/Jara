@@ -59,4 +59,8 @@ public interface AccountService {
 	
 	public int updateNaverAccount(HashMap<String, Object> hashMap);
 	
+	public int insertKakaoAccount(Account account);
+	
+	public int updateKakaoAccount(HashMap<String, Object> hashMap);
+	
 }

@@ -60,4 +60,8 @@ public interface AccountDao {
 	public int insertNaverAccount(Account account);
 	
 	public int updateNaverAccount(HashMap<String, Object> hashMap);
+	
+	public int insertKakaoAccount(Account account);
+	
+	public int updateKakaoAccount(HashMap<String, Object> hashMap);
 }

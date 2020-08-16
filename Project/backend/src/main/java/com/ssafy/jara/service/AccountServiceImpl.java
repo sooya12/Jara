@@ -144,4 +144,14 @@ public class AccountServiceImpl implements AccountService {
 		return accountDao.updateNaverAccount(hashMap);
 	}
 	
+	@Override
+	public int insertKakaoAccount(Account account) {
+		return accountDao.insertKakaoAccount(account);
+	}
+
+	@Override
+	public int updateKakaoAccount(HashMap<String, Object> hashMap) {
+		return accountDao.updateKakaoAccount(hashMap);
+	}
+	
 }

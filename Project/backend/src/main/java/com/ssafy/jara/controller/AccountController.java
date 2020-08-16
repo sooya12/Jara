@@ -108,6 +108,8 @@ public class AccountController extends HttpServlet {
 	private final String kakaoRedirectBackURI = "http://localhost:8081/jara/accounts/signin/kakao/access"; // local 
 //	private final String kakaoRedirectBackURI = "https://i3a308.p.ssafy.io/jara/accounts/signin/kakao/access"; // server
 	/* Front */
+	private final String kakaoRedirectFrontURI = "http://localhost:3030/accounts/social/login"; // local
+//	private final String kakaoRedirectFrontURI = "https://i3a308.p.ssafy.io/accounts/social/login"; // server
 	
 	@ApiOperation(value = "닉네임과 이메일 중복 체크하여 회원가입 처리", response = String.class)
 	@PostMapping("signup")
@@ -583,28 +585,67 @@ public class AccountController extends HttpServlet {
 	@ApiOperation(value = "카카오 로그인 접근 토큰")
 	@GetMapping("/signin/kakao/access")
 	private ResponseEntity<String> accessTokenKakao(HttpServletRequest request, HttpServletResponse response)
-			throws UnsupportedEncodingException {
+			throws IOException {
 
 		String code = request.getParameter("code"); // authorize_code
+		HashMap<String, String> tokens = getKakaoAccessToken(code); // 토큰 값
 		
-		String token = getKakaoAccessToken(code); // 토큰 값
-		HashMap<String, Object> userInfo = getKakaoUserInfo(token); // 사용자 정보
+		String access_token = tokens.get("access_token"); 
+		String refresh_token = tokens.get("refresh_token"); 
 		
+		HashMap<String, Object> userInfo = getKakaoUserInfo(access_token); // 사용자 정보
+		
+		// 카카오 회원 정보 추출
+		String email = (String) userInfo.get("email"); 
+		String nickname = (String)userInfo.get("nickname"); 
+		String gender = (String) userInfo.get("gender");
 
+//		System.out.println("token : "+token);
+//		System.out.println("userInfo : "+userInfo);
 		
-		System.out.println("token : "+token);
-		System.out.println("userInfo : "+userInfo);
+		String token = "";
 
-		return new ResponseEntity<String>(token, HttpStatus.OK);
+		if (accountService.findEmail(email) > 0) {
+			Account account = accountService.findPartAccount(accountService.findIdByEmail(email));
+
+			if (!account.equals(null)) {
+				token = jwtService.create(account);
+				response.setHeader("jwt-auth-token", token);
+			}
+
+			response.sendRedirect(naverRedirectFrontURI + "?token=" + token); // vue로 이동
+
+			return new ResponseEntity<String>("success", HttpStatus.OK); // 처음 소셜 로그인 사용자가 아닌 경우
+		}
+
+		Account account = new Account();
+		account.setNickname(nickname);
+		account.setSex(gender.equals("famale") ? true : false); 
+		account.setEmail(email);
+		account.setAccess_token(access_token);
+		account.setRefresh_token(refresh_token);
+
+		accountService.insertKakaoAccount(account);
+
+		Account resultAccount = accountService.findPartAccount(account.getId());
+
+		if (!resultAccount.equals(null)) {
+			token = jwtService.create(resultAccount);
+			response.setHeader("jwt-auth-token", token);
+		}
+
+		response.sendRedirect(kakaoRedirectFrontURI + "?token=" + token); // vue로 이동
+
+		return new ResponseEntity<String>("success", HttpStatus.OK); // 처음 소셜 로그인 사용자인 경우 -> 지역 입력 페이지로 가야함
 	}
-	
 
 	// 카카오 로그인 토큰 가져오는 함수
-	String getKakaoAccessToken(String authorize_code) {
+	HashMap<String, String> getKakaoAccessToken(String authorize_code) {
 		
 		String access_token = "";
 		String refresh_token = "";
 		String reqURL = "https://kauth.kakao.com/oauth/token";
+		HashMap<String, String> tokens = new HashMap<String, String>();
 
 		try {
 			URL url = new URL(reqURL);
@@ -630,7 +671,6 @@ public class AccountController extends HttpServlet {
 			int responseCode = con.getResponseCode();
 			System.out.println("responseCode : " + responseCode);
 			
-			
 
 			// 요청을 통해 얻은 json 타입의 response 메세지 읽어오기
 			BufferedReader br = new BufferedReader(new InputStreamReader(con.getInputStream()));
@@ -652,6 +692,10 @@ public class AccountController extends HttpServlet {
 			System.out.println("access_token : " + access_token);
 			System.out.println("refresh_token : " + refresh_token);
 
+			
+			tokens.put("access_token", access_token);
+			tokens.put("refresh_token",refresh_token);
+			
 			br.close();
 			bw.close();
 
@@ -659,7 +703,7 @@ public class AccountController extends HttpServlet {
 			e.printStackTrace();
 		}
 
-		return access_token;
+		return tokens;
 
 	}
 	
@@ -696,14 +740,21 @@ public class AccountController extends HttpServlet {
 			
 			JsonObject properties = element.getAsJsonObject().get("properties").getAsJsonObject();
 			JsonObject kakao_account = element.getAsJsonObject().get("kakao_account").getAsJsonObject();
-			
+
 			String nickname = properties.getAsJsonObject().get("nickname").getAsString();
 			String email = kakao_account.getAsJsonObject().get("email").getAsString();
+
+			Boolean has_gender = kakao_account.getAsJsonObject().get("has_gender").getAsBoolean();
+			String gender = "male"; // female/male
+			if(has_gender) { // 성별 값이 들어온다면
+				gender = kakao_account.getAsJsonObject().get("gender").getAsString();
+			}
 			
 			System.out.println("카카오 회원 정보 함수 출력 : "+properties);
 			
 			userInfo.put("nickname", nickname);
 			userInfo.put("email",email);
+			userInfo.put("gender",gender);
 			
 		} catch(IOException e) {
 			System.out.println("사용자 정보 가져오기 오류");
@@ -711,6 +762,28 @@ public class AccountController extends HttpServlet {
 		}
 		
 		return userInfo;
+	}
+	
+	@ApiOperation(value = "카카오 로그인으로 회원가입 시 주소 수정")
+	@PutMapping("/signin/kakao/access")
+	private ResponseEntity<Account> updateKakaoAccount(@RequestBody Account account, HttpServletResponse response) {
+		HashMap<String, Object> hashMap = new HashMap<String, Object>();
+		hashMap.put("id", account.getId());
+		hashMap.put("location", account.getLocation());
+
+		if (accountService.updateKakaoAccount(hashMap) > 0) {
+
+			account = accountService.findPartAccount(account.getId());
+
+			if (!account.equals(null)) {
+				String token = jwtService.create(account);
+				response.setHeader("jwt-auth-token", token);
+			}
+
+			return new ResponseEntity<Account>(account, HttpStatus.OK);
+		}
+
+		return new ResponseEntity<Account>(HttpStatus.NO_CONTENT);
 	}
 
 }
