@@ -6,11 +6,14 @@
         <v-icon x-large class="ml-2">mdi-lightbulb-outline</v-icon>
       </div>
       <div>
-        <v-flex class="sm6 offset-sm3 justify-center">
+        <v-flex class="sm6 offset-sm3 justify-center mt-5">
           <v-text-field
-            label="팁 게시글 검색..."
+            label="검색어를 입력해주세요."
             v-model="search"
             class="col-12"
+            outlined
+            append-icon="mdi-magnify"
+            color="green darken-2"
           >
           </v-text-field>
         </v-flex>
@@ -23,10 +26,13 @@
         />
         <v-pagination
           v-model="curPageNum"
-          :length="numOfPages">
+          :length="numOfPages"
+          color="green darken-2"
+          light
+        >
         </v-pagination>
       </div>
-      <v-btn @click="write" style="position: fixed; bottom:3vh; right: 3vh" color="success" fab small dark absolute bottom right>
+      <v-btn @click="write" style="position: fixed; bottom:3vh; right: 3vh" color="green lighten-1" fab small dark absolute bottom right>
         <v-icon>mdi-pencil</v-icon>
       </v-btn>
     </div>
