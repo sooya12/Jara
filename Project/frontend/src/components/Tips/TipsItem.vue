@@ -11,8 +11,9 @@
       >
         <v-img
           id="img"
+          v-if="tip.img_src!=null"
           class="white--text align-end"
-          height="200px"
+          aspect-ratio="1.4"
           :src="tip.img_src"
           contain
         >
