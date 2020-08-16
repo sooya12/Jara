@@ -48,6 +48,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.ws.transport.http.HttpUrlConnection;
 
 import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.ssafy.jara.common.service.jwt.JwtService;
 import com.ssafy.jara.common.weather.WeatherService;
@@ -91,10 +92,9 @@ public class AccountController extends HttpServlet {
 
 	@Autowired
 	JavaMailSender javaMailSender;
-	
+
 	@Autowired
 	WeatherService weatherService;
-	
 
 	@ApiOperation(value = "닉네임과 이메일 중복 체크하여 회원가입 처리", response = String.class)
 	@PostMapping("signup")
@@ -109,9 +109,8 @@ public class AccountController extends HttpServlet {
 //			
 //			System.out.println("hashPassword : "+hashPassword);
 
-
 			if (accountService.insertAccount(account) > 0) {
-				
+
 				// 6자리 인증코드
 				Account reaccount = accountService.findAccount(account.getId());
 
@@ -121,14 +120,13 @@ public class AccountController extends HttpServlet {
 				MailHandler sendMail = new MailHandler(javaMailSender);
 				sendMail.setSubject("[JARA 회원가입 사용자 인증]");
 				sendMail.setText(new StringBuffer()
-						.append("<center><h1 style='background-color:#388E3C; color:white;'>JARA 메일 인증 안내입니다</h1><br>" + 
-								"<p>JARA를 이용해 주셔서 진심으로 감사합니다.<br>아래의 인증코드를 입력하시면 가입이 정상적으로 완료됩니다.</p><br>" + 
-								"<h2 style='background-color:#e6e6e6; color:black;'>")
+						.append("<center><h1 style='background-color:#388E3C; color:white;'>JARA 메일 인증 안내입니다</h1><br>"
+								+ "<p>JARA를 이용해 주셔서 진심으로 감사합니다.<br>아래의 인증코드를 입력하시면 가입이 정상적으로 완료됩니다.</p><br>"
+								+ "<h2 style='background-color:#e6e6e6; color:black;'>")
 						.append("인증코드 : <b>" + reaccount.getCode() + "<br></h2>")
 //						.append("<button type='button' onclick = 'location.href = 'http://localhost:3030/accounts/certification' ' " + 
 //								"style='border: none;color: white;padding: 15px 32px;text-align: center;text-decoration: none; display: inline-block;font-size: 16px;margin: 4px 2px;cursor: pointer;background-color:#388E3C;'>인증하러가기</button></center>").toString());
 
-						
 //						 .append("<a href='http://localhost:3030/accounts/certification'>이메일 인증하기</a></center>").toString());
 						.append("<a href='http://i3a308.p.ssafy.io/accounts/certification'>이메일 인증하기</a>").toString());
 
@@ -155,11 +153,10 @@ public class AccountController extends HttpServlet {
 		return new ResponseEntity<String>("fail", HttpStatus.NO_CONTENT); //
 	}
 
-
 	@ApiOperation(value = "이메일과 비밀번호로 로그인 처리", response = Account.class)
 	@PostMapping("signin")
 	private ResponseEntity<Account> loginAccount(@RequestBody Account account, HttpServletResponse response) {
-		
+
 		// 비밀번호와 비교
 //		Account findAccount =null;
 //
@@ -169,12 +166,12 @@ public class AccountController extends HttpServlet {
 //			findAccount = accountService.selectAccount(account); // 로그인
 //		}
 
-		Account findAccount= accountService.selectAccount(account); // 로그인
-		
+		Account findAccount = accountService.selectAccount(account); // 로그인
+
 //		findAccount.setPTY(weatherService.selectPTY(findAccount.getLocation()));
 //		findAccount.setSKY(weatherService.selectSKY(findAccount.getLocation()));
 //		findAccount.setT1H(weatherService.selectT1H(findAccount.getLocation()));
-		
+
 		System.out.println("findAccount=" + findAccount);
 		if (!findAccount.equals(null)) {
 			String token = jwtService.create(findAccount);
@@ -197,17 +194,15 @@ public class AccountController extends HttpServlet {
 		MailHandler sendMail = new MailHandler(javaMailSender);
 		sendMail.setSubject("[JARA 비밀번호 변경 사용자 인증]");
 		sendMail.setText(new StringBuffer()
-				.append("<center><h1 style='background-color:#388E3C; color:white;'>JARA 메일 인증 안내입니다</h1><br>" + 
-						"<p>JARA를 이용해 주셔서 진심으로 감사합니다.<br>아래의 인증코드를 입력하시면 비밀번호 변경이 가능합니다.</p><br>" + 
-						"<h2 style='background-color:#e6e6e6; color:black;'>")
+				.append("<center><h1 style='background-color:#388E3C; color:white;'>JARA 메일 인증 안내입니다</h1><br>"
+						+ "<p>JARA를 이용해 주셔서 진심으로 감사합니다.<br>아래의 인증코드를 입력하시면 비밀번호 변경이 가능합니다.</p><br>"
+						+ "<h2 style='background-color:#e6e6e6; color:black;'>")
 				.append("인증코드 : <b>" + ncode + "</b><br></h2>")
 //				.append("<button type='button' onclick = 'location.href = 'http://localhost:3030/accounts/setnewpw' ' " + 
 //						"style='border: none;color: white;padding: 15px 32px;text-align: center;text-decoration: none; display: inline-block;font-size: 16px;margin: 4px 2px;cursor: pointer;background-color:#388E3C;'>인증하러가기</button></center>").toString());
 
-				
 //				 .append("<a href='http://localhost:3030/accounts/certification'>이메일 인증하기</a></center>").toString());			
 				.append("<a href='http://i3a308.p.ssafy.io/accounts/setnewpwd'>비밀번호 변경하기</a>").toString());
-
 
 		sendMail.setFrom("jaraauth@gmail.com", "JARA");
 		sendMail.setTo(email);
@@ -218,40 +213,39 @@ public class AccountController extends HttpServlet {
 	@ApiOperation(value = "비밀번호 변경 처리", response = Account.class)
 	@PutMapping("setnewpwd")
 	private ResponseEntity<String> setNewPassword(@RequestBody Account account) {
-		
+
 		// 비밀번호 암호화
 //		String hashPassword = BCrypt.hashpw(account.getPassword(), BCrypt.gensalt());
 //		account.setPassword(hashPassword);
-		
+
 		if (accountService.changePassword(account) > 0) {
 			return new ResponseEntity<String>("success", HttpStatus.OK);
 		}
 
 		return new ResponseEntity<String>("fail", HttpStatus.NO_CONTENT);
 	}
-	
 
 	@ApiOperation(value = "회원넘버로 회원 정보 조회하기")
 	@GetMapping("{id}")
 	private ResponseEntity<Account> findAccount(@PathVariable int id) {
-		
+
 		Account account = accountService.findPartAccount(id); // 해당 id 유저 값
 
 		account.setFollowerList(accountService.findFollowing(id));
 		account.setFollowingList(accountService.findFollower(id));
-		
+
 		account.setMyArticleList(articleService.selectListMyArticle(id));
-		
+
 		for (int i = 0; i < account.getMyArticleList().size(); i++) {
 			Article article = account.getMyArticleList().get(i);
 
 			article.setComments(articleCommentService.selectArticleComments(article.getId())); // 전체 댓글 조회
 			article.setLikeAccounts(articleService.selectArticleLikeAccount(article.getId())); // 전체 좋아요 사용자 조회
-					
+
 		}
 
 		account.setScrapTipList(tipService.selectListTipScrap(id));
-		
+
 		for (int i = 0; i < account.getScrapTipList().size(); i++) {
 			Tip tip = account.getScrapTipList().get(i);
 
@@ -260,7 +254,7 @@ public class AccountController extends HttpServlet {
 		}
 
 		System.out.println(account.getId() + "+" + account.getNickname());
-		
+
 		if (account.equals(null) || account.getId() == 0) {
 			return new ResponseEntity(HttpStatus.NO_CONTENT);
 
@@ -288,21 +282,18 @@ public class AccountController extends HttpServlet {
 		}
 		return new ResponseEntity<String>("success", HttpStatus.OK);
 	}
-	
+
 	@ApiOperation(value = "회원 정보 삭제하기")
 	@DeleteMapping("{id}")
 	private ResponseEntity<String> deleteAccount(@RequestBody Account account) {
 
 		accountService.deleteAllFollow(account.getId()); // 팔로잉 팔로워일때 삭제
 
-		if(accountService.deleteAccount(account.getId()) > 0) { // 회원 삭제
+		if (accountService.deleteAccount(account.getId()) > 0) { // 회원 삭제
 			return new ResponseEntity<String>("success", HttpStatus.OK);
 		}
 		return new ResponseEntity<String>("fail", HttpStatus.NO_CONTENT);
 	}
-	
-	
-	
 
 	@ApiOperation(value = "팔로우 요청 보내기")
 	@PostMapping("follow")
@@ -352,10 +343,10 @@ public class AccountController extends HttpServlet {
 			resultMap.putAll(jwtService.get(request.getHeader("token")));
 			accountMap = (Map<String, Object>) resultMap.get("Account");
 			String location = (String) accountMap.get("location");
-			accountMap.put("PTY",weatherService.selectPTY(location));
-			accountMap.put("SKY",weatherService.selectSKY(location));
-			accountMap.put("T1H",weatherService.selectT1H(location));
-			
+			accountMap.put("PTY", weatherService.selectPTY(location));
+			accountMap.put("SKY", weatherService.selectSKY(location));
+			accountMap.put("T1H", weatherService.selectT1H(location));
+
 		} catch (Exception e) {
 			e.printStackTrace();
 			return new ResponseEntity<Map<String, Object>>(HttpStatus.INTERNAL_SERVER_ERROR);
@@ -383,7 +374,8 @@ public class AccountController extends HttpServlet {
 
 	@ApiOperation(value = "네이버 로그인 접근 토큰")
 	@GetMapping("/signin/naver/access")
-	private ResponseEntity<String> accessTokenNaver(HttpServletRequest request, HttpServletResponse response) throws UnsupportedEncodingException {
+	private ResponseEntity<String> accessTokenNaver(HttpServletRequest request, HttpServletResponse response)
+			throws UnsupportedEncodingException {
 		String clientId = "y_9J6LuNu9tyN5tgnmEN";// 애플리케이션 클라이언트 아이디값";
 		String clientSecret = "8bMro7T5Dt";// 애플리케이션 클라이언트 시크릿값";
 		String code = request.getParameter("code");
@@ -447,7 +439,7 @@ public class AccountController extends HttpServlet {
 				String email = (String) resObj.get("email");
 
 				String token = "";
-				
+
 				if (accountService.findEmail(email) > 0) {
 					Account account = accountService.findPartAccount(accountService.findIdByEmail(email));
 
@@ -494,7 +486,7 @@ public class AccountController extends HttpServlet {
 		HashMap<String, Object> hashMap = new HashMap<String, Object>();
 		hashMap.put("id", account.getId());
 		hashMap.put("location", account.getLocation());
-		
+
 		if (accountService.updateNaverAccount(hashMap) > 0) {
 
 			account = accountService.findPartAccount(account.getId());
@@ -559,97 +551,154 @@ public class AccountController extends HttpServlet {
 			throw new RuntimeException("API 응답을 읽는데 실패했습니다.", e);
 		}
 	}
-	
+
 	@ApiOperation(value = "카카오 로그인")
 	@GetMapping("/signin/kakao")
 	private ResponseEntity<String> loginKakao() throws UnsupportedEncodingException {
 		String clientId = "2e50ed388c52dc3ef17eb1c332285923"; // REST API 키
 //		String redirectURI = URLEncoder.encode("https://i3a308.p.ssafy.io/accounts/signin/kakao/access", "UTF-8");
 		String redirectURI = URLEncoder.encode("http://localhost:8081/jara/accounts/signin/kakao/access", "UTF-8");
-		
+
 		String apiURL = "https://kauth.kakao.com/oauth/authorize?";
 		apiURL += "client_id=" + clientId;
 		apiURL += "&redirect_uri=" + redirectURI;
 		apiURL += "&response_type=code";
 
+		
 		System.out.println(apiURL);
 
 		return new ResponseEntity<String>(apiURL, HttpStatus.OK);
 	}
-	
+
 	@ApiOperation(value = "카카오 로그인 접근 토큰")
 	@GetMapping("/signin/kakao/access")
-	private ResponseEntity<String> accessTokenKakao(HttpServletRequest request, HttpServletResponse response) throws UnsupportedEncodingException {
-		String clientId = "2e50ed388c52dc3ef17eb1c332285923"; // REST API 키
+	private ResponseEntity<String> accessTokenKakao(HttpServletRequest request, HttpServletResponse response)
+			throws UnsupportedEncodingException {
+
 		String code = request.getParameter("code"); // authorize_code
+		
+		String token = getKakaoAccessToken(code); // 토큰 값
+		HashMap<String, Object> userInfo = getKakaoUserInfo(token); // 사용자 정보
+		
+
+		
+		System.out.println("token : "+token);
+		System.out.println("userInfo : "+userInfo);
+
+		return new ResponseEntity<String>(token, HttpStatus.OK);
+	}
+	
+
+	// 카카오 로그인 토큰 가져오는 함수
+	String getKakaoAccessToken(String authorize_code) {
+		
 		String access_token = "";
 		String refresh_token = "";
-		
-		String apiURL = "https://kauth.kakao.com/oauth/token";
-		
+		String reqURL = "https://kauth.kakao.com/oauth/token";
+
 		try {
-			URL url = new URL(apiURL);
-			HttpURLConnection con = (HttpURLConnection) url.openConnection();			
-			
+			URL url = new URL(reqURL);
+			HttpURLConnection con = (HttpURLConnection) url.openConnection();
+
 			// POST 요청을 위해 기본값이 false인 setDoOutput을 true로
 			con.setRequestMethod("POST");
 			con.setDoOutput(true);
-			
+
 			// POST 요청에 필요로 요구하는 파라미터 스트림을 통해 전송
 			BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(con.getOutputStream()));
-			StringBuilder sb= new StringBuilder();
+			StringBuilder sb = new StringBuilder();
 			sb.append("grant_type=authorization_code");
 			sb.append("&client_id=2e50ed388c52dc3ef17eb1c332285923");
 			sb.append("&redirect_uri=http://localhost:8081/jara/accounts/signin/kakao/access");
-			sb.append("&code="+code);
+			sb.append("&code=" + authorize_code);
 			bw.write(sb.toString());
 			bw.flush();
-			
+
 			// 결과 코드가 200이라면 성공
 			int responseCode = con.getResponseCode();
-			System.out.println("responseCode : "+responseCode);
+			System.out.println("responseCode : " + responseCode);
 			
+			
+
 			// 요청을 통해 얻은 json 타입의 response 메세지 읽어오기
 			BufferedReader br = new BufferedReader(new InputStreamReader(con.getInputStream()));
-			String line="";
-			String result ="";
-			
-			while((line=br.readLine())!=null) {
-				result +=line;
+			String line = "";
+			String result = "";
+
+			while ((line = br.readLine()) != null) {
+				result += line;
 			}
-			System.out.println("response body : "+result);
-			
+			System.out.println("response body : " + result);
+
 			// gson 라이브러리에 포함된 클래스로 json 파싱 객체 생성
 			JsonParser parser = new JsonParser();
 			JsonElement element = parser.parse(result);
-			
+
 			access_token = element.getAsJsonObject().get("access_token").getAsString();
 			refresh_token = element.getAsJsonObject().get("refresh_token").getAsString();
-			
-			System.out.println("access_token : "+access_token);
-			System.out.println("refresh_token : "+refresh_token);
-			
+
+			System.out.println("access_token : " + access_token);
+			System.out.println("refresh_token : " + refresh_token);
+
 			br.close();
 			bw.close();
+
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+
+		return authorize_code;
+
+	}
+	
+	// 카카오 로그인 정보 가져오는 함수
+	public HashMap<String, Object> getKakaoUserInfo(String access_token){
+		
+		// 요청하는 클라이언트마다 가진 정보가 다를 수 있기 때문에 HashMap 타입으로 선언
+		HashMap<String, Object> userInfo = new HashMap<>();
+		String reqURL = "https://kapi.kakao.com/v2/user/me";
+		try {
+			URL url=new URL(reqURL);
+			HttpURLConnection con = (HttpURLConnection) url.openConnection();
+			con.setRequestMethod("POST");
+			
+			// 요청에 필요한 header 에 포함될 내용
+			con.setRequestProperty("Authorization", "Bearer "+access_token);
+			
+			int responseCode = con.getResponseCode();
+			System.out.println("response 로그인 정보 받아오기 : "+responseCode);
+			
+			BufferedReader br = new BufferedReader(new InputStreamReader(con.getInputStream()));
+			
+			String line = "";
+			String result = "";
+			
+			System.out.println("===============");
+			while((line = br.readLine()) != null) {
+				result += line;
+			}
+			System.out.println("response body(로그인 정보 받아오기) : "+result);
+			
+			JsonParser parser = new JsonParser();
+			JsonElement element = parser.parse(result);
+			
+			JsonObject properties = element.getAsJsonObject().get("properties").getAsJsonObject();
+			JsonObject kakao_account = element.getAsJsonObject().get("kakao_account").getAsJsonObject();
+			
+			String nickname = properties.getAsJsonObject().get("nickname").getAsString();
+			String email = kakao_account.getAsJsonObject().get("email").getAsString();
+			
+			System.out.println("카카오 회원 정보 함수 출력 : "+properties);
+			
+			userInfo.put("nickname", nickname);
+			userInfo.put("email",email);
 			
 		} catch(IOException e) {
+			System.out.println("사용자 정보 가져오기 오류");
 			e.printStackTrace();
 		}
 		
-
-//		String redirectURI = URLEncoder.encode("https://i3a308.p.ssafy.io/accounts/signin/kakao", "UTF-8");
-		String redirectURI = URLEncoder.encode("http://localhost:8081/jara/accounts/signin/kakao", "UTF-8");
-
-		apiURL += "client_id=" + clientId;
-		apiURL += "&redirect_uri=" + redirectURI;
-		apiURL += "&response_type="+code;
-
-		System.out.println("code :"+code);
-		
-		
-		
-
-		return new ResponseEntity<String>(access_token, HttpStatus.OK);
+		return userInfo;
 	}
 
 }
