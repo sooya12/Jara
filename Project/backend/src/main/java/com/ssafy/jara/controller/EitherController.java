@@ -123,4 +123,10 @@ public class EitherController {
 	private ResponseEntity<List<EitherChoice>> selectEitherPickList(@PathVariable int either_id) {
 		return new ResponseEntity<List<EitherChoice>>(eitherService.selectEitherPickList(either_id), HttpStatus.OK);
 	}
+	
+	@ApiOperation(value = "이더 Top 5 조회", response = String.class)
+	@GetMapping("/top5")
+	private ResponseEntity<List<Either>> selectListEitherTop5() {
+		return new ResponseEntity<List<Either>>(eitherService.selectListEitherTop5(), HttpStatus.OK);
+	}
 }

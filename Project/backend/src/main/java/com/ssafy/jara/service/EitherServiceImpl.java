@@ -86,4 +86,9 @@ public class EitherServiceImpl implements EitherService {
 		System.out.println("either_id=" + either_id);
 		return eitherDao.selectChoiceBList(either_id);
 	}
+
+	@Override
+	public List<Either> selectListEitherTop5() {
+		return eitherDao.selectListEitherTop5();
+	}
 }
