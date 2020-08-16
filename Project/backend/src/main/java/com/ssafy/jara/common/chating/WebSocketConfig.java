@@ -23,7 +23,7 @@
 //	// Connection을 맺을 때, CORS 허용
 //	@Override
 //	public void registerStompEndpoints(StompEndpointRegistry registry) {
-//		registry.addEndpoint("/").setAllowedOrigins("*").withSockJS();
+//		registry.addEndpoint("/jara").setAllowedOrigins("*").withSockJS();
 //	}
 //
 //}
