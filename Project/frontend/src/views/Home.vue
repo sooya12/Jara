@@ -109,15 +109,6 @@
         fab
         dark
         small
-        color="green lighten-2"
-        @click="goToChat"
-      >
-        <v-icon>mdi-chat</v-icon>
-      </v-btn>
-      <v-btn
-        fab
-        dark
-        small
         color="light-green"
         @click="scrollToTop"
       >
