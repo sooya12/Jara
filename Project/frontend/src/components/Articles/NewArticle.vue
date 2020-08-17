@@ -1,5 +1,5 @@
 <template>
-  <v-container fluid mt-5>
+  <v-container fluid mt-5 style="font-family: 'Handon3gyeopsal300g'">
     <div id="loading" v-if="isLoading" class="text-center">
       <v-progress-circular
         :size="50"
@@ -10,7 +10,7 @@
     <div class="d-flex align-center">
       <v-icon x-large v-if="psas[userInfo.id]==null">mdi-account-circle</v-icon>
       <v-avatar v-else><img :src="psas[userInfo.id]"></v-avatar>
-      <div class="ml-2 font-weight-bold">{{ userInfo.nickname }}</div>
+      <div class="ml-2 font-weight-bold" style="font-family: 'Handon3gyeopsal600g' !important;">{{ userInfo.nickname }}</div>
       <v-btn fixed bottom right fab color="green lighten-1" @click="createArticle" small dark><v-icon>mdi-pencil</v-icon></v-btn>
     </div>
     <v-img v-if="file != null" :src="imageURL"></v-img>

@@ -1,6 +1,6 @@
 <template>
-  <v-container fluid class="mt-5">
-    <div class="text-sm-h3 text-h4 font-weight-bold ml-3">꼼꼼한 자라<v-icon x-large class="ml-2">mdi-chevron-down-box-outline</v-icon></div>
+  <v-container fluid class="mt-5" style="font-family: 'Handon3gyeopsal300g';">
+    <div class="text-sm-h3 text-h4 font-weight-bold ml-3" style="font-family: 'Handon3gyeopsal600g' !important;">꼼꼼한 자라<v-icon x-large class="ml-2">mdi-chevron-down-box-outline</v-icon></div>
     <div class="mt-5 ml-3">
       <v-chip
         @click="red"

@@ -21,6 +21,12 @@
 		SELECT *, (SELECT count(*) 
 				   FROM tip_like 
 				   WHERE tip_id=tip.id) AS likes
+				   (SELECT COUNT(*) 
+				   FROM scrap 
+				   WHERE tip_id=tip.id) AS scraps, 
+				  (SELECT COUNT(*) 
+				   FROM tip_comment 
+				   WHERE tip_id=tip.id) AS commentCount
 		FROM tip
 		WHERE tag_id=#{tag_id}
 	</select>
@@ -126,7 +132,13 @@
 	<select id="selectListTipTop5" resultType="com.ssafy.jara.dto.Tip">
 		SELECT *, (SELECT COUNT(*)
 				   FROM tip_like
-				   WHERE tip_id=id) AS likes
+				   WHERE tip_id=id) AS likes,
+				  (SELECT COUNT(*) 
+				   FROM scrap 
+				   WHERE tip_id=tip.id) AS scraps, 
+				  (SELECT COUNT(*) 
+				   FROM tip_comment 
+				   WHERE tip_id=tip.id) AS commentCount
 	    FROM tip
 	    ORDER BY (likes + hits) DESC, likes DESC, created_at DESC
 	    LIMIT 5 

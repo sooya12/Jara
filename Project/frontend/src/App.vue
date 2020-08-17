@@ -7,12 +7,12 @@
       dark
     >
       <v-app-bar-nav-icon @click="draw"></v-app-bar-nav-icon>
-      <v-toolbar-title class="font-weight-bold pl-0" @click="goToHome">JARA</v-toolbar-title>
+      <v-toolbar-title class="font-weight-bold pl-0" style="font-family: 'GmarketSansBold';" @click="goToHome">JARA</v-toolbar-title>
       <v-spacer></v-spacer>
       <v-btn icon @click="show" v-if="!isSearch">
         <v-icon>mdi-magnify</v-icon>
       </v-btn>
-      <div v-else class="searchbar mt-6" style="width: 150px;">
+      <div v-else class="searchbar mt-6" style="width: 150px; font-family: 'Handon3gyeopsal300g' !important;">
         <v-autocomplete
           v-model="searchWord"
           :search-input.sync="searched"
@@ -51,6 +51,7 @@
           class="elevation-2"
           dark
           grow
+          style="font-family: 'Handon3gyeopsal600g' !important;"
         >
           <v-tabs-slider></v-tabs-slider>
 
@@ -98,6 +99,7 @@
       >
         <v-list-item-group
           active-class="green darken-2 white--text text--accent-4"
+          style="font-family: 'Handon3gyeopsal300g';"
         >
           <v-list-item two-line>
             <v-list-item-avatar>
@@ -162,8 +164,8 @@
                 </v-list-item-icon>
                 <v-list-item-title>신고</v-list-item-title>
               </template>
-              <v-card>
-                <v-card-title class="headline grey lighten-2">
+              <v-card style="font-family: 'Handon3gyeopsal300g' !important;">
+                <v-card-title class="headline grey lighten-2" style="font-family: 'Handon3gyeopsal600g' !important;">
                   <v-icon x-large color="red darken-1" class="mr-2">mdi-alarm-light</v-icon> 유저 신고
                 </v-card-title>
 
@@ -357,5 +359,5 @@ export default {
 <style scoped>
   .searchbar {
     height: 64px;
-  }
+  }          
 </style>

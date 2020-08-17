@@ -89,6 +89,8 @@ public class TipController {
 		for (int i = 0; i < tipList.size(); i++) {
 			Tip tip = tipList.get(i);
 			tip.setComments(tipCommentService.selectTipComments(tip.getId()));
+			tip.setScrapAccounts(tipService.selectListTipScrap(tip.getId()));
+			tip.setLikeAccounts(tipService.selectTipLikeAccounts(tip.getId()));
 		}
 		return new ResponseEntity<List<Tip>>(tipList, HttpStatus.OK);
 	}
@@ -140,6 +142,7 @@ public class TipController {
 			Tip tip = tipService.selectTip(id);
 			tip.setComments(tipCommentService.selectTipComments(id));
 			tip.setLikeAccounts(tipService.selectTipLikeAccounts(id));
+			tip.setScrapAccounts(tipService.selectListTipScrap(tip.getId()));
 			return new ResponseEntity<Tip>(tip, HttpStatus.OK);
 		} catch (NullPointerException e) {
 			e.printStackTrace();
@@ -228,10 +231,9 @@ public class TipController {
 		
 		for (int i = 0; i < tipList.size(); i++) {
 			Tip tip = tipList.get(i);
-			tip.setComments(tipCommentService.selectTipComments(tip.getId())); // 댓글 목록
-			tip.setScraps(tipService.selectListTipScrap(tip.getId())); // 스크랩 사용자 목록
+			tip.setScrapAccounts(tipService.selectListTipScrap(tip.getId()));
+			tip.setLikeAccounts(tipService.selectTipLikeAccounts(tip.getId()));
 		}
-		
 		return new ResponseEntity<List<Tip>>(tipList, HttpStatus.OK);
 	}
 	

@@ -1,6 +1,6 @@
 <template>
-  <v-container fluid>
-    <div class="mt-5 d-flex align-center font-weight-bold">
+  <v-container fluid style="font-family: 'Handon3gyeopsal300g';">
+    <div class="mt-5 d-flex align-center font-weight-bold" style="font-family: 'Handon3gyeopsal600g' !important;">
       <v-icon x-large v-if="psas[userInfo.id]==null" class="mr-2">mdi-account-circle</v-icon>
       <v-avatar v-else class="mr-2"><img :src="psas[userInfo.id]"></v-avatar>
       {{ userInfo.nickname }}

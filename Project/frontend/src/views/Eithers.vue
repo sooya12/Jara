@@ -1,7 +1,7 @@
 <template>
-  <v-container fluid class="mt-5">
-    <div class="text-sm-h3 text-h4 font-weight-bold ml-3">신중한 자라<v-icon x-large class="ml-2">mdi-checkbox-multiple-marked-outline</v-icon></div>
-    <div class="d-flex mt-5">
+  <v-container fluid class="mt-5" style="font-family: 'Handon3gyeopsal300g';">
+    <div class="text-sm-h3 text-h4 font-weight-bold ml-3" style="font-family: 'Handon3gyeopsal600g' !important;">신중한 자라<v-icon x-large class="ml-2">mdi-checkbox-multiple-marked-outline</v-icon></div>
+    <div class="d-flex mt-5 ml-3">
       <v-chip
         color="green darken-2"
         text-color="white"
@@ -34,7 +34,7 @@
       >
         <v-card-text v-if="all||ing">
           <div class="d-flex justify-space-between align-center">
-            <div class="font-weight-bold">
+            <div class="font-weight-bold" style="font-family: 'Handon3gyeopsal600g' !important;">
               <v-icon class="mr-2" v-if="psas[either.writer]==null">mdi-account-circle</v-icon>
               <v-avatar class="mr-2" v-else><img :src="psas[either.writer]"></v-avatar>
               {{ users[either.writer] }}
@@ -56,14 +56,14 @@
               </v-chip>
             </div>
           </div>
-          <p class="text-h6 text--primary mt-5 ml-3">
+          <p class="text-h6 text--primary mt-5 ml-3" style="font-family: 'Handon3gyeopsal300g' !important;">
             {{ either.question }}
           </p>
           <!-- <div
             class="or d-inline-flex justify-center align-center grey darken-4 rounded-circle font-weight-bold text-center white--text text-h6" 
             style="width: 48px; height: 48px;"
           >OR</div> -->
-          <v-row justify-space-around class="px-3 text-center white--text text-sm-h3 text-h6 font-weight-bold">
+          <v-row justify-space-around class="px-3 text-center white--text text-sm-h3 text-h6 font-weight-bold" style="font-family: 'Handon3gyeopsal600g' !important;">
             <v-col cols="6" class="red darken-1 rounded">{{ either.choiceA }}</v-col>
             <v-col cols="6" class="blue darken-2 rounded">{{ either.choiceB }}</v-col>
           </v-row>
@@ -89,7 +89,7 @@
       >
         <v-card-text v-if="all">
           <div class="d-flex justify-space-between align-center">
-            <div class="font-weight-bold">
+            <div class="font-weight-bold" style="font-family: 'Handon3gyeopsal600g' !important;">
               <v-icon class="mr-2" v-if="psas[either.writer]==null">mdi-account-circle</v-icon>
               <v-avatar class="mr-2" v-else><img :src="psas[either.writer]"></v-avatar>
               {{ users[either.writer] }}
@@ -111,21 +111,21 @@
               <v-icon right>mdi-checkbox-multiple-marked</v-icon>
             </v-chip>
           </div>
-          <p class="text-h6 text--primary mt-5 ml-3">
+          <p class="text-h6 text--primary mt-5 ml-3" style="font-family: 'Handon3gyeopsal300g' !important;">
             {{ either.question }}
           </p>
           <!-- <div
             class="or d-inline-flex justify-center align-center grey darken-4 rounded-circle font-weight-bold text-center white--text text-h6" 
             style="width: 48px; height: 48px;"
           >OR</div> -->
-          <v-row justify-space-around class="px-3 text-center white--text text-sm-h3 text-h6 font-weight-bold">
+          <v-row justify-space-around class="px-3 text-center white--text text-sm-h3 text-h6 font-weight-bold" style="font-family: 'Handon3gyeopsal600g' !important;">
             <v-col cols="6" class="red darken-1 rounded">{{ either.choiceA }}</v-col>
             <v-col cols="6" class="blue darken-2 rounded">{{ either.choiceB }}</v-col>
           </v-row>
         </v-card-text>
         <v-card-text v-else-if="ing&&either.status==0">
           <div class="d-flex justify-space-between align-center">
-            <div class="font-weight-bold">
+            <div class="font-weight-bold" style="font-family: 'Handon3gyeopsal600g' !important;">
               <v-icon class="mr-2" v-if="psas[either.writer]==null">mdi-account-circle</v-icon>
               <v-avatar class="mr-2" v-else><img :src="psas[either.writer]"></v-avatar>
               {{ users[either.writer] }}
@@ -138,21 +138,21 @@
               <v-icon right>mdi-forum-outline</v-icon>
             </v-chip>
           </div>
-          <p class="text-h6 text--primary mt-5 ml-3">
+          <p class="text-h6 text--primary mt-5 ml-3" style="font-family: 'Handon3gyeopsal300g' !important;">
             {{ either.question }}
           </p>
           <!-- <div
             class="or d-inline-flex justify-center align-center grey darken-4 rounded-circle font-weight-bold text-center white--text text-h6" 
             style="width: 48px; height: 48px;"
           >OR</div> -->
-          <v-row justify-space-around class="px-3 text-center white--text text-sm-h3 text-h6 font-weight-bold">
+          <v-row justify-space-around class="px-3 text-center white--text text-sm-h3 text-h6 font-weight-bold" style="font-family: 'Handon3gyeopsal600g' !important;">
             <v-col cols="6" class="red darken-1 rounded">{{ either.choiceA }}</v-col>
             <v-col cols="6" class="blue darken-2 rounded">{{ either.choiceB }}</v-col>
           </v-row>
         </v-card-text>
         <v-card-text v-else-if="done&&either.status==1">
           <div class="d-flex justify-space-between align-center">
-            <div class="font-weight-bold">
+            <div class="font-weight-bold" style="font-family: 'Handon3gyeopsal600g' !important;">
               <v-icon class="mr-2" v-if="psas[either.writer]==null">mdi-account-circle</v-icon>
               <v-avatar class="mr-2" v-else><img :src="psas[either.writer]"></v-avatar>
               {{ users[either.writer] }}
@@ -165,14 +165,14 @@
               <v-icon right>mdi-checkbox-multiple-marked</v-icon>
             </v-chip>
           </div>
-          <p class="text-h6 text--primary mt-5 ml-3">
+          <p class="text-h6 text--primary mt-5 ml-3" style="font-family: 'Handon3gyeopsal300g' !important;">
             {{ either.question }}
           </p>
           <div
             class="or d-inline-flex justify-center align-center grey darken-4 rounded-circle font-weight-bold text-center white--text text-h6" 
             style="width: 48px; height: 48px;"
           >OR</div>
-          <v-row justify-space-around class="px-3 text-center white--text text-sm-h3 text-h6 font-weight-bold">
+          <v-row justify-space-around class="px-3 text-center white--text text-sm-h3 text-h6 font-weight-bold" style="font-family: 'Handon3gyeopsal600g' !important;">
             <v-col cols="6" class="red darken-1 rounded">{{ either.choiceA }}</v-col>
             <v-col cols="6" class="blue darken-2 rounded">{{ either.choiceB }}</v-col>
           </v-row>
