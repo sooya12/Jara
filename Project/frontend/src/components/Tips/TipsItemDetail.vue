@@ -168,7 +168,10 @@ export default {
     },
     scrap() {
       axios.post(`${this.$store.state.api_server}/tips/${this.tip.id}/scrap`, '', { params: { user_id: this.$store.state.userInfo.id}})
-        .then(() => alert('팁이 저장되었습니다.'))
+        .then(() => {
+          this.tip.scarpAccounts.push(this.$store.state.userInfo.id)
+          alert('팁이 저장되었습니다.')
+        })
     },
     deleteComment(commentId) {
       axios.delete(`${this.$store.state.api_server}/tips/${this.$route.params.tip_id}/comments/${commentId}`)
