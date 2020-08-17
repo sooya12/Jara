@@ -11,7 +11,7 @@
         <v-layout justify-start column fill-height>
           <v-flex xs12>
             <v-card>
-              <v-card-title class="headline pb-0 justify-space-between" style="font-family: 'Handon3gyeopsal600g';">
+              <v-card-title class="headline pb-0 justify-space-between" style="font-family: 'Handon3gyeopsal600g' !important;">
                 {{ barter.title }}
                   <v-btn color="green" x-large icon v-if="!barter.status" @click="saleCompleted">
                     <v-icon>
@@ -19,7 +19,7 @@
                     </v-icon>
                   </v-btn>
                 <!-- <v-btn icon v-else> -->
-                  <v-icon color="gray" v-else>
+                  <v-icon color="gray" v-else x-large>
                     mdi-toggle-switch-off
                   </v-icon>
                 <!-- </v-btn> -->
@@ -55,7 +55,7 @@
               </v-layout>
               <v-divider></v-divider>
               <v-card-text>
-                <v-img v-if="barter.img_src" class="mt-3" width="100%" height="auto" :src="barter.img_src"></v-img>
+                <v-img v-if="barter.img_src" class="my-3" width="100%" height="auto" :src="barter.img_src"></v-img>
                 <article class="black--text">{{ barter.contents }}</article>
               </v-card-text>
               <v-card-text>
@@ -83,27 +83,28 @@
                         </v-btn>
                         
                       </template>
-                      <v-card>
+                      <v-card style="font-family: 'Handon3gyeopsal300g';">
                         <v-card-title>
-                          <span class="headline">Edit Item</span>
+                          <span class="headline" style="font-family: 'Handon3gyeopsal600g' !important;">수정하기</span>
                         </v-card-title>
                         <v-card-text>
                           <v-container>
                             <v-row>
                               <v-col cols="12" sm="6" md="4">
-                                <v-text-field v-model="editedItem.title" label="Title"></v-text-field>
+                                <v-text-field v-model="editedItem.title" label="제목" color="green darken-2"></v-text-field>
                               </v-col>
                               <v-col cols="12" sm="6" md="4">
-                                <v-text-field v-model="editedItem.contents" label="Contents"></v-text-field>
+                                <v-text-field v-model="editedItem.contents" label="내용" color="green darken-2"></v-text-field>
                               </v-col>
                               <v-col cols="12" sm="6" md="4">
-                                <v-text-field v-model="editedItem.price" label="Price"></v-text-field>
+                                <v-text-field v-model="editedItem.price" label="가격" color="green darken-2"></v-text-field>
                               </v-col>
                               <v-col cols="12" sm="6" md="4">
                                 <v-autocomplete
-                                  label="Type"
+                                  label="분류"
                                   v-model="tag"
                                   :items="tags"
+                                  color="green darken-2"
                                   required
                                 ></v-autocomplete>
                               </v-col>
@@ -112,8 +113,8 @@
                         </v-card-text>
                         <v-card-actions>
                           <v-spacer></v-spacer>
-                          <v-btn color="blue darken-1" text @click="close">Cancel</v-btn>
-                          <v-btn color="blue darken-1" text @click="save">Save</v-btn>
+                          <v-btn color="grey" text @click="close">취소</v-btn>
+                          <v-btn color="green darken-2" text @click="save">수정</v-btn>
                         </v-card-actions>
                       </v-card>
                     </v-dialog>
@@ -232,7 +233,6 @@ export default {
             this.editedItem.status = true
             axios.put(`${this.$store.state.api_server}/barters/${this.barter.id}`,this.editedItem)
               .then(res => {
-                console.log(res)
                 this.barter = res.data
                 this.$nextTick(() => {
                   this.editedItem = Object.assign({}, this.defaultItem)

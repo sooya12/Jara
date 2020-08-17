@@ -64,10 +64,10 @@ public class ReportController {
 		return new ResponseEntity<String>("fail", HttpStatus.BAD_REQUEST);
 
 	}
-
+	
 	@ApiOperation(value = "관리자 페이지 - 신고 리스트", response = String.class)
 	@GetMapping("admin")
-	private ResponseEntity<List<Report>> selectListReport(@RequestHeader(value="token") String token) {
+	private ResponseEntity<Map<String, Object>> selectListReport(@RequestHeader(value="token") String token) {
 		Map<String, Object> tokenMap = new HashMap<>();
 		Map<String, Object> accountMap = new HashMap<>();
 		
@@ -77,18 +77,23 @@ public class ReportController {
 		accountMap = (Map<String, Object>) tokenMap.get("Account");
 		String nickname = (String) accountMap.get("nickname");
 		
+		Map<String, Object> resultMap = new HashMap<>();
+		
 		if (nickname.equals("관리자")) {
 			List<Report> report = reportService.selectListReport();
+			resultMap.put("report", report);
+			resultMap.put("isAdmin", true);
 			if (!reportService.selectListReport().equals(null)) {
 				System.out.println(report);
-				return new ResponseEntity<List<Report>>(report, HttpStatus.OK);
+				return new ResponseEntity<Map<String, Object>>(resultMap, HttpStatus.OK);
 			} else {
 				System.out.println("내역이 없습니다.");
-				return new ResponseEntity<List<Report>>(HttpStatus.NO_CONTENT);
+				return new ResponseEntity<Map<String, Object>>(HttpStatus.NO_CONTENT);
 			}
 		} else {
 			System.out.println("Error: 권한이 없습니다.");
-			return new ResponseEntity<List<Report>>(HttpStatus.FORBIDDEN);
+			resultMap.put("isAdmin", false);
+			return new ResponseEntity<Map<String, Object>>(resultMap, HttpStatus.OK);
 		}
 	}
 	

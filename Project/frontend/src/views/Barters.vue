@@ -32,6 +32,7 @@
         <v-layout row wrap>
           <v-flex xs12>
             <v-data-table
+              color="green darken-2"
               :headers="headers"
               :items="barters"
               :loading="loading"
@@ -146,7 +147,6 @@ export default {
         { text: '날짜', value: 'created_at', sortable: true },
         { text: '제목', value: 'title', sortable: false },
         { text: '가격', value: 'price', sortable: true },
-        { text: '조회 수', value: 'hits', sortable: true },
         { text: '분류', value: 'tag', sortable: true },
         { text: '상태', value: 'status', sortable: true },
       ],
@@ -202,6 +202,7 @@ export default {
             8 : '나눠요'
           }
           item['tag'] = tags[item.tag_id]
+          item['price'] = item.price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")
         })
         this.loading = false
       })
@@ -242,16 +243,20 @@ export default {
         .then(res => {
           this.id = res.data.id
           const temp = res.data
+          const tags = {
+            5 : '구해요',
+            6 : '사요',
+            7 : '팔아요',
+            8 : '나눠요'
+          }
+          temp['tag'] = tags[res.data.tag_id]
+          temp['price'] = res.data.price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")
           if (this.file) {
             temp.img_src = this.uploadImg()
-          }
-          // console.log(res.data)
+          } else { alert('거래가 성공적으로 등록되었습니다.')}
           this.barters.push(temp)
           this.barters = _.orderBy(this.barters,'id','desc')
           this.close()
-        })
-        .catch(err => {
-          console.log(err)
         })
     },
     goToBarterDetail(val) {
@@ -266,14 +271,7 @@ export default {
             .then(url => {
               // console.log(url)
               axios.put(`${this.$store.state.api_server}/barters/${this.id}/img`,{ img_src : url })
-                .then(res => {
-                  console.log(res.data)
-                  return res.data
-                  // img_src = res.data
-                })
-                .catch(err => {
-                  console.log(err.message)
-                })
+                .then(() => alert('거래를 성공적으로 등록했습니다.'))
             })
         })
     }

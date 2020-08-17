@@ -181,9 +181,9 @@ export default new Vuex.Store({
           }
         }
         Axios.get(`${state.api_server}/reports/admin`, requestHeaders)
-          .then(() => router.push('/admin'))
-          .catch(() => {
-            commit('SET_DIALOG', true)
+          .then(res => {
+            if (res.isAdmin) {router.push('/admin')}
+            else {commit('SET_DIALOG', true)}
           })
       } else {
         alert('로그인한 회원님만 사용할 수 있어요!')
