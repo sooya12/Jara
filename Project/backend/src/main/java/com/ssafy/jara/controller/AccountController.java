@@ -127,10 +127,7 @@ public class AccountController extends HttpServlet {
 			if (accountService.insertAccount(account) > 0) {
 
 				// 6자리 인증코드
-				Account reaccount = accountService.findAccount(account.getId());
-
-//				System.out.println("code : "+reaccount.getCode());
-//				System.out.println("nickname : "+reaccount.getNickname());
+				String code = accountService.findCode(account.getEmail());
 
 				MailHandler sendMail = new MailHandler(javaMailSender);
 				sendMail.setSubject("[JARA 회원가입 사용자 인증]");
@@ -138,7 +135,7 @@ public class AccountController extends HttpServlet {
 						.append("<center><h1 style='background-color:#388E3C; color:white;'>JARA 메일 인증 안내입니다</h1><br>"
 								+ "<p>JARA를 이용해 주셔서 진심으로 감사합니다.<br>아래의 인증코드를 입력하시면 가입이 정상적으로 완료됩니다.</p><br>"
 								+ "<h2 style='background-color:#e6e6e6; color:black;'>")
-						.append("인증코드 : <b>" + reaccount.getCode() + "<br></h2>")
+						.append("인증코드 : <b>" + code + "<br></h2>")
 //						.append("<button type='button' onclick = 'location.href = 'http://localhost:3030/accounts/certification' ' " + 
 //								"style='border: none;color: white;padding: 15px 32px;text-align: center;text-decoration: none; display: inline-block;font-size: 16px;margin: 4px 2px;cursor: pointer;background-color:#388E3C;'>인증하러가기</button></center>").toString());
 
