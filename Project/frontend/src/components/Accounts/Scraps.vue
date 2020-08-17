@@ -6,8 +6,8 @@
         :class="{ 'on-hover': hover }"
       >
         <v-img
-          src=""
-          max-width="100%"
+          :src="scrap.img_src"
+          width="100%"
           height="150"
         >
           <v-dialog
