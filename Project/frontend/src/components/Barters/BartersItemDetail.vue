@@ -53,6 +53,8 @@
               </v-layout>
               <v-divider></v-divider>
               <v-card-text>
+                {{ barter }}
+                <v-img v-if="barter.img_src" class="mt-3" width="100%" height="auto" :src="barter.img_src"></v-img>
                 <article>{{ barter.contents }}</article>
               </v-card-text>
               <v-card-text>
@@ -129,6 +131,7 @@
                   placeholder="댓글을 입력해 주세요."
                   required
                   @keyup.enter="newComment"
+                  color="green darken-2"
                 >
                 </v-text-field>
               </v-card-text>
@@ -159,6 +162,7 @@
 <script>
 import axios from 'axios'
 import { mapState} from 'vuex'
+import firebase from 'firebase'
 import BarterComment from '../Barters/BarterComment.vue'
 
 export default {
@@ -271,11 +275,15 @@ export default {
     },
     deleteItem() {
       if (this.$store.state.userInfo.id === this.barter.writer) {
+        const flag = this.barter.img_sec ? true : false
         const response = confirm('정말로 삭제 하시겠습니까?')
         if (response) {
           axios.delete(`${this.$store.state.api_server}/barters/${this.barter.id}`)
             .then(() => {
               // console.log('성공')
+              if (flag) {
+                firebase.storage().ref().child(`barters/${this.tip.id}`).delete()
+              }
               this.$router.push('/barters')
             })
             .catch(err => {

@@ -2,7 +2,7 @@
   <v-container fluid>
     <div class="mt-5">
       <div class="mx-3 font-weight-bold text-sm-h3 text-h4">
-        합리적인 자라
+        알뜰한 자라
         <v-icon x-large class="ml-2">mdi-shopping-outline</v-icon>
       </div>
       <div>
@@ -11,6 +11,7 @@
             label="필요한 물품 검색..."
             v-model="search"
             class="col-12"
+            color="green darken-2"
           >
           </v-text-field>
         </v-flex>
@@ -22,7 +23,7 @@
               <template v-slot:activator="{ on, attrs}">
                 <v-spacer></v-spacer>
                 <v-btn
-                  color="primary"
+                  color="green"
                   dark
                   class="my-1"
                   v-bind="attrs"
@@ -33,27 +34,41 @@
               </template>
               <v-card>
                 <v-card-title>
-                  <span class="headline">New Item</span>
+                  <span class="headline">새 글 쓰기</span>
                 </v-card-title>
 
                 <v-card-text>
                   <v-container>
                     <v-row>
                       <v-col cols="12" sm="6" md="4">
-                        <v-text-field v-model="editedItem.title" label="Title" required></v-text-field>
+                        <v-text-field color="green darken-2" v-model="editedItem.title" label="제목" required :rules="[() => !!editedItem.title || '필수 입력입니다']"></v-text-field>
                       </v-col>
                       <v-col cols="12" sm="6" md="4">
-                        <v-text-field v-model="editedItem.contents" label="Contents" required></v-text-field>
+                        <v-img color="green darken-2" v-if="file != null" :src="imageURL"></v-img>
                       </v-col>
                       <v-col cols="12" sm="6" md="4">
-                        <v-text-field v-model="editedItem.price" label="Price"></v-text-field>
+                        <v-file-input
+                          @change="image"
+                          v-model="file"
+                          placeholder="사진을 첨부해 주세요."
+                          color="green darken-2"
+                        >
+                        </v-file-input>
+                      </v-col>
+                      <v-col cols="12" sm="6" md="4">
+                        <v-text-field color="green darken-2" v-model="editedItem.contents" label="내용" required :rules="[() => !!editedItem.contents || '필수 입력입니다']"></v-text-field>
+                      </v-col>
+                      <v-col cols="12" sm="6" md="4">
+                        <v-text-field color="green darken-2" v-model="editedItem.price" label="가격"></v-text-field>
                       </v-col>
                       <v-col cols="12" sm="6" md="4">
                         <v-autocomplete
-                          label="Type"
+                          label="분류 "
                           v-model="tag"
                           :items="tags"
+                          color="green darken-2"
                           required
+                          :rules="[() => !!tag || '필수 입력입니다']"
                         ></v-autocomplete>
                       </v-col>
                     </v-row>
@@ -62,8 +77,8 @@
 
                 <v-card-actions>
                   <v-spacer></v-spacer>
-                  <v-btn color="blue darken-1" text @click="close">Cancel</v-btn>
-                  <v-btn color="blue darken-1" text @click="save">Save</v-btn>
+                  <v-btn text @click="close">취소</v-btn>
+                  <v-btn color="green darken-2" text @click="save">저장</v-btn>
                 </v-card-actions>
               </v-card>
             </v-dialog>
@@ -117,6 +132,7 @@ import axios from 'axios'
 // import BartersItem from '../components/Barters/BartersItem.vue'
 import _ from 'lodash'
 import { mapState } from 'vuex'
+import firebase from 'firebase'
 
 export default {
   name: 'Barters',
@@ -138,6 +154,10 @@ export default {
       page: 1,
       pageCount: 0,
       dialog: false,
+      file: null,
+      imageURL: '',
+      img_src: '',
+      id: null,
       editedItem: {
         title: '',
         tag_id: null,
@@ -158,7 +178,8 @@ export default {
   },
   computed: {
     ...mapState([
-      'api_server'
+      'api_server',
+      'userInfo',
     ])
   },
   watch: {
@@ -180,10 +201,9 @@ export default {
       })
   },
   methods: {
-    // id2date(val) {
-    //   if (!val) return '잘못된 시간 정보'
-    //   return new Date(parseInt(val.substring(0,8), 16) * 1000).toLocaleString()
-    // }
+    image() {
+      this.imageURL = URL.createObjectURL(this.file)
+    },
     getColor(s) {
       if (s) return 'gray'
       else return 'green'
@@ -198,6 +218,9 @@ export default {
     },
     close() {
       this.dialog = false
+      this.file = null
+      this.imageURL = ''
+      this.img_src = ''
       this.$nextTick(() => {
         this.editedItem = Object.assign({}, this.defaultItem)
       })
@@ -208,18 +231,42 @@ export default {
 
       axios.post(`${this.$store.state.api_server}/barters`,this.editedItem)
         .then(res => {
+          this.id = res.data.id
+          const temp = res.data
+          if (this.file) {
+            temp.img_src = this.uploadImg()
+          }
           // console.log(res.data)
-          this.barters.push(res.data)
+          this.barters.push(temp)
           this.barters = _.orderBy(this.barters,'id','desc')
+          this.close()
         })
         .catch(err => {
           console.log(err)
         })
-      this.close()
     },
     goToBarterDetail(val) {
       // console.log(val.id)
       this.$router.push(`/barters/${val.id}`)
+    },
+    uploadImg() {
+      firebase.storage().ref(`barters/${this.id}`).put(this.file)
+        .then(() => {
+          // console.log('저장')
+          firebase.storage().ref(`barters/${this.id}`).getDownloadURL()
+            .then(url => {
+              // console.log('url넘기기')
+              axios.put(`${this.$store.state.api_server}/barters/${this.id}/img`,{ query : { img_src : url } })
+                .then(res => {
+                  // console.log(res.data)
+                  return res.data
+                  // img_src = res.data
+                })
+                .catch(err => {
+                  console.log(err.message)
+                })
+            })
+        })
     }
   }
 }
