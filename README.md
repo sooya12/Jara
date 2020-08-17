@@ -12,9 +12,9 @@
 
 ## :computer: Getting started ![badge](https://img.shields.io/badge/SUB3PJT-OK-brightgreen)
 
-![badge](https://img.shields.io/badge/platform-web-lightgrey)
+![badge](https://img.shields.io/badge/platform-mobile web-lightgrey)
 
-![badge](https://img.shields.io/badge/browser-chrome-red)![badge](https://img.shields.io/badge/flatform-vue-green)![badge](https://img.shields.io/badge/library-spring-pink)![badge](https://img.shields.io/badge/DB-MySQL-skyblue)![badge](https://img.shields.io/badge/language-Java JavaScript-yellow) 
+![badge](https://img.shields.io/badge/browser-chrome-red)![badge](https://img.shields.io/badge/flatform-vue-green)![badge](https://img.shields.io/badge/library-spring-pink)![badge](https://img.shields.io/badge/DB-MySQL-skyblue)![badge](https://img.shields.io/badge/language-Java JavaScript-yellow)  
 
 ![badge](https://img.shields.io/badge/node-12.18.2-brightgreen)![badge](https://img.shields.io/badge/npm-6.14.5-brightgreen)![badge](https://img.shields.io/badge/yarn-1.22.4-blue)![badge](https://img.shields.io/badge/@vue/cli-4.4.6-green)![badge](https://img.shields.io/badge/java-14.0.1-orange)![badge](https://img.shields.io/badge/mvn-3.6.3-blueviolet)![badge](https://img.shields.io/badge/MySQL-8.0.21-blue)
 
@@ -23,7 +23,7 @@
 ## :floppy_disk: Install
 
 ```bash
-$ yarn add vuex
+$ yarn add vuex webstomp-client sockjs-client 
 ```
 
 ```bash
@@ -193,7 +193,7 @@ $ git commit -m "| header | 설명"
 
 
 
-### :100: 명세 요건 진척률 : 85%
+### :100: 명세 요건 진척률 : 90%
 
 
 
