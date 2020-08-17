@@ -14,7 +14,7 @@
 
 ![badge](https://img.shields.io/badge/platform-mobile_web-lightgrey)
 
-![badge](https://img.shields.io/badge/browser-chrome-red)![badge](https://img.shields.io/badge/flatform-vue-green)![badge](https://img.shields.io/badge/library-spring-pink)![badge](https://img.shields.io/badge/DB-MySQL-skyblue)![badge](https://img.shields.io/badge/language-Java, JavaScript-yellow)  
+![badge](https://img.shields.io/badge/browser-chrome-red)![badge](https://img.shields.io/badge/flatform-vue-green)![badge](https://img.shields.io/badge/library-spring-pink)![badge](https://img.shields.io/badge/DB-MySQL-skyblue)![badge](https://img.shields.io/badge/language-Java_JavaScript-yellow)   
 
 ![badge](https://img.shields.io/badge/node-12.18.2-brightgreen)![badge](https://img.shields.io/badge/npm-6.14.5-brightgreen)![badge](https://img.shields.io/badge/yarn-1.22.4-blue)![badge](https://img.shields.io/badge/@vue/cli-4.4.6-green)![badge](https://img.shields.io/badge/java-14.0.1-orange)![badge](https://img.shields.io/badge/mvn-3.6.3-blueviolet)![badge](https://img.shields.io/badge/MySQL-8.0.21-blue)
 
