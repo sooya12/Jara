@@ -251,11 +251,39 @@
 
 
 
-## 8월 16일 (일) 오늘 할 일 :sun_with_face:
+## :pig2: 8월 16일 (일) 오늘 한 일 :sun_with_face:
 
-* 카카오 로그인 api 사용해서 로그인
+* 카카오 로그인 api 사용해서 로그인 
 
-  > * access token 으로 회원정보 받아오기 - json 객체로
-  > * 정보가 없다면 회원가입
-  > * 정보가 있다면 로그인
-  > * 네이버 로그인처럼 값을 어떻게 넘겨주는지 확인하기
+  > 1. redirect uri, 서비스 url 설정
+  >
+  > 2. 맨 처음 들어가는 링크 
+  >
+  >    > https://kauth.kakao.com/oauth/authorize?client_id=2e50ed388c52dc3ef17eb1c332285923&redirect_uri=https://i3a308.p.ssafy.io/jara/accounts/signin/kakao/access&response_type=code 
+  >
+  > 3. authorize_code 값을 받음 (함수 생성)
+  >
+  > 4. authorize_code 값을 사용해서 access_token, refresh_token을 받음
+  >
+  > 5. access_token으로 json 객체로 로그인 정보를 받음
+  >
+  > 6. json객체로 받은 값 -> 회원가입 및 로그인을 위해 매핑 추가, 함수 추가
+  >
+  > * 문제들
+  >   * 카카오 로그인 api가 친절하지 않음
+  >   * redirect uri 설정
+  >   * 스프링이 지맘대로임 됐다~ 안됐다~ 그래서 json 객체를 받아오는데 오래걸림
+
+
+
+## :pig2: 8월 17일 (월) 오늘 한 일 :full_moon:
+
+* 비밀번호 찾기 - 회원정보에 등록되지 않은 사람들한테도 이메일 발송 (해결)
+
+  > api 요청을 모두 pwd로 수정
+
+* 회원가입 인증 메일 - 인증은 되나 메일에 인증코드 값이 null로 감 (해결)
+
+* 올바른 DB 값 채우기
+
+  
