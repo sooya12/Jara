@@ -46,7 +46,7 @@
               </v-card-title>
 
               <v-card-text style="font-family: 'Handon3gyeopsal300g' !important;">
-                <v-img :src="scrap.img_src" width="100%" height="auto"></v-img>
+                <v-img :src="scrap.img_src" width="100%" height="300"></v-img>
                 <div class="font-weight-bold">{{ scrap.title }}</div>
                 <div class="text-truncate mt-2">{{ scrap.contents }}</div>
                 <div class="d-flex mt-3">
