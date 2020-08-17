@@ -255,10 +255,10 @@ export default {
           // console.log('저장')
           firebase.storage().ref(`barters/${this.id}`).getDownloadURL()
             .then(url => {
-              // console.log('url넘기기')
-              axios.put(`${this.$store.state.api_server}/barters/${this.id}/img`,{ query : { img_src : url } })
+              // console.log(url)
+              axios.put(`${this.$store.state.api_server}/barters/${this.id}/img`,{ img_src : url })
                 .then(res => {
-                  // console.log(res.data)
+                  console.log(res.data)
                   return res.data
                   // img_src = res.data
                 })
