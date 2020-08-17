@@ -193,26 +193,33 @@ public class AccountController extends HttpServlet {
 
 	@ApiOperation(value = "비밀번호 변경하기 전 인증 코드 발송", response = String.class)
 	@PostMapping("changepwd")
-	private void changePassword(@RequestParam String email) throws MessagingException, UnsupportedEncodingException {
-
-		accountService.changeCode(email); 		// 인증코드 변경하기
-		String ncode = accountService.findCode(email);
-		System.out.println(ncode);
-
-		MailHandler sendMail = new MailHandler(javaMailSender);
-		sendMail.setSubject("[JARA 비밀번호 변경 사용자 인증]");
-		sendMail.setText(new StringBuffer()
-				.append("<center><h1 style='background-color:#388E3C; color:white;'>JARA 메일 인증 안내입니다</h1><br>"
-						+ "<p>JARA를 이용해 주셔서 진심으로 감사합니다.<br>아래의 인증코드를 입력하시면 비밀번호 변경이 가능합니다.</p><br>"
-						+ "<h2 style='background-color:#e6e6e6; color:black;'>")
-				.append("인증코드 : <b>" + ncode + "</b><br></h2>")
+	private ResponseEntity<String> changePassword(@RequestParam String email) throws MessagingException, UnsupportedEncodingException {
+		
+		// 비밀번호 변경하기 전에 이 사람이 있는가..?
+		if(accountService.findEmail(email)>0) {
+			
+			accountService.changeCode(email); 		// 인증코드 변경하기
+			String ncode = accountService.findCode(email);
+			System.out.println(ncode);
+			
+			MailHandler sendMail = new MailHandler(javaMailSender);
+			sendMail.setSubject("[JARA 비밀번호 변경 사용자 인증]");
+			sendMail.setText(new StringBuffer()
+					.append("<center><h1 style='background-color:#388E3C; color:white;'>JARA 메일 인증 안내입니다</h1><br>"
+							+ "<p>JARA를 이용해 주셔서 진심으로 감사합니다.<br>아래의 인증코드를 입력하시면 비밀번호 변경이 가능합니다.</p><br>"
+							+ "<h2 style='background-color:#e6e6e6; color:black;'>")
+					.append("인증코드 : <b>" + ncode + "</b><br></h2>")
 //				 .append("<a href='http://localhost:3030/accounts/setnewpwd'>이메일 인증하기</a></center>").toString());			
-				.append("<a href='http://i3a308.p.ssafy.io/accounts/setnewpwd'>비밀번호 변경하기</a>").toString());
-
-		sendMail.setFrom("jaraauth@gmail.com", "JARA");
-		sendMail.setTo(email);
-		sendMail.send();
-
+					.append("<a href='http://i3a308.p.ssafy.io/accounts/setnewpwd'>비밀번호 변경하기</a>").toString());
+			
+			sendMail.setFrom("jaraauth@gmail.com", "JARA");
+			sendMail.setTo(email);
+			sendMail.send();
+			
+			return new ResponseEntity<String>("success",HttpStatus.OK);
+			
+		}
+		return new ResponseEntity<String>("fail",HttpStatus.NO_CONTENT);
 	}
 
 	@ApiOperation(value = "비밀번호 변경 처리", response = Account.class)
