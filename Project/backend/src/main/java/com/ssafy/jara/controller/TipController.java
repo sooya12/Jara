@@ -89,6 +89,8 @@ public class TipController {
 		for (int i = 0; i < tipList.size(); i++) {
 			Tip tip = tipList.get(i);
 			tip.setComments(tipCommentService.selectTipComments(tip.getId()));
+			tip.setScrapAccounts(tipService.selectListTipScrap(tip.getId()));
+			tip.setLikeAccounts(tipService.selectTipLikeAccounts(tip.getId()));
 		}
 		return new ResponseEntity<List<Tip>>(tipList, HttpStatus.OK);
 	}

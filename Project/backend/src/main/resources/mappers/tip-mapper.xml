@@ -21,6 +21,12 @@
 		SELECT *, (SELECT count(*) 
 				   FROM tip_like 
 				   WHERE tip_id=tip.id) AS likes
+				   (SELECT COUNT(*) 
+				   FROM scrap 
+				   WHERE tip_id=tip.id) AS scraps, 
+				  (SELECT COUNT(*) 
+				   FROM tip_comment 
+				   WHERE tip_id=tip.id) AS commentCount
 		FROM tip
 		WHERE tag_id=#{tag_id}
 	</select>
