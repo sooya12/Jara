@@ -136,9 +136,6 @@ public class AccountController extends HttpServlet {
 								+ "<p>JARA를 이용해 주셔서 진심으로 감사합니다.<br>아래의 인증코드를 입력하시면 가입이 정상적으로 완료됩니다.</p><br>"
 								+ "<h2 style='background-color:#e6e6e6; color:black;'>")
 						.append("인증코드 : <b>" + code + "<br></h2>")
-//						.append("<button type='button' onclick = 'location.href = 'http://localhost:3030/accounts/certification' ' " + 
-//								"style='border: none;color: white;padding: 15px 32px;text-align: center;text-decoration: none; display: inline-block;font-size: 16px;margin: 4px 2px;cursor: pointer;background-color:#388E3C;'>인증하러가기</button></center>").toString());
-
 //						 .append("<a href='http://localhost:3030/accounts/certification'>이메일 인증하기</a></center>").toString());
 						.append("<a href='http://i3a308.p.ssafy.io/accounts/certification'>이메일 인증하기</a>").toString());
 
@@ -198,8 +195,7 @@ public class AccountController extends HttpServlet {
 	@PostMapping("changepwd")
 	private void changePassword(@RequestParam String email) throws MessagingException, UnsupportedEncodingException {
 
-		// 인증코드 변경하기
-		accountService.changeCode(email);
+		accountService.changeCode(email); 		// 인증코드 변경하기
 		String ncode = accountService.findCode(email);
 		System.out.println(ncode);
 
@@ -210,10 +206,7 @@ public class AccountController extends HttpServlet {
 						+ "<p>JARA를 이용해 주셔서 진심으로 감사합니다.<br>아래의 인증코드를 입력하시면 비밀번호 변경이 가능합니다.</p><br>"
 						+ "<h2 style='background-color:#e6e6e6; color:black;'>")
 				.append("인증코드 : <b>" + ncode + "</b><br></h2>")
-//				.append("<button type='button' onclick = 'location.href = 'http://localhost:3030/accounts/setnewpw' ' " + 
-//						"style='border: none;color: white;padding: 15px 32px;text-align: center;text-decoration: none; display: inline-block;font-size: 16px;margin: 4px 2px;cursor: pointer;background-color:#388E3C;'>인증하러가기</button></center>").toString());
-
-//				 .append("<a href='http://localhost:3030/accounts/certification'>이메일 인증하기</a></center>").toString());			
+//				 .append("<a href='http://localhost:3030/accounts/setnewpwd'>이메일 인증하기</a></center>").toString());			
 				.append("<a href='http://i3a308.p.ssafy.io/accounts/setnewpwd'>비밀번호 변경하기</a>").toString());
 
 		sendMail.setFrom("jaraauth@gmail.com", "JARA");
