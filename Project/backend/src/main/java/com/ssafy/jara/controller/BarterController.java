@@ -159,15 +159,15 @@ public class BarterController {
 	
 	@ApiOperation(value = "물물교환 게시글 이미지 경로 저장", response = String.class)
 	@PutMapping("/{id}/img")
-	private ResponseEntity<String> updateBarterImg(@PathVariable int id, @RequestParam String img_src) {
+	private ResponseEntity<String> updateBarterImg(@PathVariable int id, @RequestBody Barter barter) {
 		Barter originalBarter = barterService.selectBarter(id);
 		HashMap<String, Object> hashMap = new HashMap<String, Object>();
 		hashMap.put("id", id);
-		hashMap.put("img_src", img_src);
+		hashMap.put("img_src", barter.getImg_src());
 		hashMap.put("original_updated_at", originalBarter.getUpdated_at());
 		
 		if (barterService.updateBarterImgSrc(hashMap) > 0) {
-			return new ResponseEntity<String>(img_src, HttpStatus.OK);
+			return new ResponseEntity<String>(barter.getImg_src(), HttpStatus.OK);
 		} else {
 			return new ResponseEntity<String>(HttpStatus.BAD_REQUEST);
 		}
