@@ -142,6 +142,7 @@ public class TipController {
 			Tip tip = tipService.selectTip(id);
 			tip.setComments(tipCommentService.selectTipComments(id));
 			tip.setLikeAccounts(tipService.selectTipLikeAccounts(id));
+			tip.setScrapAccounts(tipService.selectListTipScrap(tip.getId()));
 			return new ResponseEntity<Tip>(tip, HttpStatus.OK);
 		} catch (NullPointerException e) {
 			e.printStackTrace();

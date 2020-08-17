@@ -1,5 +1,5 @@
 <template>
-  <v-container mt-5 v-if="isLoad" fluid>
+  <v-container mt-5 v-if="isLoad" fluid style="font-family: 'Handon3gyeopsal300g';">
     <v-alert v-if="isError" type="error">
       유효하지 않은 입력입니다.
     </v-alert>
@@ -109,6 +109,7 @@
         color="green darken-2"
         item-color="green darken-2"
         v-model="user.location"
+        style="font-family: 'Handon3gyeopsal300g';"
       ></v-select>
     </v-form>
     <div class="text-right px-3">

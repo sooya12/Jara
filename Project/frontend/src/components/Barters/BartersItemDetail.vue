@@ -1,5 +1,5 @@
 <template>
-  <v-container v-if="isTaken" fill-height fluid grid-list-md>
+  <v-container v-if="isTaken" fill-height fluid grid-list-md style="font-family: 'Handon3gyeopsal300g';">
     <!-- {{ tip }} -->
     <!-- <v-layout v-if="loading" align-center justify-center>
       <v-progress-circular size="50" color="primary" indeterminate></v-progress-circular>
@@ -11,19 +11,18 @@
         <v-layout justify-start column fill-height>
           <v-flex xs12>
             <v-card>
-              <v-card-title class="headline pb-0">
+              <v-card-title class="headline pb-0 justify-space-between" style="font-family: 'Handon3gyeopsal600g';">
                 {{ barter.title }}
-                <v-btn color="green" icon v-if="!barter.status" @click="saleCompleted">
-                  <v-icon>
-                    mdi-toggle-switch
-                  </v-icon>
-                </v-btn>
+                  <v-btn color="green" x-large icon v-if="!barter.status" @click="saleCompleted">
+                    <v-icon>
+                      mdi-toggle-switch
+                    </v-icon>
+                  </v-btn>
                 <!-- <v-btn icon v-else> -->
                   <v-icon color="gray" v-else>
                     mdi-toggle-switch-off
                   </v-icon>
                 <!-- </v-btn> -->
-                <v-spacer></v-spacer>
                 
               </v-card-title>
               <v-layout>
@@ -32,10 +31,13 @@
                     <v-list-item>
                       <v-list-item-avatar>
                       <!-- <img :src="'https://steemitimages.com/u/' + author + '/avatar/small'" alt="avatar" onerror="this.src='https://steemitimages.com/u/monawoo/avatar/small'"> -->
-                      <img :src="psas[barter.writer]" alt="avatar">
+                      <v-avatar>
+                        <v-icon v-if="psas[barter.writer]==null">mdi-account-circle</v-icon>
+                        <img v-else :src="psas[barter.writer]">
+                      </v-avatar>
                       </v-list-item-avatar>
                       <v-list-item-content>
-                        <v-list-item-title>{{users[barter.writer]}}
+                        <v-list-item-title style="font-family: 'Handon3gyeopsal600g';">{{users[barter.writer]}}
                         </v-list-item-title>
                         <v-list-item-title v-if="!barter.updated_at">{{barter.created_at | filterCreated }}</v-list-item-title>
                         <v-list-item-title v-else>{{barter.updated_at | filterCreated }}<p style="font-size: x-small; display: inline-block; margin: 0;">(수정됨)</p></v-list-item-title>
@@ -44,7 +46,7 @@
                   </v-list>
                 </v-flex>
                 <v-flex xs5 text-xs-right class='pr-4 pt-3'>
-                  <div>
+                  <div class="text-right mr-3">
                     <v-btn icon>
                       <v-icon>mdi-comment-processing-outline</v-icon>
                     </v-btn> {{ comments.length }}
@@ -53,15 +55,14 @@
               </v-layout>
               <v-divider></v-divider>
               <v-card-text>
-                {{ barter }}
                 <v-img v-if="barter.img_src" class="mt-3" width="100%" height="auto" :src="barter.img_src"></v-img>
-                <article>{{ barter.contents }}</article>
+                <article class="black--text">{{ barter.contents }}</article>
               </v-card-text>
               <v-card-text>
                 <v-toolbar v-if="$store.state.userInfo.id === barter.writer" flat color="white">
                   <v-row justify="center" align="center">
                     <template>
-                      <v-chip href='javascript:false' class='tag'>#{{ tag_name[barter.tag_id] }}</v-chip>
+                      <v-chip class='tag'>#{{ tag_name[barter.tag_id] }}</v-chip>
                     </template>
                     <v-spacer></v-spacer>
                     <v-dialog v-model="dialog" persistent max-width="600px">
@@ -206,16 +207,10 @@ export default {
         this.barter = res.data
         // console.log('1차 성공')
       })
-      .catch(err => {
-        console.log(err)
-      })
     axios.get(`${this.$store.state.api_server}/barters/${this.$route.params.item_id}/comments`)
       .then(res => {
         // console.log('2차 성공')
         this.comments = res.data
-      })
-      .catch(err => {
-        console.log(err.message)
       })
     this.isTaken = true
   },
@@ -227,14 +222,11 @@ export default {
           this.comments.push(res.data)
           this.new_comment.contents = ''
         })
-        .catch(err => {
-          console.log(err.message)
-        })
     },
     saleCompleted() {
       if (!this.barter.status) {
         if (this.$store.state.userInfo.id === this.barter.writer) {
-          const response = confirm('판매를 완료하시겠습니까?')
+          const response = confirm('거래를 완료하시겠습니까?')
           if (response) {
             this.editedItem = this.barter
             this.editedItem.status = true
@@ -246,13 +238,10 @@ export default {
                   this.editedItem = Object.assign({}, this.defaultItem)
                 })
               })
-              .catch(err => {
-                console.log(err.message)
-              })
           }
         }
       } else {
-        alert('이미 판매가 완료된 Item 입니다.')
+        alert('이미 완료된 거래입니다.')
       }
     },
     updateComment(changeComment) {
@@ -260,18 +249,14 @@ export default {
         .then(res => {
           this.comments.splice(this.comments.findIndex(x => x.id === changeComment.id), 1, res.data)
         })
-        .catch(err => {
-          console.log(err)
-        })
     },
     deleteComment(commentId) {
-      axios.delete(`${this.$store.state.api_server}/barters/${this.barter.id}/comments/${commentId}`)
-        .then(() => {
-          this.comments.splice(this.comments.findIndex(x => x.id === commentId), 1)
-        })
-        .catch(err => {
-          console.log(err)
-        })
+      if (confirm('정말로 삭제하시겠습니까?')) {
+        axios.delete(`${this.$store.state.api_server}/barters/${this.barter.id}/comments/${commentId}`)
+          .then(() => {
+            this.comments.splice(this.comments.findIndex(x => x.id === commentId), 1)
+          })
+      }
     },
     deleteItem() {
       if (this.$store.state.userInfo.id === this.barter.writer) {
@@ -286,12 +271,9 @@ export default {
               }
               this.$router.push('/barters')
             })
-            .catch(err => {
-              console.log(err.message)
-            })
         }
       } else {
-        alert('Item 등록자만 삭제 가능 합니다.')
+        alert('작성자만 삭제 가능 합니다.')
       }
     },
     updateItem() {
@@ -313,12 +295,9 @@ export default {
             // console.log(res.data)
             this.barter = res.data
           })
-          .catch(err => {
-            console.log(err.message)
-          })
         this.close()
       } else {
-        alert('Item 등록자만 수정 가능 합니다.')
+        alert('작성자만 수정 가능 합니다.')
       }
     }
   },

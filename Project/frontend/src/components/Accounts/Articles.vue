@@ -18,9 +18,9 @@
               <div class="back" @click="dialog = true" v-bind="attrs" v-on="on"></div>
             </template>
 
-            <v-card>
+            <v-card  style="font-family: 'Handon3gyeopsal300g' !important;">
               <v-card-title class="headline d-flex align-center justify-space-between">
-                <div>
+                <div style="font-family: 'Handon3gyeopsal600g' !important;">
                   <v-icon class="mr-1" v-if="psas[article.writer]==null">mdi-account-circle</v-icon>
                   <v-avatar class="mr-1" v-else><img :src="psas[article.writer]"></v-avatar>
                   {{ users[article.writer] }}
@@ -39,7 +39,7 @@
                     <v-list-item
                       @click="goToArticle(article.id)"
                     >
-                      <v-list-item-title>{{ menu }}</v-list-item-title>
+                      <v-list-item-title style="font-family: 'Handon3gyeopsal300g' !important;">{{ menu }}</v-list-item-title>
                     </v-list-item>
                   </v-list>
                 </v-menu>

@@ -11,33 +11,20 @@
       >
         <v-img
           id="img"
-          v-if="tip.img_src!=null"
           class="white--text align-end"
-          aspect-ratio="1.4"
+          width="100%"
+          height="250"
           :src="tip.img_src"
-          contain
         >
         </v-img>
         
         <v-card-title class="text-center font-weight-bold">{{ tip.title }}</v-card-title>
         <v-card-subtitle class="pb-0 text-start">{{ tip.created_at }}</v-card-subtitle>
 
-        <v-card-text class="text--primary" align="left">
-          <!-- <div>subheading</div> -->
-
-          <div class="box">{{ tip.contents }}</div>
-        </v-card-text>
       </v-container>
       <v-card-actions style="width: 100%;">
-        <v-chip href="javascript:false" class="tag">#{{ tag[tip.tag_id] }}</v-chip>
+        <v-chip class="tag">#{{ tag[tip.tag_id] }}</v-chip>
         <v-spacer></v-spacer>
-        <v-btn color="teel" icon>
-          <v-icon> mdi-share-variant </v-icon>
-        </v-btn>
-
-        <v-btn @click="scrapTip(tip.id)" color="teel" icon>
-          <v-icon>mdi-bookmark-outline</v-icon>
-        </v-btn>
 
         <v-btn v-if="!liked" @click="like" icon>
           <v-icon>mdi-heart-outline</v-icon>
@@ -45,6 +32,14 @@
 
         <v-btn v-else @click="like" icon>
           <v-icon color="red darken-1">mdi-heart</v-icon>
+        </v-btn>
+
+        <v-btn v-if="!scraped" @click="scrapTip(tip.id)" icon>
+          <v-icon>mdi-bookmark-outline</v-icon>
+        </v-btn>
+
+        <v-btn v-else color="teal" icon>
+          <v-icon>mdi-bookmark</v-icon>
         </v-btn>
 
       </v-card-actions>
@@ -68,40 +63,28 @@ export default {
       show: false,
       tag: {1:'요리',2:'세탁',3:'청소',4:'보관'},
       liked: false,
-      likeAccounts: []
+      likeAccounts: [],
+      scraped: false,
     } 
   },
   methods: {
     goTipDetail(t) {
-      // console.log(t)
       this.$router.push(`/tips/${t}`) // new -> t
     },
     scrapTip(t) {
       axios.post(`${this.$store.state.api_server}/tips/${t}/scrap`, '', { params: { user_id: this.$store.state.userInfo.id}})
-        .then(res => {
-          console.log(res)
-        })
-        .catch(err => {
-          console.log(err)
-        })
+        .then(() => alert('팁이 저장되었습니다.'))
     },
     like() {
       axios.post(`${this.$store.state.api_server}/tips/${this.tip.id}/like`, '',{ params : { user_id: this.$store.state.userInfo.id }})
         .then(() => {
-          // console.log(res)
           if (this.liked) {
             this.liked = false
-            // console.log(this.tip.likeAccounts)
             this.likeAccounts.splice(this.likeAccounts.indexOf(this.$store.state.userInfo.id),1)
-            // console.log(this.tip.likeAccounts)
           } else {
             this.liked = true
             this.likeAccounts.push(this.$store.state.userInfo.id)
-            // console.log(this.tip.likeAccounts)
           }
-        })
-        .catch(err => {
-          console.log(err.message)
         })
     },
   },
@@ -113,9 +96,7 @@ export default {
           this.liked = true
         }
       })
-      .catch(err => {
-        console.log(err.message)
-      })
+    if (this.tip.scrapAccounts.includes(this.$store.state.userInfo.id)) {this.scraped = true}
   },
   computed: {
     ...mapState([

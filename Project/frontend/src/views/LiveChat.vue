@@ -1,17 +1,17 @@
 <template>
   <v-container fluid mt-5>
-    <div class="text-sm-h3 text-h4 font-weight-bold ml-3">심심한 자라<v-icon x-large class="ml-2">mdi-cellphone-message</v-icon></div>
+    <div class="text-sm-h3 text-h4 font-weight-bold ml-3" style="font-family: 'Handon3gyeopsal600g' !important;">심심한 자라<v-icon x-large class="ml-2">mdi-cellphone-message</v-icon></div>
     <div
       v-for="(item, idx) in chats"
       :key="idx"
       class="mt-5"
     >
       <div :class="{ 'text-right': item.userName==nickname}">
-        <div v-if="item.userName!=nickname"><v-icon>mdi-account-circle</v-icon> {{ item.userName }} :</div>
-        <div class="text-h6 mx-3 font-weight-bold">{{ item.content }}</div>
+        <div v-if="item.userName!=nickname" style="font-family: 'Handon3gyeopsal300g' !important;"><v-icon>mdi-account-circle</v-icon> {{ item.userName }} :</div>
+        <div class="text-h6 mx-3 font-weight-bold" style="font-family: 'Handon3gyeopsal300g' !important;">{{ item.content }}</div>
       </div>
     </div>
-    <v-form class="mt-5 d-flex">
+    <v-form class="mt-5 d-flex" style="font-family: 'Handon3gyeopsal300g' !important;">
       <v-textarea
         v-model="chat"
         label="채팅을 남겨주세요."

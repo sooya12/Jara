@@ -1,5 +1,5 @@
 <template>
-  <v-container grid-list-xs>
+  <v-container grid-list-xs style="font-family: 'Handon3gyeopsal300g' !important;">
     <v-layout column>
         <v-card flat style='padding:0' class='comments'>
           <v-card-title class="pb-1">
@@ -12,8 +12,7 @@
               ref="contents"
               color="green darken-2"
               v-model="change_comment.contents"
-              label="Content"
-              placeholder="수정할 댓글을 입력해 주세요."
+              label="댓글"
               required
               @keyup.enter="updateComment"
             ></v-text-field>

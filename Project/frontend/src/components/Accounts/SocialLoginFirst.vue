@@ -1,6 +1,6 @@
 <template>
-  <v-container fluid>
-    <div class="mt-5 font-weight-bold text-h5"><v-icon x-large>mdi-turtle</v-icon> 자라에 첫 방문이시군요!</div>
+  <v-container fluid style="font-family: 'Handon3gyeopsal300g';">
+    <div class="mt-5 font-weight-bold text-h5" style="font-family: 'Handon3gyeopsal600g' !important;"><v-icon x-large>mdi-turtle</v-icon> 자라에 첫 방문이시군요!</div>
     <v-form
       v-model="isValid"
       ref="form"
@@ -19,6 +19,7 @@
           :value="locationTerms"
           solo
           readonly
+          style="font-family: 'Handon3gyeopsal300g';"
         ></v-textarea>
       </div>
       <div class="font-weight-bold d-flex align-center">주소<v-icon class="ml-2">mdi-map-search</v-icon></div>

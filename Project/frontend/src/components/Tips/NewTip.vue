@@ -1,5 +1,5 @@
 <template>
-    <v-container>
+    <v-container style="font-family: 'Handon3gyeopsal300g' !important;">
     <v-row justify="center">
       <v-col cols="12" sm="10" md="8" lg="6">
         <v-card ref="form">

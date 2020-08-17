@@ -1,16 +1,16 @@
 <template>
-  <v-container fluid style="potition: relative">
+  <v-container fluid style="potition: relative; font-family: 'Handon3gyeopsal300g' !important;">
     <div class="mt-5">
-      <div class="mx-3 font-weight-bold text-sm-h3 text-h4">
+      <div class="mx-3 font-weight-bold text-sm-h3 text-h4" style="font-family: 'Handon3gyeopsal600g' !important;">
         유익한 자라
-        <v-icon x-large class="ml-2">mdi-lightbulb-outline</v-icon>
+        <v-icon x-large>mdi-lightbulb-outline</v-icon>
       </div>
       <div>
         <v-flex class="sm6 offset-sm3 justify-center mt-5">
           <v-text-field
             label="검색어를 입력해주세요."
             v-model="search"
-            class="col-12"
+            class="col-12 px-3"
             outlined
             append-icon="mdi-magnify"
             color="green darken-2"
@@ -18,7 +18,7 @@
           </v-text-field>
         </v-flex>
       </div>
-      <div v-if="!search" class="mx-3 font-weight-bold text-sm-h4 text-h5">인기 팁</div>
+      <div v-if="!search" class="mx-3 font-weight-bold text-sm-h4 text-h5">인기 팁<v-icon color="yellow">mdi-sparkles</v-icon></div>
       <v-container v-if="!search" d-flex justify="center" align="center" class="pt-0">
         <v-slide-group
           class="pa-0"
@@ -26,7 +26,7 @@
           :show-arrows="false"
         >
           <v-slide-item
-            v-for="(top,i) in top5"
+            v-for="(top, i) in top5"
             :key="i"
           >
             <v-card
@@ -41,7 +41,7 @@
                 class="white--text align-end"
                 :src="top.img_src"
                 height="120"
-                widht="100%"
+                width="100%"
               >
               </v-img>
               <v-card-title class="py-1"><p class="text-truncate box mb-0">{{ top.title }}</p></v-card-title>
@@ -51,7 +51,7 @@
                   <v-btn icon><v-icon>mdi-heart-outline</v-icon></v-btn>{{ top.likes }}
                 </div>
                 <div>
-                  <v-btn icon><v-icon>mdi-comment-processing</v-icon></v-btn>{{ top.commentCount }}
+                  <v-btn icon><v-icon>mdi-bookmark</v-icon></v-btn>{{ top.scraps }}
                 </div>
               </div>
             </v-card>
@@ -105,16 +105,11 @@ export default {
   created() {
     axios.get(`${this.$store.state.api_server}/tips/`)
       .then(res => {
-        // console.log(res.data)
         this.tips = _.orderBy(res.data, 'id', 'desc')
-      })
-      .catch(err => {
-        console.log(err)
       })
     axios.get(`${this.$store.state.api_server}/tips/top5`)
       .then(res => {
         this.top5 = res.data
-        console.log(this.top5)
       })
   },
   methods: {

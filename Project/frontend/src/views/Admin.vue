@@ -1,6 +1,6 @@
 <template>
-  <v-container fluid class="mt-5">
-    <div class="mb-5 ml-3 font-weight-bold text-h4">신고 내역<v-icon large class="ml-1">mdi-alarm-light-outline</v-icon></div>
+  <v-container fluid class="mt-5" style="font-family: 'Handon3gyeopsal300g';">
+    <div class="mb-5 ml-3 font-weight-bold text-h4" style="font-family: 'Handon3gyeopsal600g' !important;">신고 내역<v-icon large class="ml-1">mdi-alarm-light-outline</v-icon></div>
     <v-data-table
       :headers="headers"
       :items="reports"

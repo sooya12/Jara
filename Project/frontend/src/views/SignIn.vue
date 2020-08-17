@@ -3,10 +3,10 @@
     <v-alert v-if="isError" type="error">
       이메일 또는 비밀번호를 확인해주세요.
     </v-alert>
-    <div class="mt-5 font-weight-bold text-center text-sm-h1 text-h2 green--text text--darken-2">
+    <div class="mt-5 font-weight-bold text-center text-sm-h1 text-h2 green--text text--darken-2" style="font-family: 'GmarketSansBold' !important;">
       JARA
     </div>
-    <v-container mt-3 fluid>
+    <v-container mt-3 fluid style="font-family: 'Handon3gyeopsal300g';">
       <v-form 
         ref="form"
         v-model="isValid"
@@ -43,7 +43,7 @@
         >로그인</v-btn>
       </v-form>
     </v-container>
-    <v-container fluid>
+    <v-container fluid style="font-family: 'Handon3gyeopsal300g';">
       <div class="my-5 d-flex">
         <div class="text grey--text">소셜 로그인</div>
         <v-divider class="align-self-center ml-2"></v-divider>

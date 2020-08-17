@@ -2,19 +2,19 @@
   <v-container grid-list-xs>
     <v-layout column>
         <v-card flat style='padding:0' class='comments'>
-          <v-card-title class="grey--text pb-1">
-            {{ users[comment.writer] }} · <span v-if="!comment.updated_at">{{comment.created_at | filterCreated}}</span>
-            <span v-else>{{comment.updated_at | filterCreated}} <p style="font-size: x-small; display: inline-block; margin: 0;">(수정됨)</p></span>
+          <v-card-title class="pb-1">
+            {{ users[comment.writer] }} · <span v-if="!comment.updated_at" class="grey--text">{{comment.created_at | filterCreated}}</span>
+            <span v-else class="grey--text">{{comment.updated_at | filterCreated}} <p style="font-size: x-small; display: inline-block; margin: 0;" class="grey--text">(수정됨)</p></span>
           </v-card-title>
           <v-card-text v-if="!isChange" class='pt-0 pb-0'> {{ comment.contents }} </v-card-text>
           <v-card-text v-if="isChange" class='pt-0 pb-0'>
             <v-text-field
               ref="contents"
               v-model="change_comment.contents"
-              label="Content"
               placeholder="수정할 댓글을 입력해 주세요."
               required
               @keyup.enter="updateComment"
+              color="green darken-2"
             ></v-text-field>
           </v-card-text>
           <v-card-actions class='pr-3'>

@@ -1,88 +1,21 @@
 <template>
-  <v-container fluid>
+  <v-container fluid style="font-family: 'Handon3gyeopsal300g';">
     <div class="mt-5">
-      <div class="mx-3 font-weight-bold text-sm-h3 text-h4">
+      <div class="mx-3 font-weight-bold text-sm-h3 text-h4" style="font-family: 'Handon3gyeopsal600g' !important;">
         알뜰한 자라
-        <v-icon x-large class="ml-2">mdi-shopping-outline</v-icon>
+        <v-icon x-large>mdi-shopping-outline</v-icon>
       </div>
       <div>
-        <v-flex class="sm6 offset-sm3 justify-center">
+        <v-flex class="sm6 offset-sm3 justify-center mt-5">
           <v-text-field
-            label="필요한 물품 검색..."
+            label="검색어를 입력해주세요."
+            outlined
+            append-icon="mdi-magnify"
             v-model="search"
-            class="col-12"
+            class="col-12 px-3"
             color="green darken-2"
           >
           </v-text-field>
-        </v-flex>
-      </div>
-      <div class="mx-3">
-        <v-flex class="sm8 offset-sm3">
-          <v-toolbar flat color="white">
-            <v-dialog v-model="dialog" max-width="500px">
-              <template v-slot:activator="{ on, attrs}">
-                <v-spacer></v-spacer>
-                <v-btn
-                  color="green"
-                  dark
-                  class="my-1"
-                  v-bind="attrs"
-                  v-on="on"
-                >
-                  새 글 쓰기
-                </v-btn>
-              </template>
-              <v-card>
-                <v-card-title>
-                  <span class="headline">새 글 쓰기</span>
-                </v-card-title>
-
-                <v-card-text>
-                  <v-container>
-                    <v-row>
-                      <v-col cols="12" sm="6" md="4">
-                        <v-text-field color="green darken-2" v-model="editedItem.title" label="제목" required :rules="[() => !!editedItem.title || '필수 입력입니다']"></v-text-field>
-                      </v-col>
-                      <v-col cols="12" sm="6" md="4">
-                        <v-img color="green darken-2" v-if="file != null" :src="imageURL"></v-img>
-                      </v-col>
-                      <v-col cols="12" sm="6" md="4">
-                        <v-file-input
-                          @change="image"
-                          v-model="file"
-                          placeholder="사진을 첨부해 주세요."
-                          color="green darken-2"
-                        >
-                        </v-file-input>
-                      </v-col>
-                      <v-col cols="12" sm="6" md="4">
-                        <v-text-field color="green darken-2" v-model="editedItem.contents" label="내용" required :rules="[() => !!editedItem.contents || '필수 입력입니다']"></v-text-field>
-                      </v-col>
-                      <v-col cols="12" sm="6" md="4">
-                        <v-text-field color="green darken-2" v-model="editedItem.price" label="가격"></v-text-field>
-                      </v-col>
-                      <v-col cols="12" sm="6" md="4">
-                        <v-autocomplete
-                          label="분류 "
-                          v-model="tag"
-                          :items="tags"
-                          color="green darken-2"
-                          required
-                          :rules="[() => !!tag || '필수 입력입니다']"
-                        ></v-autocomplete>
-                      </v-col>
-                    </v-row>
-                  </v-container>
-                </v-card-text>
-
-                <v-card-actions>
-                  <v-spacer></v-spacer>
-                  <v-btn text @click="close">취소</v-btn>
-                  <v-btn color="green darken-2" text @click="save">저장</v-btn>
-                </v-card-actions>
-              </v-card>
-            </v-dialog>
-          </v-toolbar>
         </v-flex>
       </div>
       <!-- <div align="center" justify="center">
@@ -118,12 +51,79 @@
               </template>
             </v-data-table>
             <div class="text-center pt-2">
-              <v-pagination v-model="page" :length="pageCount"></v-pagination>
+              <v-pagination v-model="page" :length="pageCount" color="green darken-2"></v-pagination>
             </div>
           </v-flex>
         </v-layout>
       </v-container>
     </div>
+    <v-dialog v-model="dialog" max-width="500px">
+      <template v-slot:activator="{ on, attrs}">
+        <v-spacer></v-spacer>
+        <v-btn
+          fab
+          small
+          bottom
+          right
+          fixed
+          class="my-1"
+          v-bind="attrs"
+          v-on="on"
+          color="green ligten-1"
+        >
+          <v-icon color="white">mdi-pencil</v-icon>
+        </v-btn>
+      </template>
+      <v-card>
+        <v-card-title>
+          <span class="headline" style="font-family: 'Handon3gyeopsal600g' !important;">새 글 쓰기</span>
+        </v-card-title>
+
+        <v-card-text>
+          <v-container style="font-family: 'Handon3gyeopsal300g' !important;"> 
+            <v-row>
+              <v-col cols="12" sm="6" md="4">
+                <v-text-field color="green darken-2" v-model="editedItem.title" label="제목" required :rules="[() => !!editedItem.title || '필수 입력입니다']"></v-text-field>
+              </v-col>
+              <v-col cols="12" sm="6" md="4">
+                <v-img color="green darken-2" v-if="file != null" :src="imageURL"></v-img>
+              </v-col>
+              <v-col cols="12" sm="6" md="4">
+                <v-file-input
+                  @change="image"
+                  v-model="file"
+                  placeholder="사진을 첨부해 주세요."
+                  color="green darken-2"
+                >
+                </v-file-input>
+              </v-col>
+              <v-col cols="12" sm="6" md="4">
+                <v-text-field color="green darken-2" v-model="editedItem.contents" label="내용" required :rules="[() => !!editedItem.contents || '필수 입력입니다']"></v-text-field>
+              </v-col>
+              <v-col cols="12" sm="6" md="4">
+                <v-text-field color="green darken-2" v-model="editedItem.price" label="가격"></v-text-field>
+              </v-col>
+              <v-col cols="12" sm="6" md="4">
+                <v-autocomplete
+                  label="분류 "
+                  v-model="tag"
+                  :items="items"
+                  color="green darken-2"
+                  required
+                  :rules="[() => !!tag || '필수 입력입니다']"
+                ></v-autocomplete>
+              </v-col>
+            </v-row>
+          </v-container>
+        </v-card-text>
+
+        <v-card-actions>
+          <v-spacer></v-spacer>
+          <v-btn text @click="close">취소</v-btn>
+          <v-btn color="green darken-2" text @click="save">저장</v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
   </v-container>
 </template>
 
@@ -147,6 +147,7 @@ export default {
         { text: '제목', value: 'title', sortable: false },
         { text: '가격', value: 'price', sortable: true },
         { text: '조회 수', value: 'hits', sortable: true },
+        { text: '분류', value: 'tag', sortable: true },
         { text: '상태', value: 'status', sortable: true },
       ],
       loading: false,
@@ -173,7 +174,7 @@ export default {
         price: 0,
       },
       tag: '',
-      tags: ['구해요','사요','팔아요','나눠요']
+      items: ['구해요','사요','팔아요','나눠요'],
     }
   },
   computed: {
@@ -193,10 +194,18 @@ export default {
       .then(res => {
         // console.log(res.data)
         this.barters = res.data
+        this.barters.forEach(function(item) {
+          const tags = {
+            5 : '구해요',
+            6 : '사요',
+            7 : '팔아요',
+            8 : '나눠요'
+          }
+          item['tag'] = tags[item.tag_id]
+        })
         this.loading = false
       })
-      .catch(err => {
-        console.log(err)
+      .catch(() => {
         this.loading = false
       })
   },
