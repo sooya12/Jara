@@ -28,9 +28,13 @@ public class Tip {
 	
 	private String img_src;				// 파이어베이스 이미지 파일 경로 
 	
+	private List<Integer> scraps;		// 스크랩 사용자 목록
+	
 	public Tip() {} 
 	
-	public Tip(int id, int writer, String title, String contents, int tag_id, Date created_at, Date updated_at, int hits, int likes, String stored_file_name, String img_src) {
+	public Tip(int id, int writer, String title, String contents, int tag_id, Date created_at, Date updated_at,
+			int hits, int likes, List<TipComment> comments, List<Integer> likeAccounts, String stored_file_name,
+			String img_src, List<Integer> scraps) {
 		super();
 		this.id = id;
 		this.writer = writer;
@@ -41,8 +45,11 @@ public class Tip {
 		this.updated_at = updated_at;
 		this.hits = hits;
 		this.likes = likes;
+		this.comments = comments;
+		this.likeAccounts = likeAccounts;
 		this.stored_file_name = stored_file_name;
 		this.img_src = img_src;
+		this.scraps = scraps;
 	}
 
 	public int getId() {
@@ -149,12 +156,20 @@ public class Tip {
 		this.img_src = img_src;
 	}
 
+	public List<Integer> getScraps() {
+		return scraps;
+	}
+
+	public void setScraps(List<Integer> scraps) {
+		this.scraps = scraps;
+	}
+
 	@Override
 	public String toString() {
 		return "Tip [id=" + id + ", writer=" + writer + ", title=" + title + ", contents=" + contents + ", tag_id="
 				+ tag_id + ", created_at=" + created_at + ", updated_at=" + updated_at + ", hits=" + hits + ", likes="
 				+ likes + ", comments=" + comments + ", likeAccounts=" + likeAccounts + ", stored_file_name="
-				+ stored_file_name + ", img_src=" + img_src + "]";
+				+ stored_file_name + ", img_src=" + img_src + ", scraps=" + scraps + "]";
 	}
 
 }

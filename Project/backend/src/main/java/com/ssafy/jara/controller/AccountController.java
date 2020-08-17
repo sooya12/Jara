@@ -259,7 +259,7 @@ public class AccountController extends HttpServlet {
 
 		}
 
-		account.setScrapTipList(tipService.selectListTipScrap(id));
+		account.setScrapTipList(tipService.selectListTipUserScrap(id));
 
 		for (int i = 0; i < account.getScrapTipList().size(); i++) {
 			Tip tip = account.getScrapTipList().get(i);
