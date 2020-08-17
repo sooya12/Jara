@@ -93,8 +93,8 @@ public class TipServiceImpl implements TipService {
 	}
 
 	@Override
-	public List<Tip> selectListTipScrap(int user_id) {
-		return tipDao.selectListTipScrap(user_id);
+	public List<Tip> selectListTipUserScrap(int user_id) {
+		return tipDao.selectListTipUserScrap(user_id);
 	}
 
 	@Override
@@ -105,6 +105,11 @@ public class TipServiceImpl implements TipService {
 	@Override
 	public int updateTipImg(HashMap<String, Object> hashMap) {
 		return tipDao.updateTipImg(hashMap);
+	}
+	
+	@Override
+	public List<Integer> selectListTipScrap(int tip_id) {
+		return tipDao.selectListTipScrap(tip_id);
 	}
 
 }

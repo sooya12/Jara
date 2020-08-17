@@ -84,7 +84,13 @@ public class TipController {
 	@ApiOperation(value = "전체 팁 조회", response = List.class)
 	@GetMapping("")
 	private ResponseEntity<List<Tip>> selectListTip() {
-		return new ResponseEntity<List<Tip>>(tipService.selectListTip(), HttpStatus.OK);
+		List<Tip> tipList = tipService.selectListTip();
+		
+		for (int i = 0; i < tipList.size(); i++) {
+			Tip tip = tipList.get(i);
+			tip.setComments(tipCommentService.selectTipComments(tip.getId()));
+		}
+		return new ResponseEntity<List<Tip>>(tipList, HttpStatus.OK);
 	}
 	
 	@ApiOperation(value = "요리 태그 팁 조회", response = List.class)
@@ -218,7 +224,15 @@ public class TipController {
 	@ApiOperation(value = "팁 Top 5  조회", response = List.class)
 	@GetMapping("/top5")
 	private ResponseEntity<List<Tip>> selectListTipTop5() {
-		return new ResponseEntity<List<Tip>>(tipService.selectListTipTop5(), HttpStatus.OK);
+		List<Tip> tipList = tipService.selectListTipTop5();
+		
+		for (int i = 0; i < tipList.size(); i++) {
+			Tip tip = tipList.get(i);
+			tip.setComments(tipCommentService.selectTipComments(tip.getId())); // 댓글 목록
+			tip.setScraps(tipService.selectListTipScrap(tip.getId())); // 스크랩 사용자 목록
+		}
+		
+		return new ResponseEntity<List<Tip>>(tipList, HttpStatus.OK);
 	}
 	
 }

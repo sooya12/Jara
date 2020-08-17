@@ -159,9 +159,10 @@ public class BarterController {
 	
 	@ApiOperation(value = "물물교환 게시글 이미지 경로 저장", response = String.class)
 	@PutMapping("/{id}/img")
-	private ResponseEntity<String> updateBarterImg(@PathVariable int id, @RequestBody String img_src) {
+	private ResponseEntity<String> updateBarterImg(@PathVariable int id, @RequestParam String img_src) {
 		Barter originalBarter = barterService.selectBarter(id);
 		HashMap<String, Object> hashMap = new HashMap<String, Object>();
+		hashMap.put("id", id);
 		hashMap.put("img_src", img_src);
 		hashMap.put("original_updated_at", originalBarter.getUpdated_at());
 		
