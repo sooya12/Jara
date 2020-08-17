@@ -224,7 +224,14 @@ public class TipController {
 	@ApiOperation(value = "팁 Top 5  조회", response = List.class)
 	@GetMapping("/top5")
 	private ResponseEntity<List<Tip>> selectListTipTop5() {
-		return new ResponseEntity<List<Tip>>(tipService.selectListTipTop5(), HttpStatus.OK);
+		List<Tip> tipList = tipService.selectListTipTop5();
+		
+		for (int i = 0; i < tipList.size(); i++) {
+			Tip tip = tipList.get(i);
+			tip.setScrapAccounts(tipService.selectListTipScrap(tip.getId()));
+			tip.setLikeAccounts(tipService.selectTipLikeAccounts(tip.getId()));
+		}
+		return new ResponseEntity<List<Tip>>(tipList, HttpStatus.OK);
 	}
 	
 }
