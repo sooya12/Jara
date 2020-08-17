@@ -73,7 +73,10 @@ export default {
     },
     scrapTip(t) {
       axios.post(`${this.$store.state.api_server}/tips/${t}/scrap`, '', { params: { user_id: this.$store.state.userInfo.id}})
-        .then(() => alert('팁이 저장되었습니다.'))
+        .then(() => {
+          alert('팁이 저장되었습니다.')
+          this.tip.scrapAccounts.push(this.$store.state.userInfo.id)
+        })
     },
     like() {
       axios.post(`${this.$store.state.api_server}/tips/${this.tip.id}/like`, '',{ params : { user_id: this.$store.state.userInfo.id }})

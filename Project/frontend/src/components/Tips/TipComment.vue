@@ -4,9 +4,9 @@
         <v-card flat style='padding:0' class='comments'>
           <v-card-title class="pb-1">
             {{ users[comment.writer] }} · <span class="grey--text" v-if="!comment.updated_at">{{comment.created_at | filterCreated}}</span>
-            <span v-else>{{comment.updated_at | filterCreated}} <p style="font-size: x-small; display: inline-block; margin: 0;">(수정됨)</p></span>
+            <span v-else class="grey--text">{{comment.updated_at | filterCreated}} <p style="font-size: x-small; display: inline-block; margin: 0;" class="grey--text">(수정됨)</p></span>
           </v-card-title>
-          <v-card-text v-if="!isChange" class='pt-0 pb-0'> {{ comment.contents }} </v-card-text>
+          <v-card-text v-if="!isChange" class='pt-0 pb-0 black--text'> {{ comment.contents }} </v-card-text>
           <v-card-text v-if="isChange" class='pt-0 pb-0'>
             <v-text-field
               ref="contents"

@@ -14,8 +14,8 @@ Vue.use(firebase)
 
 export default new Vuex.Store({
   state: {
-    api_server: 'http://localhost:8081/jara',      // Local
-    // api_server: 'https://i3a308.p.ssafy.io/jara',  // Server
+    // api_server: 'http://localhost:8081/jara',      // Local
+    api_server: 'https://i3a308.p.ssafy.io/jara',  // Server
     authToken: VueCookies.get('auth-token'),
     entrance: true,
     drawer: false,
@@ -181,9 +181,9 @@ export default new Vuex.Store({
           }
         }
         Axios.get(`${state.api_server}/reports/admin`, requestHeaders)
-          .then(() => router.push('/admin'))
-          .catch(() => {
-            commit('SET_DIALOG', true)
+          .then(res => {
+            if (res.isAdmin) {router.push('/admin')}
+            else {commit('SET_DIALOG', true)}
           })
       } else {
         alert('로그인한 회원님만 사용할 수 있어요!')

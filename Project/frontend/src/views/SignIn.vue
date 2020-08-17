@@ -4,8 +4,9 @@
       이메일 또는 비밀번호를 확인해주세요.
     </v-alert>
     <div class="mt-5 font-weight-bold text-center text-sm-h1 text-h2 green--text text--darken-2" style="font-family: 'GmarketSansBold' !important;">
-      JARA
+      J A R A
     </div>
+    <div class="text-center" style="font-family: 'Handon3gyeopsal300g';">#사회적 거리두기</div>
     <v-container mt-3 fluid style="font-family: 'Handon3gyeopsal300g';">
       <v-form 
         ref="form"
@@ -49,7 +50,7 @@
         <v-divider class="align-self-center ml-2"></v-divider>
       </div>
       <div class="text-right">
-        <v-btn icon :href="naverLoginURL" style="background-color: #1EC800;"><v-icon x-large color="white">mdi-alpha-n</v-icon></v-btn>
+        <v-btn icon :href="naverLoginURL" style="background-color: #1EC800;" class="mr-3"><v-icon x-large color="white">mdi-alpha-n</v-icon></v-btn>
         <v-btn icon :href="kakaoLoginURL" style="background-color: #FDD835;"><v-icon color="brown darken-1">mdi-chat</v-icon></v-btn>  
       </div>
       <v-divider class="my-5"></v-divider>

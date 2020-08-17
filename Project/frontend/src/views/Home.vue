@@ -10,7 +10,7 @@
     </div>
     <v-divider class="mt-5 mb-5"></v-divider>
     <div>
-      <v-card v-for="item in articles" :key="item.id" class="my-5">
+      <v-card v-for="item in articles" :key="item.id" class="my-5" @click="goToDetail(item.id)">
         <v-card-title>
           <v-btn
             v-if="psas[item.writer]==null"
