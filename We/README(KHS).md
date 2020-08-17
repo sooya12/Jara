@@ -342,9 +342,5 @@
 
 :speech_balloon: 실시간 채팅 페이지 작성
 
-
-
-
-
-
+:yellow_heart: Kakao 소셜 로그인 구현
 

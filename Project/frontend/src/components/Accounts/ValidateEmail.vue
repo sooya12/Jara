@@ -60,7 +60,7 @@ export default {
     },
     sendEmail() {
       this.loader = 'loading'
-      axios.post(`${this.$store.state.api_server}/accounts/changepw`, '', { params: { email: this.authData.email }})
+      axios.post(`${this.$store.state.api_server}/accounts/changepwd`, '', { params: { email: this.authData.email }})
         .then(() => alert('입력하신 이메일로 비밀번호 변경 인증 메일을 발송했습니다. 메일함을 확인해주세요.'))
         .catch(() => this.isError = !this.isError)
     }
