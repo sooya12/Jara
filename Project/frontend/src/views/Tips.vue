@@ -19,7 +19,7 @@
         </v-flex>
       </div>
       <div v-if="!search" class="mx-3 font-weight-bold text-sm-h4 text-h5">인기 팁</div>
-      <v-container d-flex justify="center" align="center" class="pt-0">
+      <v-container v-if="!search" d-flex justify="center" align="center" class="pt-0">
         <v-slide-group
           class="pa-0"
           active-class="success"
@@ -50,11 +50,8 @@
                 <div>
                   <v-btn icon><v-icon>mdi-heart-outline</v-icon></v-btn>{{ top.likes }}
                 </div>
-                <div v-if="!top.comments">
-                  <v-btn icon><v-icon>mdi-comment-processing</v-icon></v-btn>0
-                </div>
-                <div v-else>
-                  <v-btn icon><v-icon>mdi-comment-processing</v-icon></v-btn>{{ top.comments.length }}
+                <div>
+                  <v-btn icon><v-icon>mdi-comment-processing</v-icon></v-btn>{{ top.commentCount }}
                 </div>
               </div>
             </v-card>
@@ -101,6 +98,7 @@ export default {
       search: '',
       tipPerPage: 5,
       curPageNum: 1,
+      serPageNum: 1,
       top5: [],
     }
   },
@@ -116,6 +114,7 @@ export default {
     axios.get(`${this.$store.state.api_server}/tips/top5`)
       .then(res => {
         this.top5 = res.data
+        console.log(this.top5)
       })
   },
   methods: {

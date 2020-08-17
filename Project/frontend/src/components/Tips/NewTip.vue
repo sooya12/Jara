@@ -7,10 +7,11 @@
             <v-text-field
               ref="title"
               v-model="tip.title"
-              :rules="[() => !!tip.title || 'This field is required']"
+              :rules="[() => !!tip.title || '필수 입력입니다']"
               label="제목"
               placeholder="제목을 입력해 주세요."
               required
+              color="green darken-2"
             ></v-text-field>
             <v-img v-if="file != null" :src="imageURL"></v-img>
             <v-file-input
@@ -23,26 +24,28 @@
             <v-text-field
               ref="contents"
               v-model="tip.contents"
-              :rules="[() => !!tip.contents || 'This field is required']"
+              :rules="[() => !!tip.contents || '필수 입력입니다']"
               label="내용"
               placeholder="내용을 입력해 주세요."
               required
+              color="green darken-2"
             ></v-text-field>
             <v-autocomplete
               ref="tag"
               v-model="tag"
-              :rules="[() => !!tag || 'This field is required']"
+              :rules="[() => !!tag || '필수 입력입니다']"
               :items="tags"
               label="분류"
-              placeholder="Select..."
+              placeholder="분류..."
               required
+              color="green darken-2"
             ></v-autocomplete>
           </v-card-text>
           <v-divider class="mt-12"></v-divider>
           <v-card-actions>
-            <v-btn text>Cancel</v-btn>
+            <v-btn @click="close" text>취소</v-btn>
             <v-spacer></v-spacer>
-            <v-btn color="primary" text @click="createTip">Submit</v-btn>
+            <v-btn color="green darken-2" text @click="createTip">제출</v-btn>
           </v-card-actions>
         </v-card>
       </v-col>
@@ -94,6 +97,9 @@ export default {
   methods: {
     image() {
       this.imageURL = URL.createObjectURL(this.file)
+    },
+    close() {
+      this.$router.push('/tips')
     },
     createTip() {
       const tag_id_dict = {'요리': 1, '세탁': 2, '청소': 3, '보관': 4}

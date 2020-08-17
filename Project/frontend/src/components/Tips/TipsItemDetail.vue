@@ -83,6 +83,7 @@
                   placeholder="댓글을 입력해 주세요."
                   required
                   @keyup.enter="newComment"
+                  color="green darken-2"
                 >
                 </v-text-field>
               </v-card-text>
@@ -115,6 +116,7 @@
 import axios from 'axios'
 import { mapState } from 'vuex'
 import TipComment from '../Tips/TipComment.vue'
+import firebase from 'firebase'
 
 export default {
   name: 'TipsItemDetail',
@@ -144,6 +146,7 @@ export default {
           axios.delete(`${this.$store.state.api_server}/tips/${this.tip.id}`)
             .then(() => {
               // console.log(res.data)
+              firebase.storage().ref().child(`tips/${this.tip.id}`).delete()
               this.$router.push('/tips')
             })
             .catch(err => {
