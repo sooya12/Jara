@@ -1,9 +1,9 @@
 package com.ssafy.jara.common.chating;
 
 public class Socket {
-	private String userName;
-	private String content;
-
+	private String userName;	// 사용자
+	private String content;		// 채팅 내용
+	
 	public Socket() {}
 
 	public Socket(String userName, String content) {
@@ -27,7 +27,7 @@ public class Socket {
 	public void setContent(String content) {
 		this.content = content;
 	}
-
+	
 	@Override
 	public String toString() {
 		return "Socket [userName=" + userName + ", content=" + content + "]";
