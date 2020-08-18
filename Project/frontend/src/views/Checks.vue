@@ -43,6 +43,7 @@
           v-model="item.checked"
           color="green darken-2"
           :label="item.item"
+          :class="{ 'done' : item.checked }"
         ></v-checkbox>
       </div>
     </div>
@@ -362,4 +363,7 @@ export default {
 </script>
 
 <style scoped>
+  .done {
+    text-decoration: line-through;
+  }
 </style>
