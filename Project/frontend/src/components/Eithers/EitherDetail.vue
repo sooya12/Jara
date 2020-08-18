@@ -305,7 +305,7 @@ export default {
       this.$router.push(`/accounts/${this.either.writer}`)
     },
     addComment() {
-      if (this.commentData.contents.trim().length <= 0 || this.commentData.choice == null) {
+      if (this.commentData.contents.trim().length <= 0) {
         alert('유효한 입력이 아닙니다.')
         this.commentData.contents = ''
         this.commentData.choice = null
