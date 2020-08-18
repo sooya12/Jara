@@ -69,6 +69,7 @@
           v-model="curPageNum"
           :length="numOfPages"
           color="green darken-2"
+          :total-visible="7"
           light
         >
         </v-pagination>
