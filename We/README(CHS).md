@@ -2061,3 +2061,112 @@ h6#other {
 
 -----
 
+
+
+### :feet: 20.08.15 ~ 20.08.16
+
+##### 네이버 소셜 로그인
+
+> 백과 프론트 연동 성공
+>
+> 네아로 검수 요청
+>
+> AWS 서버에 올려서 연동 성공
+
+##### 실시간 채팅
+
+> 백과 프론트 소켓 통신 성공
+>
+> AWS 서버에 올려서 통신 성공
+>
+> Swagger와 충돌나던 SocketConfig 문제 해결
+
+```b
+package com.ssafy.jara.config;
+
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.messaging.simp.config.MessageBrokerRegistry;
+import org.springframework.web.socket.config.annotation.EnableWebSocketMessageBroker;
+import org.springframework.web.socket.config.annotation.StompEndpointRegistry;
+import org.springframework.web.socket.config.annotation.WebSocketMessageBrokerConfigurer;
+
+import springfox.documentation.builders.ApiInfoBuilder;
+import springfox.documentation.builders.PathSelectors;
+import springfox.documentation.builders.RequestHandlerSelectors;
+import springfox.documentation.service.ApiInfo;
+import springfox.documentation.spi.DocumentationType;
+import springfox.documentation.spring.web.plugins.Docket;
+import springfox.documentation.swagger2.annotations.EnableSwagger2;
+
+@Configuration
+@EnableSwagger2
+@EnableWebSocketMessageBroker
+public class SwaggerSocketConfig implements WebSocketMessageBrokerConfigurer {
+
+	@Bean
+	public Docket postsApi() {
+		return new Docket(DocumentationType.SWAGGER_2)
+				.groupName("SSAFY_JARA")
+				.apiInfo(apiInfo())
+				.select()
+				.apis(RequestHandlerSelectors.basePackage("com.ssafy.jara.controller"))
+				.paths(PathSelectors.ant("/**"))
+				.build();
+	}
+
+	private ApiInfo apiInfo() {
+		return new ApiInfoBuilder().title("SSAFY_JARA API")
+				.description("SSAFY_JARA API Reference for Developers")
+				.termsOfServiceUrl("https://edu.ssafy.com")
+				.license("SSAFY_JARA License")
+				.licenseUrl("ssafy_jara@ssafy.com").version("1.0").build();
+	}
+	
+	// Vue.js로 구현한 채팅
+	// 클라이언트가 메시지를 구독할 endpoint 정의
+	@Override
+	public void configureMessageBroker(MessageBrokerRegistry registry) {
+		registry.enableSimpleBroker("/send");
+	}
+
+	// Connection을 맺을 때, CORS 허용
+	@Override
+	public void registerStompEndpoints(StompEndpointRegistry registry) {
+		registry.addEndpoint("/jara").setAllowedOrigins("*").withSockJS();
+	}
+}
+```
+
+
+
+##### Tips 전체 조회 시, 댓글 목록도 함께 조회
+
+-----
+
+
+
+### :feet: 20.08.17
+
+##### Tips Top5 조회 시 댓글 목록, 스크랩 사용자 목록, 댓글수, 스크랩수 함께 조회
+
+-----
+
+
+
+### :feet: 20.08.18
+
+##### 실시간 채팅에 참여한 사용자수, 입장 및 퇴장 메시지를 설정하려고 했으나 소켓을 제대로 이해하지 못한 상태로 기능 구현을 하여서 구현하지 못함
+
+##### 빌드된 서버에서 기능 테스트 및 데이터 추가(돌아다니면서 댓글 달거나, 좋아요, 스크랩)
+
+
+
+### :sweat_smile: 어려웠던 점
+
+##### 소켓을 모르겠다. 구글링을 통해 블로그마다 어떻게 구현하였는지 정보를 수집하였으나, 비슷한듯 다르고 사용 기술 스펙이 달라서 JS를 완벽 숙지하지 못한 나에게는 어려웠다
+
+##### JS 공부해야겠다.
+
+-----
+
