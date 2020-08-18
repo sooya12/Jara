@@ -1,4 +1,18 @@
-# Sub PJT 3 [2020.08.03 ~ 2020.08.21]  
+# Sub PJT 3 [2020.08.03 ~ 2020.08.21] 
+
+## :woman_technologist: :man_technologist: 화장실 앞 정수기 테이블
+
+#### 팀장 : 김혜선 (front-end) ​​
+
+#### 팀원 : 김영수 (front-end) 
+
+#### 		   박진 (back-end, CTO)
+
+#### 		   이채영 (back-end)
+
+#### 		   최현수 (back-end) 
+
+
 
 # :turtle: JARA
 
@@ -161,7 +175,7 @@ $ mvn spring-boot : run
 
 
 
-## Branch
+## :link:Branch
 
 hotfix : 간단한 오탈자 수정의 경우에 생성하여 머지 후 삭제
 
