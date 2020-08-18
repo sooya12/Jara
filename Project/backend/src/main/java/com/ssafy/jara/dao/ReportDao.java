@@ -15,4 +15,6 @@ public interface ReportDao {
 	public int findAccusedId(String nickname);
 	
 	public List<Report> selectListReport();
+	
+	public String findNickname(int reporter_id);
 }
