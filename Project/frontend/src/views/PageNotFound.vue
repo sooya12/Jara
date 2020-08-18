@@ -6,7 +6,7 @@
     <div class="mt-3 font-weight-bold text-h6 text-center" style="font-family: 'Handon3gyeopsal300g' !important;">자라가 페이지를 찾을 수 없습니다.</div>
     <div class="mt-10 text-center" style="font-family: 'Handon3gyeopsal300g' !important;">입력하신 URL을 다시 확인해 주시기 바랍니다.</div>
     <div class="mt-10 text-center">
-      <v-btn @click="goBack" color="green darken-1" class="white--text" style="font-family: 'Handon3gyeopsal300g' !important;"><v-icon>mdi-arrow-left</v-icon>이전 화면으로 돌아가기</v-btn>
+      <v-btn @click="goBack" color="green darken-1" class="white--text" style="font-family: 'Handon3gyeopsal300g' !important;"><v-icon>mdi-arrow-left</v-icon>홈으로 돌아가기</v-btn>
     </div>
   </v-container>
 </template>

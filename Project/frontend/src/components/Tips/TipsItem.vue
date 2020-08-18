@@ -75,6 +75,7 @@ export default {
       axios.post(`${this.$store.state.api_server}/tips/${t}/scrap`, '', { params: { user_id: this.$store.state.userInfo.id}})
         .then(() => {
           alert('팁이 저장되었습니다.')
+          this.scraped = true
           this.tip.scrapAccounts.push(this.$store.state.userInfo.id)
         })
     },
