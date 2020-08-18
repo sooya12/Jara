@@ -46,8 +46,11 @@
               </v-card-title>
 
               <v-card-text>
-                <div id="imgBox">
+                <div id="imgBox" v-if="article.img_src">
                   <img width="100%" height="300" :src="article.img_src">
+                </div>
+                <div v-else class="black--text">
+                  {{ article.contents }}
                 </div>
                 <div class="d-flex mt-3">
                   <v-icon v-if="article.likeAccounts.includes(userInfo.id)" color="red darken-1" class="mr-3">mdi-heart</v-icon>

@@ -7,7 +7,7 @@
             <v-text-field
               ref="title"
               v-model="tip.title"
-              :rules="[() => !!tip.title || '필수 입력입니다']"
+              :rules="[() => !!tip.title || '필수 입력입니다.']"
               label="제목"
               placeholder="제목을 입력해 주세요."
               required
@@ -24,7 +24,7 @@
             <v-text-field
               ref="contents"
               v-model="tip.contents"
-              :rules="[() => !!tip.contents || '필수 입력입니다']"
+              :rules="[() => !!tip.contents || '필수 입력입니다.']"
               label="내용"
               placeholder="내용을 입력해 주세요."
               required
@@ -33,10 +33,10 @@
             <v-autocomplete
               ref="tag"
               v-model="tag"
-              :rules="[() => !!tag || '필수 입력입니다']"
+              :rules="[() => !!tag || '필수 입력입니다.']"
               :items="tags"
               label="분류"
-              placeholder="분류..."
+              placeholder="분류를 선택해 주세요."
               required
               color="green darken-2"
             ></v-autocomplete>

@@ -340,20 +340,26 @@ export default {
       }
     },
     updateComment() {
-      axios.put(`${this.$store.state.api_server}/eithers/${this.either.id}/comments/${this.commentData.id}`, this.commentData)
-        .then(res => {
-          this.isUpdate = false
-          const idx = this.comments.findIndex(x => x.id === this.commentData.id)
-          this.comments[idx].updated_at = res.data.updated_at
-          this.comments[idx].contents = res.data.contents
-          this.comments[idx].choice = res.data.choice
-          this.commentData = {
-            contents: '',
-            writer: this.$store.state.userInfo.id,
-            either_id: this.either.id,
-            choice: null
-          }
-        })
+      if (this.commentData.contents.trim().length == 0) {
+        alert('유효한 입력이 아닙니다.')
+        this.commentData.contents = ''
+      }
+      else {
+        axios.put(`${this.$store.state.api_server}/eithers/${this.either.id}/comments/${this.commentData.id}`, this.commentData)
+          .then(res => {
+            this.isUpdate = false
+            const idx = this.comments.findIndex(x => x.id === this.commentData.id)
+            this.comments[idx].updated_at = res.data.updated_at
+            this.comments[idx].contents = res.data.contents
+            this.comments[idx].choice = res.data.choice
+            this.commentData = {
+              contents: '',
+              writer: this.$store.state.userInfo.id,
+              either_id: this.either.id,
+              choice: null
+            }
+          })
+      }
     },
   },
 }

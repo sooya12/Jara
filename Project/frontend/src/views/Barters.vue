@@ -84,7 +84,7 @@
           <v-container style="font-family: 'Handon3gyeopsal300g' !important;"> 
             <v-row>
               <v-col cols="12" sm="6" md="4">
-                <v-text-field color="green darken-2" v-model="editedItem.title" label="제목" required :rules="[() => !!editedItem.title || '필수 입력입니다']"></v-text-field>
+                <v-text-field color="green darken-2" v-model="editedItem.title" label="제목" placeholder="제목을 입력해 주세요." required :rules="[() => !!editedItem.title || '필수 입력입니다.']"></v-text-field>
               </v-col>
               <v-col cols="12" sm="6" md="4">
                 <v-img color="green darken-2" v-if="file != null" :src="imageURL"></v-img>
@@ -99,19 +99,21 @@
                 </v-file-input>
               </v-col>
               <v-col cols="12" sm="6" md="4">
-                <v-text-field color="green darken-2" v-model="editedItem.contents" label="내용" required :rules="[() => !!editedItem.contents || '필수 입력입니다']"></v-text-field>
+                <v-text-field color="green darken-2" v-model="editedItem.contents" label="내용" placeholder="내용을 입력해 주세요." required :rules="[() => !!editedItem.contents || '필수 입력입니다.']"></v-text-field>
               </v-col>
               <v-col cols="12" sm="6" md="4">
                 <v-text-field color="green darken-2" v-model="editedItem.price" label="가격"></v-text-field>
               </v-col>
               <v-col cols="12" sm="6" md="4">
                 <v-autocomplete
-                  label="분류 "
+                  label="분류"
+                  placeholder="분류를 선택해주세요."
                   v-model="tag"
                   :items="items"
                   color="green darken-2"
+                  item-color="green darken-2"
                   required
-                  :rules="[() => !!tag || '필수 입력입니다']"
+                  :rules="[() => !!tag || '필수 입력입니다.']"
                 ></v-autocomplete>
               </v-col>
             </v-row>
