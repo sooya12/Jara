@@ -334,7 +334,7 @@
 
 
 
-# 2020.08.15-16
+# 2020.08.15-17
 
 ### :computer:
 
@@ -344,3 +344,24 @@
 
 :yellow_heart: Kakao 소셜 로그인 구현
 
+:hammer_and_wrench: 수정 및 보완
+
+
+
+### :blonde_woman:
+
+:woman_facepalming: 실시간 채팅 페이지를 예쁘게 꾸며보고 싶은데 내 한계는 여기까지 인듯 싶다.
+
+
+
+# 2020.08.18 Day :one::one:
+
+### :computer:
+
+:hammer_and_wrench: 수정 및 보완
+
+
+
+### :blonde_woman:
+
+:video_camera: UCC 준비에 들어간다.
