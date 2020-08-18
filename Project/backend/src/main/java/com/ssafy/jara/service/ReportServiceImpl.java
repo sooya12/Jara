@@ -32,4 +32,9 @@ public class ReportServiceImpl implements ReportService {
 	public List<Report> selectListReport() {
 		return reportDao.selectListReport();
 	}
+	
+	@Override
+	public String findNickname(int reporter_id) {
+		return reportDao.findNickname(reporter_id);
+	}
 }

@@ -188,17 +188,23 @@ export default {
       }
     },
     updateComment() {
-      axios.put(`${this.$store.state.api_server}/articles/${this.article.id}/comments/${this.commentData.id}`, this.commentData)
-        .then(res => {
-          const idx = this.comments.findIndex(x => x.id === this.commentData.id)
-          this.comments[idx].updated_at = res.data.updated_at
-          this.comments[idx].contents = res.data.contents
-          this.isUpdate = false
-          this.commentData = {
-            contents: '',
-            writer: this.$store.state.userInfo.id
-          }
-        })
+      if (this.commentData.contents.trim().length == 0) {
+        alert('유효한 입력이 아닙니다.')
+        this.commentData.contents = ''
+      }
+      else {
+        axios.put(`${this.$store.state.api_server}/articles/${this.article.id}/comments/${this.commentData.id}`, this.commentData)
+          .then(res => {
+            const idx = this.comments.findIndex(x => x.id === this.commentData.id)
+            this.comments[idx].updated_at = res.data.updated_at
+            this.comments[idx].contents = res.data.contents
+            this.isUpdate = false
+            this.commentData = {
+              contents: '',
+              writer: this.$store.state.userInfo.id
+            }
+          })
+      }
     },
     scrollToTop() {
       this.$vuetify.goTo(0)

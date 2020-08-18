@@ -86,6 +86,7 @@
         class="mx-auto my-5"
         v-for="either in eithers"
         :key="either.id"
+        @click="goToEither(either.id)"
       >
         <v-card-text v-if="all">
           <div class="d-flex justify-space-between align-center">

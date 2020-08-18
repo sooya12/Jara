@@ -73,10 +73,45 @@
         >
         </v-pagination>
       </div>
-      <v-btn @click="write" style="position: fixed; bottom:3vh; right: 3vh" color="green lighten-1" fab small dark absolute bottom right>
+    </div>
+    <v-speed-dial
+      v-model="fab"
+      fixed
+      bottom
+      right
+      direction="top"
+      transition="slide-y-reverse-transition"
+    >
+      <template v-slot:activator>
+        <v-btn
+          v-model="fab"
+          color="green darken-2"
+          dark
+          fab
+        >
+          <v-icon v-if="fab">mdi-close</v-icon>
+          <v-icon v-else>mdi-turtle</v-icon>
+        </v-btn>
+      </template>
+      <v-btn
+        fab
+        dark
+        small
+        color="green lighten-1"
+        @click="write"
+      >
         <v-icon>mdi-pencil</v-icon>
       </v-btn>
-    </div>
+      <v-btn
+        fab
+        dark
+        small
+        color="light-green"
+        @click="scrollToTop"
+      >
+        <v-icon>mdi-apple-keyboard-control</v-icon>
+      </v-btn>
+    </v-speed-dial>
   </v-container>
 </template>
 
@@ -100,6 +135,7 @@ export default {
       curPageNum: 1,
       serPageNum: 1,
       top5: [],
+      fab: false,
     }
   },
   created() {
@@ -118,6 +154,9 @@ export default {
     },
     goToDetail(id) {
       this.$router.push(`/tips/${id}`)
+    },
+    scrollToTop() {
+      this.$vuetify.goTo(0)
     }
   },
   computed: {

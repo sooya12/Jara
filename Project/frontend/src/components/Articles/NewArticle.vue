@@ -1,5 +1,8 @@
 <template>
   <v-container fluid mt-5 style="font-family: 'Handon3gyeopsal300g'">
+    <v-alert v-if="isError" type="error">
+      유효하지 않은 입력입니다.
+    </v-alert>
     <div id="loading" v-if="isLoading" class="text-center">
       <v-progress-circular
         :size="50"
@@ -66,6 +69,7 @@ export default {
       img_src: '',
       isLoading: false,
       id: null,
+      isError: false,
     }
   },
   methods: {
@@ -74,14 +78,23 @@ export default {
     },
     createArticle() {
       if (this.$route.path == '/main/new') {
-        this.isLoading = true
-        axios.post(`${this.$store.state.api_server}/articles`, this.article)
-          .then(res => {
-            this.id = res.data
-            if (this.file==null) {
-              this.$router.push('/main')
-            } else {this.uploadImg()}
-          })
+        if (this.article.contents.trim().length == 0 && this.file == null) {
+          this.isError = true
+          this.article.contents = ''
+          setTimeout(() => {
+            this.isError = false
+          }, 2000)
+        }
+        else {
+          this.isLoading = true
+          axios.post(`${this.$store.state.api_server}/articles`, this.article)
+            .then(res => {
+              this.id = res.data
+              if (this.file==null) {
+                this.$router.push('/main')
+              } else {this.uploadImg()}
+            })
+        }
       } else {
         axios.put(`${this.$store.state.api_server}/articles/${this.article.id}`, this.article)
           .then(() => this.$router.push('/main'))  

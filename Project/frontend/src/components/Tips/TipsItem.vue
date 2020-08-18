@@ -64,6 +64,7 @@ export default {
       tag: {1:'요리',2:'세탁',3:'청소',4:'보관'},
       liked: false,
       likeAccounts: [],
+      scrapAccounts: [],
       scraped: false,
     } 
   },
@@ -75,6 +76,7 @@ export default {
       axios.post(`${this.$store.state.api_server}/tips/${t}/scrap`, '', { params: { user_id: this.$store.state.userInfo.id}})
         .then(() => {
           alert('팁이 저장되었습니다.')
+          this.scraped = true
           this.tip.scrapAccounts.push(this.$store.state.userInfo.id)
         })
     },
@@ -92,14 +94,15 @@ export default {
     },
   },
   created() {
-    axios.get(`${this.$store.state.api_server}/tips/${this.tip.id}/like`)
+    axios.get(`${this.$store.state.api_server}/tips/${this.tip.id}`)
       .then(res => {
-        this.likeAccounts = res.data
+        this.likeAccounts = res.data.likeAccounts
+        this.scrapAccounts = res.data.scrapAccounts
         if (this.likeAccounts.length>0 && this.likeAccounts.includes(this.$store.state.userInfo.id)) {
           this.liked = true
         }
+        if (this.scrapAccounts.includes(this.$store.state.userInfo.id)) {this.scraped = true}
       })
-    if (this.tip.scrapAccounts.includes(this.$store.state.userInfo.id)) {this.scraped = true}
   },
   computed: {
     ...mapState([

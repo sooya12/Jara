@@ -81,6 +81,10 @@ public class ReportController {
 		
 		if (nickname.equals("관리자")) {
 			List<Report> report = reportService.selectListReport();
+			for(int i=0;i< report.size();i++) {
+				Report addInfo = report.get(i);
+				addInfo.setReporter_nickname(reportService.findNickname(addInfo.getReporter_id()));
+			}
 			resultMap.put("report", report);
 			resultMap.put("isAdmin", true);
 			if (!reportService.selectListReport().equals(null)) {
