@@ -49,7 +49,6 @@ public class BarterController {
 		Barter barter = barterService.selectBarter(id);
 		
 		if (barter == null) {
-			System.out.println("ERROR: 해당하는 글이 존재하지 않습니다.");
 			return new ResponseEntity<Barter>(HttpStatus.NOT_FOUND);
 		}
 		
