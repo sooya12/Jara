@@ -2188,3 +2188,27 @@ public class SwaggerSocketConfig implements WebSocketMessageBrokerConfigurer {
 
 -----
 
+
+
+### :feet: 20.08.19
+
+##### API, Method 사용하지 않는 코드 삭제 및 주석 정리
+
+##### API 문서 정리 및 Swagger 정보 정리
+
+##### UCC 1차 영상에 대한 회의
+
+##### 발표 PPT 준비
+
+> ##### DB ERD
+>
+> ![jara ERD](C:\Users\multicampus\Desktop\jara\jara ERD.png)
+>
+> ##### 간트차트
+>
+> ![image-20200819182414873](C:\Users\multicampus\AppData\Roaming\Typora\typora-user-images\image-20200819182414873.png)
+
+-----
+
+
+
