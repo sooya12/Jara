@@ -194,7 +194,7 @@ public class AccountController extends HttpServlet {
 	@PostMapping("changepwd")
 	private ResponseEntity<String> changePassword(@RequestParam String email) throws MessagingException, UnsupportedEncodingException {
 
-		if(accountService.findEmail(email)>0) { // 이메일로 사용자 찾기
+		if(accountService.findEmail(email)>0) { // 사용자가 있는지
 			
 			accountService.changeCode(email); 		// 인증코드 변경하기
 			String ncode = accountService.findCode(email);
@@ -290,15 +290,15 @@ public class AccountController extends HttpServlet {
 		return new ResponseEntity<String>("success", HttpStatus.OK);
 	}
 
-	@ApiOperation(value = "회원 정보 삭제하기")
-	@DeleteMapping("{id}")
-	private ResponseEntity<String> deleteAccount(@RequestBody Account account) {
-
-		if (accountService.deleteAccount(account.getId()) > 0) { // 회원 삭제
-			return new ResponseEntity<String>("success", HttpStatus.OK);
-		}
-		return new ResponseEntity<String>("fail", HttpStatus.NO_CONTENT);
-	}
+//	@ApiOperation(value = "회원 정보 삭제하기")
+//	@DeleteMapping("{id}")
+//	private ResponseEntity<String> deleteAccount(@RequestBody Account account) {
+//
+//		if (accountService.deleteAccount(account.getId()) > 0) { // 회원 삭제
+//			return new ResponseEntity<String>("success", HttpStatus.OK);
+//		}
+//		return new ResponseEntity<String>("fail", HttpStatus.NO_CONTENT);
+//	}
 
 	@ApiOperation(value = "팔로우 요청 보내기")
 	@PostMapping("follow")
@@ -357,21 +357,6 @@ public class AccountController extends HttpServlet {
 			return new ResponseEntity<Map<String, Object>>(HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 		return new ResponseEntity<Map<String, Object>>(accountMap, HttpStatus.OK);
-	}
-
-	@ApiOperation(value = "네이버 로그인")
-	@GetMapping("/signin/naver")
-	private ResponseEntity<String> loginNaver() throws UnsupportedEncodingException {
-		String clientId = "y_9J6LuNu9tyN5tgnmEN";
-		String redirectURI = URLEncoder.encode(naverRedirectBackURI, "UTF-8");
-		SecureRandom random = new SecureRandom();
-		String state = new BigInteger(130, random).toString();
-		String apiURL = "https://nid.naver.com/oauth2.0/authorize?response_type=code";
-		apiURL += "&client_id=" + clientId;
-		apiURL += "&redirect_uri=" + redirectURI;
-		apiURL += "&state=" + state;
-
-		return new ResponseEntity<String>(apiURL, HttpStatus.OK);
 	}
 
 	@ApiOperation(value = "네이버 로그인 접근 토큰")
@@ -439,7 +424,7 @@ public class AccountController extends HttpServlet {
 
 				String token = "";
 
-				if (accountService.findEmail(email) > 0) {
+				if (accountService.findEmail(email) > 0) { // 사용자가 있는지
 					Account account = accountService.findPartAccount(accountService.findIdByEmail(email));
 
 					if (!account.equals(null)) {
@@ -551,21 +536,21 @@ public class AccountController extends HttpServlet {
 		}
 	}
 
-	@ApiOperation(value = "카카오 로그인")
-	@GetMapping("/signin/kakao")
-	private ResponseEntity<String> loginKakao() throws UnsupportedEncodingException {
-		String clientId = "2e50ed388c52dc3ef17eb1c332285923"; // REST API 키
-		String redirectURI = URLEncoder.encode(kakaoRedirectBackURI, "UTF-8");
+//	@ApiOperation(value = "카카오 로그인")
+//	@GetMapping("/signin/kakao")
+//	private ResponseEntity<String> loginKakao() throws UnsupportedEncodingException {
+//		String clientId = "2e50ed388c52dc3ef17eb1c332285923"; // REST API 키
+//		String redirectURI = URLEncoder.encode(kakaoRedirectBackURI, "UTF-8");
+//
+//		String apiURL = "https://kauth.kakao.com/oauth/authorize?";
+//		apiURL += "client_id=" + clientId;
+//		apiURL += "&redirect_uri=" + redirectURI;
+//		apiURL += "&response_type=code";
+//
+//		return new ResponseEntity<String>(apiURL, HttpStatus.OK);
+//	}
 
-		String apiURL = "https://kauth.kakao.com/oauth/authorize?";
-		apiURL += "client_id=" + clientId;
-		apiURL += "&redirect_uri=" + redirectURI;
-		apiURL += "&response_type=code";
-
-		return new ResponseEntity<String>(apiURL, HttpStatus.OK);
-	}
-
-	@ApiOperation(value = "카카오 로그인 접근 토큰")
+	@ApiOperation(value = "카카오 로그인 토큰 접근")
 	@GetMapping("/signin/kakao/access")
 	private ResponseEntity<String> accessTokenKakao(HttpServletRequest request, HttpServletResponse response)
 			throws IOException {
@@ -586,7 +571,7 @@ public class AccountController extends HttpServlet {
 		
 		String token = "";
 
-		if (accountService.findEmail(email) > 0) {
+		if (accountService.findEmail(email) > 0) { // 사용자가 있는지
 			Account account = accountService.findPartAccount(accountService.findIdByEmail(email));
 
 			if (!account.equals(null)) {
