@@ -95,20 +95,23 @@ public class AccountController extends HttpServlet {
 	@Autowired
 	WeatherService weatherService;
 	
-	private final String SERVER_URI = "http://localhost:8081";		// local 
-//	private final String SERVER_URI = "https://i3a308.p.ssafy.io";	// server
+	private final String BACK_SERVER_URI = "http://localhost:8081";			// local (back)
+//	private final String BACK_SERVER_URI = "https://i3a308.p.ssafy.io";		// server (back)
+	
+	private final String FRONT_SERVER_URI = "http://localhost:3030";		// local (front)
+//	private final String FRONT_SERVER_URI = "https://i3a308.p.ssafy.io";	// server (front)
 	
 	/* 네이버 소셜 로그인 URI */
 	/* Back */
-	private final String naverRedirectBackURI = SERVER_URI + "/jara/accounts/signin/naver/access";
+	private final String naverRedirectBackURI = BACK_SERVER_URI + "/jara/accounts/signin/naver/access";
 	/* Front */
-	private final String naverRedirectFrontURI = SERVER_URI + "/accounts/social/login";
+	private final String naverRedirectFrontURI = FRONT_SERVER_URI + "/accounts/social/login";
 	
 	/* 카카오 소셜 로그인 URI */
 	/* Back */
-	private final String kakaoRedirectBackURI = SERVER_URI + "/jara/accounts/signin/kakao/access";
+	private final String kakaoRedirectBackURI = BACK_SERVER_URI + "/jara/accounts/signin/kakao/access";
 	/* Front */
-	private final String kakaoRedirectFrontURI = SERVER_URI + "/accounts/social/login";
+	private final String kakaoRedirectFrontURI = FRONT_SERVER_URI + "/accounts/social/login";
 	
 	@ApiOperation(value = "닉네임과 이메일 중복 체크하여 회원가입 처리", response = String.class)
 	@PostMapping("signup")
@@ -143,8 +146,7 @@ public class AccountController extends HttpServlet {
 								+ "<p>JARA를 이용해 주셔서 진심으로 감사합니다.<br>아래의 인증코드를 입력하시면 가입이 정상적으로 완료됩니다.</p><br>"
 								+ "<h2 style='background-color:#e6e6e6; color:black;'>")
 						.append("인증코드 : <b>" + code + "<br></h2>")
-//						 .append("<a href='http://localhost:3030/accounts/certification'>이메일 인증하기</a></center>").toString());
-						.append("<a href='http://i3a308.p.ssafy.io/accounts/certification'>이메일 인증하기</a>").toString());
+						.append("<a href='" + FRONT_SERVER_URI + "/accounts/certification'>이메일 인증하기</a></center>").toString());
 				sendMail.setFrom("jaraauth@gmail.com", "JARA");
 				sendMail.setTo(account.getEmail());
 				sendMail.send();
@@ -206,8 +208,7 @@ public class AccountController extends HttpServlet {
 							+ "<p>JARA를 이용해 주셔서 진심으로 감사합니다.<br>아래의 인증코드를 입력하시면 비밀번호 변경이 가능합니다.</p><br>"
 							+ "<h2 style='background-color:#e6e6e6; color:black;'>")
 					.append("인증코드 : <b>" + ncode + "</b><br></h2>")
-//				 .append("<a href='http://localhost:3030/accounts/setnewpwd'>이메일 인증하기</a></center>").toString());			
-					.append("<a href='http://i3a308.p.ssafy.io/accounts/setnewpwd'>비밀번호 변경하기</a>").toString());
+					.append("<a href='" + FRONT_SERVER_URI + "/accounts/setnewpwd'>비밀번호 변경하기</a>").toString());
 			sendMail.setFrom("jaraauth@gmail.com", "JARA");
 			sendMail.setTo(email);
 			sendMail.send();
