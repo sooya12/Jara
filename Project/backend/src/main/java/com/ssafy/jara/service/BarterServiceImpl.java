@@ -35,25 +35,10 @@ public class BarterServiceImpl implements BarterService {
 	}
 
 	@Override
-	public List<Barter> selectListBarterTag(int tag_id) {
-		return barterDao.selectListBarterTag(tag_id);
-	}
-
-	@Override
-	public List<Barter> selectListBarterSearch(String searchWord) {
-		return barterDao.selectListBarterSearch(searchWord);
-	}
-
-	@Override
 	public Barter selectBarter(int id) {
 		return barterDao.selectBarter(id);
 	}
 
-	@Override
-	public int updateBarterHits(int id) {
-		return barterDao.updateBarterHits(id);
-	}
-	
 	@Override
 	public int updateBarterStatus(HashMap<String, Object> hashMap) {
 		return barterDao.updateBarterStatus(hashMap);
