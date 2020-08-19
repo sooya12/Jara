@@ -20,8 +20,6 @@ public interface EitherService {
 
 	public int pickEither(EitherChoice eitherChoice);
 
-	public List<EitherChoice> selectEitherPickList(int either_id);
-
 	public List<Integer> selectChoiceAList(int either_id);
 
 	public List<Integer> selectChoiceBList(int either_id);

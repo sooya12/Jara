@@ -41,13 +41,6 @@
 		VALUES (#{either_id}, #{user_id}, #{pick});
 	</insert>
 
-	<!-- 해당하는 투표의 투표 현황 조회 -->
-	<select id="selectEitherPickList" resultType="com.ssafy.jara.dto.Either">
-		SELECT *
-		FROM either_choice
-		ORDER BY id DESC;
-	</select>
-
 	<!-- 해당하는 투표의 A선택지를 선택한 user_id 리스트 조회 -->
 	<select id="selectChoiceAList" resultType="int">
 		SELECT user_id
