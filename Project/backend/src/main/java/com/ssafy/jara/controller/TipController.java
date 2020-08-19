@@ -95,45 +95,45 @@ public class TipController {
 		return new ResponseEntity<List<Tip>>(tipList, HttpStatus.OK);
 	}
 	
-	@ApiOperation(value = "요리 태그 팁 조회", response = List.class)
-	@GetMapping("/cook")
-	private ResponseEntity<List<Tip>> selectListTipCook() {
-		return new ResponseEntity<List<Tip>>(tipService.selectListTipTag(1), HttpStatus.OK);
-	}
+//	@ApiOperation(value = "요리 태그 팁 조회", response = List.class)
+//	@GetMapping("/cook")
+//	private ResponseEntity<List<Tip>> selectListTipCook() {
+//		return new ResponseEntity<List<Tip>>(tipService.selectListTipTag(1), HttpStatus.OK);
+//	}
+//	
+//	@ApiOperation(value = "세탁 태그 팁 조회", response = List.class)
+//	@GetMapping("/laundry")
+//	private ResponseEntity<List<Tip>> selectListTipLaundry() {
+//		return new ResponseEntity<List<Tip>>(tipService.selectListTipTag(2), HttpStatus.OK);
+//	}
+//	
+//	@ApiOperation(value = "청소 태그 팁 조회", response = List.class)
+//	@GetMapping("/clean")
+//	private ResponseEntity<List<Tip>> selectListTipClean() {
+//		return new ResponseEntity<List<Tip>>(tipService.selectListTipTag(3), HttpStatus.OK);
+//	}
+//	
+//	@ApiOperation(value = "보관 태그 팁 조회", response = List.class)
+//	@GetMapping("/neat")
+//	private ResponseEntity<List<Tip>> selectListTipNeat() {
+//		return new ResponseEntity<List<Tip>>(tipService.selectListTipTag(4), HttpStatus.OK);
+//	}
 	
-	@ApiOperation(value = "세탁 태그 팁 조회", response = List.class)
-	@GetMapping("/laundry")
-	private ResponseEntity<List<Tip>> selectListTipLaundry() {
-		return new ResponseEntity<List<Tip>>(tipService.selectListTipTag(2), HttpStatus.OK);
-	}
-	
-	@ApiOperation(value = "청소 태그 팁 조회", response = List.class)
-	@GetMapping("/clean")
-	private ResponseEntity<List<Tip>> selectListTipClean() {
-		return new ResponseEntity<List<Tip>>(tipService.selectListTipTag(3), HttpStatus.OK);
-	}
-	
-	@ApiOperation(value = "보관 태그 팁 조회", response = List.class)
-	@GetMapping("/neat")
-	private ResponseEntity<List<Tip>> selectListTipNeat() {
-		return new ResponseEntity<List<Tip>>(tipService.selectListTipTag(4), HttpStatus.OK);
-	}
-	
-	@ApiOperation(value = "검색어에 해당하는 전체 팁 조회", response = List.class)
-	@GetMapping("/search/{searchWord}")
-	private ResponseEntity<List<Tip>> selectListTipSearch(@PathVariable("searchWord") String searchWord) {
-		return new ResponseEntity<List<Tip>>(tipService.selectListTipSearch(searchWord), HttpStatus.OK);
-	}
-	
-	@ApiOperation(value = "태그와 검색어에 해당하는 전체 팁 조회", response = List.class) 
-	@GetMapping("/search/{searchWord}/{tag_id}")
-	private ResponseEntity<List<Tip>> selectListTipTagSearch(@PathVariable("searchWord") String searchWord, @PathVariable("tag_id") int tag_id) {
-		HashMap<String, String> hashMap = new HashMap<String, String>();
-		hashMap.put("searchWord", searchWord);
-		hashMap.put("tag_id", String.valueOf(tag_id));
-		
-		return new ResponseEntity<List<Tip>>(tipService.selectListTipTagSearch(hashMap), HttpStatus.OK);
-	}
+//	@ApiOperation(value = "검색어에 해당하는 전체 팁 조회", response = List.class)
+//	@GetMapping("/search/{searchWord}")
+//	private ResponseEntity<List<Tip>> selectListTipSearch(@PathVariable("searchWord") String searchWord) {
+//		return new ResponseEntity<List<Tip>>(tipService.selectListTipSearch(searchWord), HttpStatus.OK);
+//	}
+//	
+//	@ApiOperation(value = "태그와 검색어에 해당하는 전체 팁 조회", response = List.class) 
+//	@GetMapping("/search/{searchWord}/{tag_id}")
+//	private ResponseEntity<List<Tip>> selectListTipTagSearch(@PathVariable("searchWord") String searchWord, @PathVariable("tag_id") int tag_id) {
+//		HashMap<String, String> hashMap = new HashMap<String, String>();
+//		hashMap.put("searchWord", searchWord);
+//		hashMap.put("tag_id", String.valueOf(tag_id));
+//		
+//		return new ResponseEntity<List<Tip>>(tipService.selectListTipTagSearch(hashMap), HttpStatus.OK);
+//	}
 	
 	@ApiOperation(value = "해당 팁 조회", response = Tip.class)
 	@GetMapping("/{id}")
@@ -161,15 +161,15 @@ public class TipController {
 		return new ResponseEntity<String>("fail", HttpStatus.BAD_REQUEST);
 	}
 	
-	@ApiOperation(value = "팁 조회수 수정", response = String.class)
-	@PutMapping("/{id}/hits")
-	private ResponseEntity<String> updateTipHits(@PathVariable("id") int id) {
-		if(tipService.updateTipHits(id) > 0) {
-			return new ResponseEntity<String>("success", HttpStatus.OK);
-		}
-		
-		return new ResponseEntity<String>("fail", HttpStatus.INTERNAL_SERVER_ERROR);
-	}
+//	@ApiOperation(value = "팁 조회수 수정", response = String.class)
+//	@PutMapping("/{id}/hits")
+//	private ResponseEntity<String> updateTipHits(@PathVariable("id") int id) {
+//		if(tipService.updateTipHits(id) > 0) {
+//			return new ResponseEntity<String>("success", HttpStatus.OK);
+//		}
+//		
+//		return new ResponseEntity<String>("fail", HttpStatus.INTERNAL_SERVER_ERROR);
+//	}
 	
 	@ApiOperation(value = "팁 삭제", response = String.class)
 	@DeleteMapping("/{id}")
