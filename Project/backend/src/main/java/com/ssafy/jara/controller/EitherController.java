@@ -52,7 +52,6 @@ public class EitherController {
 		Either either = eitherService.selectEither(id);
 		
 		if (either == null) {
-			System.out.println("ERROR: 해당하는 글이 존재하지 않습니다.");
 			return new ResponseEntity<Map<String, Object>>(HttpStatus.NOT_FOUND);
 		}
 		
@@ -103,7 +102,6 @@ public class EitherController {
 		if (partialList.size() > 0) {
 			return new ResponseEntity<List<Either>>(partialList, HttpStatus.OK);
 		} else {
-			System.out.println("투표 리스트가 존재하지 않음");
 			return new ResponseEntity<List<Either>>(partialList, HttpStatus.BAD_REQUEST);
 		}
 	}
