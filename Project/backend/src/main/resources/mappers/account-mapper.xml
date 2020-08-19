@@ -58,6 +58,14 @@
 		WHERE code=#{code}
 	</update>
 	
+	<!-- 모든 회원 정보(유저) 조회 -->
+	<select id="findAllAccount" resultType="com.ssafy.jara.dto.Account">
+		SELECT id, nickname, img_src
+		FROM user
+		ORDER BY nickname
+	</select>
+	
+	
 	<!-- 회원 정보 조회 - 민감 정보 제외 -->
 	<select id="findPartAccount" resultType="com.ssafy.jara.dto.Account">
 		SELECT id, nickname, sex, birthday, location, bio, status, img_src
