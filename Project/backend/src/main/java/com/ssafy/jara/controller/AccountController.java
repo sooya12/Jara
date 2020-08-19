@@ -117,18 +117,26 @@ public class AccountController extends HttpServlet {
 			throws MessagingException, UnsupportedEncodingException, InvalidKeyException, NoSuchAlgorithmException,
 			NoSuchPaddingException, InvalidAlgorithmParameterException, IllegalBlockSizeException, BadPaddingException {
 
-		if (accountService.duplicateCheck(account) < 1) {
+		if (accountService.duplicateCheck(account) < 1) { // 이메일, 닉네임 중복 체크
 			// 비밀번호 암호화
 //			String hashPassword = BCrypt.hashpw(account.getPassword(), BCrypt.gensalt());
 //			account.setPassword(hashPassword);
-//			
 //			System.out.println("hashPassword : "+hashPassword);
 
-			if (accountService.insertAccount(account) > 0) {
+			if (accountService.insertAccount(account) > 0) { // 회원가입
+				
+				// 관리자 팔로우 추가하기
+				Follow follow = new Follow();
+				follow.setFollower(account.getId());
+				follow.setFollowing(1);
+				
+				accountService.insertFollow(follow);
+				accountService.approveFollow(follow);
 
 				// 6자리 인증코드
 				String code = accountService.findCode(account.getEmail());
 
+				// SMTP 메일 발송
 				MailHandler sendMail = new MailHandler(javaMailSender);
 				sendMail.setSubject("[JARA 회원가입 사용자 인증]");
 				sendMail.setText(new StringBuffer()
@@ -138,7 +146,6 @@ public class AccountController extends HttpServlet {
 						.append("인증코드 : <b>" + code + "<br></h2>")
 //						 .append("<a href='http://localhost:3030/accounts/certification'>이메일 인증하기</a></center>").toString());
 						.append("<a href='http://i3a308.p.ssafy.io/accounts/certification'>이메일 인증하기</a>").toString());
-
 				sendMail.setFrom("jaraauth@gmail.com", "JARA");
 				sendMail.setTo(account.getEmail());
 				sendMail.send();
@@ -154,34 +161,26 @@ public class AccountController extends HttpServlet {
 	@PostMapping("certification/{code}")
 	private ResponseEntity<String> certification(@PathVariable String code) {
 
-		if (accountService.changeStatus(code) > 0) {
-
+		if (accountService.changeStatus(code) > 0) { // 로그인 가능상태로 변경
+			
 			return new ResponseEntity<String>("success", HttpStatus.OK);
 		}
-
-		return new ResponseEntity<String>("fail", HttpStatus.NO_CONTENT); //
+		return new ResponseEntity<String>("fail", HttpStatus.NO_CONTENT); 
 	}
 
 	@ApiOperation(value = "이메일과 비밀번호로 로그인 처리", response = Account.class)
 	@PostMapping("signin")
 	private ResponseEntity<Account> loginAccount(@RequestBody Account account, HttpServletResponse response) {
 
-		// 비밀번호와 비교
+		// (암호화) 비밀번호와 비교
 //		Account findAccount =null;
 //
 //		if(BCrypt.checkpw(account.getPassword(),accountService.findPassword(account.getEmail()))) { // 기존 비밀번호와 같음
-//			findAccount = accountService.selectAccount(account); // 로그인
-//		}else {
 //			findAccount = accountService.selectAccount(account); // 로그인
 //		}
 
 		Account findAccount = accountService.selectAccount(account); // 로그인
 
-//		findAccount.setPTY(weatherService.selectPTY(findAccount.getLocation()));
-//		findAccount.setSKY(weatherService.selectSKY(findAccount.getLocation()));
-//		findAccount.setT1H(weatherService.selectT1H(findAccount.getLocation()));
-
-		System.out.println("findAccount=" + findAccount);
 		if (!findAccount.equals(null)) {
 			String token = jwtService.create(findAccount);
 			response.setHeader("jwt-auth-token", token);
@@ -194,14 +193,13 @@ public class AccountController extends HttpServlet {
 	@ApiOperation(value = "비밀번호 변경하기 전 인증 코드 발송", response = String.class)
 	@PostMapping("changepwd")
 	private ResponseEntity<String> changePassword(@RequestParam String email) throws MessagingException, UnsupportedEncodingException {
-		
-		// 비밀번호 변경하기 전에 이 사람이 있는가..?
-		if(accountService.findEmail(email)>0) {
+
+		if(accountService.findEmail(email)>0) { // 이메일로 사용자 찾기
 			
 			accountService.changeCode(email); 		// 인증코드 변경하기
 			String ncode = accountService.findCode(email);
-			System.out.println(ncode);
 			
+			// SMTP 메일 발송
 			MailHandler sendMail = new MailHandler(javaMailSender);
 			sendMail.setSubject("[JARA 비밀번호 변경 사용자 인증]");
 			sendMail.setText(new StringBuffer()
@@ -211,7 +209,6 @@ public class AccountController extends HttpServlet {
 					.append("인증코드 : <b>" + ncode + "</b><br></h2>")
 //				 .append("<a href='http://localhost:3030/accounts/setnewpwd'>이메일 인증하기</a></center>").toString());			
 					.append("<a href='http://i3a308.p.ssafy.io/accounts/setnewpwd'>비밀번호 변경하기</a>").toString());
-			
 			sendMail.setFrom("jaraauth@gmail.com", "JARA");
 			sendMail.setTo(email);
 			sendMail.send();
@@ -230,7 +227,7 @@ public class AccountController extends HttpServlet {
 //		String hashPassword = BCrypt.hashpw(account.getPassword(), BCrypt.gensalt());
 //		account.setPassword(hashPassword);
 
-		if (accountService.changePassword(account) > 0) {
+		if (accountService.changePassword(account) > 0) { // 비밀번호 변경
 			return new ResponseEntity<String>("success", HttpStatus.OK);
 		}
 
@@ -241,23 +238,27 @@ public class AccountController extends HttpServlet {
 	@GetMapping("{id}")
 	private ResponseEntity<Account> findAccount(@PathVariable int id) {
 
-		Account account = accountService.findPartAccount(id); // 해당 id 유저 값
+		Account account = accountService.findPartAccount(id); // 해당 id 유저에 해당하는 객체
 
+		// + 팔로워, 팔로잉 리스트
 		account.setFollowerList(accountService.findFollowing(id));
 		account.setFollowingList(accountService.findFollower(id));
 
+		// + 피드 리스트
 		account.setMyArticleList(articleService.selectListMyArticle(id));
 
+		// + 피드 댓글, 좋아요
 		for (int i = 0; i < account.getMyArticleList().size(); i++) {
 			Article article = account.getMyArticleList().get(i);
 
 			article.setComments(articleCommentService.selectArticleComments(article.getId())); // 전체 댓글 조회
 			article.setLikeAccounts(articleService.selectArticleLikeAccount(article.getId())); // 전체 좋아요 사용자 조회
-
 		}
 
+		// + 스크랩 리스트 (팁)
 		account.setScrapTipList(tipService.selectListTipUserScrap(id));
 
+		// + 팁 댓글, 좋아요
 		for (int i = 0; i < account.getScrapTipList().size(); i++) {
 			Tip tip = account.getScrapTipList().get(i);
 
@@ -265,12 +266,6 @@ public class AccountController extends HttpServlet {
 			tip.setLikeAccounts(tipService.selectTipLikeAccounts(tip.getId()));
 		}
 
-		System.out.println(account.getId() + "+" + account.getNickname());
-
-		if (account.equals(null) || account.getId() == 0) {
-			return new ResponseEntity(HttpStatus.NO_CONTENT);
-
-		}
 		return new ResponseEntity<Account>(account, HttpStatus.OK);
 	}
 
@@ -287,8 +282,8 @@ public class AccountController extends HttpServlet {
 	@ApiOperation(value = "회원 정보 수정하기")
 	@PutMapping("{id}")
 	private ResponseEntity<String> updateAccount(@RequestBody Account account) {
-		boolean total = accountService.updateAccount(account);
-		if (!total) {
+
+		if (!accountService.updateAccount(account)) { // 회원 정보 수정
 			return new ResponseEntity<String>("fail", HttpStatus.NO_CONTENT);
 
 		}
@@ -298,8 +293,6 @@ public class AccountController extends HttpServlet {
 	@ApiOperation(value = "회원 정보 삭제하기")
 	@DeleteMapping("{id}")
 	private ResponseEntity<String> deleteAccount(@RequestBody Account account) {
-
-		accountService.deleteAllFollow(account.getId()); // 팔로잉 팔로워일때 삭제
 
 		if (accountService.deleteAccount(account.getId()) > 0) { // 회원 삭제
 			return new ResponseEntity<String>("success", HttpStatus.OK);
@@ -311,7 +304,7 @@ public class AccountController extends HttpServlet {
 	@PostMapping("follow")
 	public ResponseEntity<String> requestFollow(@RequestBody Follow follow) {
 
-		if (accountService.findFollow(follow) > 0) { // 팔로우하는 경우 - 팔로우 취소
+		if (accountService.findFollow(follow) > 0) { // 팔로우하는 경우
 			return new ResponseEntity<String>("fail", HttpStatus.NO_CONTENT);
 
 		} else { // 팔로우하지 않은 경우 - 팔로우 추가
@@ -329,7 +322,7 @@ public class AccountController extends HttpServlet {
 		if (accountService.approveFollow(follow) > 0) { // 팔로우 돼있는 경우
 			return new ResponseEntity<String>("success", HttpStatus.OK);
 
-		} else { // 팔로우하지 않은 경우 - 팔로우 추가
+		} else { // 팔로우하지 않은 경우 
 			return new ResponseEntity<String>("fail", HttpStatus.NO_CONTENT);
 		}
 	}
@@ -338,7 +331,7 @@ public class AccountController extends HttpServlet {
 	@DeleteMapping("follow")
 	public ResponseEntity<List<Integer>> Unfollow(@RequestBody Follow follow) {
 
-		accountService.deleteFollow(follow); // 팔로우 정보 지움 = 언팔로우
+		accountService.deleteFollow(follow); // 언팔로우
 
 		List<Integer> followerList = accountService.findFollowing(follow.getFollowing());
 
@@ -378,8 +371,6 @@ public class AccountController extends HttpServlet {
 		apiURL += "&redirect_uri=" + redirectURI;
 		apiURL += "&state=" + state;
 
-		System.out.println(apiURL);
-
 		return new ResponseEntity<String>(apiURL, HttpStatus.OK);
 	}
 
@@ -409,8 +400,6 @@ public class AccountController extends HttpServlet {
 			con.setRequestMethod("GET");
 			int responseCode = con.getResponseCode();
 			BufferedReader br;
-
-			System.out.println("responseCode=" + responseCode);
 
 			if (responseCode == 200) { // 정상 호출
 				br = new BufferedReader(new InputStreamReader(con.getInputStream()));
@@ -573,9 +562,6 @@ public class AccountController extends HttpServlet {
 		apiURL += "&redirect_uri=" + redirectURI;
 		apiURL += "&response_type=code";
 
-		
-		System.out.println(apiURL);
-
 		return new ResponseEntity<String>(apiURL, HttpStatus.OK);
 	}
 
@@ -597,10 +583,6 @@ public class AccountController extends HttpServlet {
 		String nickname = (String)userInfo.get("nickname"); 
 		String gender = (String) userInfo.get("gender");
 		String profile_image = (String)userInfo.get("profile_image");
-		
-
-//		System.out.println("token : "+token);
-//		System.out.println("userInfo : "+userInfo);
 		
 		String token = "";
 
@@ -669,8 +651,6 @@ public class AccountController extends HttpServlet {
 
 			// 결과 코드가 200이라면 성공
 			int responseCode = con.getResponseCode();
-			System.out.println("responseCode : " + responseCode);
-			
 
 			// 요청을 통해 얻은 json 타입의 response 메세지 읽어오기
 			BufferedReader br = new BufferedReader(new InputStreamReader(con.getInputStream()));
@@ -680,7 +660,6 @@ public class AccountController extends HttpServlet {
 			while ((line = br.readLine()) != null) {
 				result += line;
 			}
-			System.out.println("response body : " + result);
 
 			// gson 라이브러리에 포함된 클래스로 json 파싱 객체 생성
 			JsonParser parser = new JsonParser();
@@ -689,10 +668,6 @@ public class AccountController extends HttpServlet {
 			access_token = element.getAsJsonObject().get("access_token").getAsString();
 			refresh_token = element.getAsJsonObject().get("refresh_token").getAsString();
 
-			System.out.println("access_token : " + access_token);
-			System.out.println("refresh_token : " + refresh_token);
-
-			
 			tokens.put("access_token", access_token);
 			tokens.put("refresh_token",refresh_token);
 			
@@ -704,7 +679,6 @@ public class AccountController extends HttpServlet {
 		}
 
 		return tokens;
-
 	}
 	
 	// 카카오 로그인 정보 가져오는 함수
@@ -722,18 +696,15 @@ public class AccountController extends HttpServlet {
 			con.setRequestProperty("Authorization", "Bearer "+access_token);
 			
 			int responseCode = con.getResponseCode();
-			System.out.println("response 로그인 정보 받아오기 : "+responseCode);
 			
 			BufferedReader br = new BufferedReader(new InputStreamReader(con.getInputStream()));
 			
 			String line = "";
 			String result = "";
 			
-			System.out.println("===============");
 			while((line = br.readLine()) != null) {
 				result += line;
 			}
-			System.out.println("response body(로그인 정보 받아오기) : "+result);
 			
 			JsonParser parser = new JsonParser();
 			JsonElement element = parser.parse(result);
@@ -751,15 +722,12 @@ public class AccountController extends HttpServlet {
 				gender = kakao_account.getAsJsonObject().get("gender").getAsString();
 			}
 			
-			System.out.println("카카오 회원 정보 함수 출력 : "+properties);
-			
 			userInfo.put("nickname", nickname);
 			userInfo.put("email",email);
 			userInfo.put("gender",gender);
 			userInfo.put("profile_image",profile_image);
 			
 		} catch(IOException e) {
-			System.out.println("사용자 정보 가져오기 오류");
 			e.printStackTrace();
 		}
 		
