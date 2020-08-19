@@ -380,7 +380,7 @@ export default {
       },
       nickNameRules: {
         required: value => !!value || '닉네임을 입력해주세요.',
-        max: v => v.length <= 6 || '닉네임은 6자리 이하이어야 합니다.'
+        max: v => v.length <= 8 || '닉네임은 8자리 이하이어야 합니다.'
       },
       sexRules: {
         required: value => value!=null || '성별을 선택해주세요.'
