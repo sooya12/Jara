@@ -51,13 +51,14 @@
                 </v-chip>
               </template>
             </v-data-table>
-            <div class="text-center pt-2">
+            <div class="text-center py-2">
               <v-pagination v-model="page" :length="pageCount" color="green darken-2"></v-pagination>
             </div>
           </v-flex>
         </v-layout>
       </v-container>
     </div>
+    <div class="pb-5"></div>
     <v-dialog v-model="dialog" max-width="500px">
       <template v-slot:activator="{ on, attrs}">
         <v-spacer></v-spacer>
@@ -70,7 +71,7 @@
           class="my-1"
           v-bind="attrs"
           v-on="on"
-          color="green ligten-1"
+          color="green lighten-1"
         >
           <v-icon color="white">mdi-pencil</v-icon>
         </v-btn>
