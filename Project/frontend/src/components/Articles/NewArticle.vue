@@ -16,7 +16,8 @@
       <div class="ml-2 font-weight-bold" style="font-family: 'Handon3gyeopsal600g' !important;">{{ userInfo.nickname }}</div>
       <v-btn fixed bottom right fab color="green lighten-1" @click="createArticle" small dark><v-icon>mdi-pencil</v-icon></v-btn>
     </div>
-    <v-img v-if="file != null" :src="imageURL"></v-img>
+    <v-img class="mt-5" v-if="file != null" :src="imageURL"></v-img>
+    <v-img class="mt-5" v-else-if="file==null && imageURL.length !=0" :src="imageURL"></v-img>
     <v-textarea
       v-model="article.contents"
       append-outer-icon="mdi-head-dots-horizontal"
@@ -55,7 +56,10 @@ export default {
   mounted() {
     if (this.$route.path != '/main/new') {
       axios.get(`${this.$store.state.api_server}/articles/${this.$route.params.article_id}`)
-        .then(res => this.article = res.data)
+        .then(res => {
+          this.article = res.data
+          this.imageURL = res.data.img_src
+        })
     }
   },
   data() {

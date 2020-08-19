@@ -116,12 +116,6 @@ public class EitherController {
 		}
 	}
 	
-	@ApiOperation(value = "해당하는 투표의 투표 현황 조회", response = String.class)
-	@GetMapping("/{either_id}/pick")
-	private ResponseEntity<List<EitherChoice>> selectEitherPickList(@PathVariable int either_id) {
-		return new ResponseEntity<List<EitherChoice>>(eitherService.selectEitherPickList(either_id), HttpStatus.OK);
-	}
-	
 	@ApiOperation(value = "이더 Top 3 조회", response = String.class)
 	@GetMapping("/top3")
 	private ResponseEntity<List<Either>> selectListEitherTop3() {

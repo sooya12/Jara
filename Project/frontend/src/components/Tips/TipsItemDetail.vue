@@ -20,7 +20,8 @@
                     <v-list-item>
                       <v-list-item-avatar>
                       <!-- <img :src="'https://steemitimages.com/u/' + author + '/avatar/small'" alt="avatar" onerror="this.src='https://steemitimages.com/u/monawoo/avatar/small'"> -->
-                      <img :src="psas[tip.writer]" alt="avatar">
+                        <v-icon v-if="psas[tip.writer]==null" x-large>mdi-account-circle</v-icon>
+                        <img v-else :src="psas[tip.writer]" alt="avatar">
                       </v-list-item-avatar>
                       <v-list-item-content>
                         <v-list-item-title style="font-family: 'Handon3gyeopsal600g';">{{users[tip.writer]}}
@@ -170,6 +171,7 @@ export default {
       axios.post(`${this.$store.state.api_server}/tips/${this.tip.id}/scrap`, '', { params: { user_id: this.$store.state.userInfo.id}})
         .then(() => {
           this.tip.scarpAccounts.push(this.$store.state.userInfo.id)
+          this.scraped = true
           alert('팁이 저장되었습니다.')
         })
     },

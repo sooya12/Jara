@@ -114,7 +114,7 @@ export default {
     },
     updateOrDelete(val) {
       if (this.$store.state.userInfo.id == this.article.writer) {
-        if (val == 0) { this.$router.push({ name: 'UpdateArticle', params: { article_id : val.id }}) }
+        if (val == 0) { this.$router.push({ name: 'UpdateArticle', params: { article_id : this.article.id }}) }
         else { 
           const response = confirm('정말로 삭제 하시겠습니까?')
           if (response) { 

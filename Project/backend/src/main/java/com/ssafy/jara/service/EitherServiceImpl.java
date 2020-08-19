@@ -65,11 +65,6 @@ public class EitherServiceImpl implements EitherService {
 	}
 	
 	@Override
-	public List<EitherChoice> selectEitherPickList(int either_id) {
-		return eitherDao.selectEitherPickList(either_id);
-	}
-	
-	@Override
 	public List<Integer> selectChoiceAList(int either_id) {
 		return eitherDao.selectChoiceAList(either_id);
 	}

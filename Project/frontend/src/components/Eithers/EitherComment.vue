@@ -49,7 +49,7 @@
           </div>
         </div>
         <div class="ml-5" style="font-family: 'Handon3gyeopsal300g' !important;">{{ comment.contents }}</div>
-        <v-divider class="mt-5"></v-divider>
+        <v-divider class="my-3"></v-divider>
       </div>  
     </div>
   </div>
