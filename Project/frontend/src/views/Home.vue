@@ -10,7 +10,7 @@
     </div>
     <v-divider class="mt-5 mb-5"></v-divider>
     <div>
-      <v-card v-for="item in articles" :key="item.id" class="my-5" @click="goToDetail(item.id)">
+      <v-card v-for="item in articles" :key="item.id" class="my-5">
         <v-card-title>
           <v-btn
             v-if="psas[item.writer]==null"
@@ -57,8 +57,8 @@
             </v-menu>
           </div>
         </v-card-title>
-        <v-img v-if="item.img_src!=null" id="img" max-width="100%" height="auto" :src="item.img_src"></v-img>
-        <div class="text-subtitle-1 black--text mx-5 mt-5" style="font-family: 'Handon3gyeopsal300g' !important;">
+        <v-img v-if="item.img_src!=null" id="img" max-width="100%" height="auto" :src="item.img_src" @click="goToDetail(item.id)"></v-img>
+        <div class="text-subtitle-1 black--text mx-5 mt-5" style="font-family: 'Handon3gyeopsal300g' !important;" @click="goToDetail(item.id)">
           {{ item.contents }}
         </div>
         <div class="mx-5 pb-3 d-flex justify-end align-center" style="font-family: 'Handon3gyeopsal300g' !important;">

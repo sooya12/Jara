@@ -3,6 +3,8 @@
     <v-layout column>
         <v-card flat style='padding:0' class='comments'>
           <v-card-title class="pb-1">
+            <v-icon v-if="psas[comment.writer]==null" x-large>mdi-account-circle</v-icon>
+            <v-avatar v-else><img :src="psas[comment.writer]"></v-avatar>
             {{ users[comment.writer] }} · <span v-if="!comment.updated_at" class="grey--text">{{comment.created_at | filterCreated}}</span>
             <span v-else class="grey--text">{{comment.updated_at | filterCreated}} <p style="font-size: x-small; display: inline-block; margin: 0;" class="grey--text">(수정됨)</p></span>
           </v-card-title>
@@ -93,7 +95,8 @@ export default {
   computed: {
     ...mapState([
       'users',
-      'userInfo'
+      'userInfo',
+      'psas'
     ])
   }
 }

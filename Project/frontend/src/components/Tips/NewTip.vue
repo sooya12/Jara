@@ -85,7 +85,6 @@ export default {
   },
   mounted() {
     if (this.$route.path != '/tips/new') {
-      console.log(this.$route)
       axios.get(`${this.$store.state.api_server}/tips/${this.$route.params.tip_id}`)
         .then(res => {
           const tag_id_dict = {1:'요리', 2:'세탁', 3:'청소', 4:'보관'}
@@ -105,9 +104,6 @@ export default {
       const tag_id_dict = {'요리': 1, '세탁': 2, '청소': 3, '보관': 4}
       this.tip.tag_id = tag_id_dict[this.tag]
 
-      // console.log(this.$store.state.authToken)
-      // console.log(this.$route.path)
-
       if (this.$route.path == '/tips/new') {
         axios.post(`${this.$store.state.api_server}/tips`, this.tip)
           .then(res => {
@@ -116,17 +112,9 @@ export default {
               this.$router.push('/tips')
             } else {this.uploadImg()}
           })
-          .catch(err => {
-            console.log(err)
-          })
       } else {
-        // console.log(`${this.$store.state.api_server}/tips/${this.$route.params.tip_id}`)
         axios.put(`${this.$store.state.api_server}/tips/${this.$route.params.tip_id}`, this.tip)
           .then(() => this.$router.push(`/tips/${this.$route.params.tip_id}`))
-            // .then(res => {
-            //   console.log(res)
-            // })
-          .catch(err => {console.log(err)})
       }
     },
     uploadImg() {

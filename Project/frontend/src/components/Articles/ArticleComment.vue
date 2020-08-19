@@ -33,7 +33,7 @@
           </div>
         </div>
         <div class="mx-5">{{ comment.contents }}</div>
-        <v-divider class="mt-5"></v-divider>
+        <v-divider class="my-3"></v-divider>
       </div>  
     </div>
   </div>

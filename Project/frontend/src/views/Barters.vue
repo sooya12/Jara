@@ -194,7 +194,6 @@ export default {
     this.loading = true
     axios.get(`${this.$store.state.api_server}/barters`)
       .then(res => {
-        // console.log(res.data)
         this.barters = res.data
         this.barters.forEach(function(item) {
           const tags = {
@@ -262,16 +261,13 @@ export default {
         })
     },
     goToBarterDetail(val) {
-      // console.log(val.id)
       this.$router.push(`/barters/${val.id}`)
     },
     uploadImg() {
       firebase.storage().ref(`barters/${this.id}`).put(this.file)
         .then(() => {
-          // console.log('저장')
           firebase.storage().ref(`barters/${this.id}`).getDownloadURL()
             .then(url => {
-              // console.log(url)
               axios.put(`${this.$store.state.api_server}/barters/${this.id}/img`,{ img_src : url })
                 .then(() => alert('거래를 성공적으로 등록했습니다.'))
             })
