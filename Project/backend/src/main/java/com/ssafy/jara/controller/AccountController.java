@@ -95,21 +95,20 @@ public class AccountController extends HttpServlet {
 	@Autowired
 	WeatherService weatherService;
 	
+	private final String SERVER_URI = "http://localhost:8081";		// local 
+//	private final String SERVER_URI = "https://i3a308.p.ssafy.io";	// server
+	
 	/* 네이버 소셜 로그인 URI */
 	/* Back */
-	 private final String naverRedirectBackURI = "http://localhost:8081/jara/accounts/signin/naver/access"; // local 
-//	private final String naverRedirectBackURI = "https://i3a308.p.ssafy.io/jara/accounts/signin/naver/access"; // server
+	private final String naverRedirectBackURI = SERVER_URI + "/jara/accounts/signin/naver/access";
 	/* Front */
-	private final String naverRedirectFrontURI = "http://localhost:3030/accounts/social/login"; // local
-//	private final String naverRedirectFrontURI = "https://i3a308.p.ssafy.io/accounts/social/login"; // server
+	private final String naverRedirectFrontURI = SERVER_URI + "/accounts/social/login";
 	
 	/* 카카오 소셜 로그인 URI */
 	/* Back */
-	private final String kakaoRedirectBackURI = "http://localhost:8081/jara/accounts/signin/kakao/access"; // local 
-//	private final String kakaoRedirectBackURI = "https://i3a308.p.ssafy.io/jara/accounts/signin/kakao/access"; // server
+	private final String kakaoRedirectBackURI = SERVER_URI + "/jara/accounts/signin/kakao/access";
 	/* Front */
-	private final String kakaoRedirectFrontURI = "http://localhost:3030/accounts/social/login"; // local
-//	private final String kakaoRedirectFrontURI = "https://i3a308.p.ssafy.io/accounts/social/login"; // server
+	private final String kakaoRedirectFrontURI = SERVER_URI + "/accounts/social/login";
 	
 	@ApiOperation(value = "닉네임과 이메일 중복 체크하여 회원가입 처리", response = String.class)
 	@PostMapping("signup")
