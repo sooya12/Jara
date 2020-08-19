@@ -21,6 +21,9 @@ public interface EitherService {
 	// 전체 투표 조회
 	public List<Either> selectListEither();
 
+	// 투표 리스트에서 인덱스 {s_idx}번 부터 {count}개의 투표 조회
+	public List<Either> selectPartialListEither(int s_idx, int count);
+	
 	// 선택지 투표
 	public int pickEither(EitherChoice eitherChoice);
 
