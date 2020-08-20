@@ -173,7 +173,24 @@ $ mvn spring-boot : run
 - Delete
   - 투표 삭제
 
+---
 
+#### [Reports : 신고 기능]
+
+* Get
+
+  * Admin 계정 확인
+  * 신고 조회
+
+* Post
+
+  * 신고 
+
+* Delete
+
+  * 유저 삭제
+
+  
 
 ## :link:Branch
 
