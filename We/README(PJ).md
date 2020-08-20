@@ -1,7 +1,7 @@
 # Sub PJT III - 모바일 웹 디자인 및 기본 구성
 
 ## :bar_chart: 진척률(%)
-- 이슈 진행률 : 90%
+- 이슈 진행률 : 100%
 
 ## :computer: Getting Started (개발환경 및 빌드 실행)
 
