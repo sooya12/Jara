@@ -164,7 +164,7 @@ export default {
   #chats{
     position: absolute;
     overflow-y: scroll;
-    height: 250px;
+    height: 450px;
     width: 100%;
     top: 100px;
   }
