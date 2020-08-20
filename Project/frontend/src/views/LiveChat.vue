@@ -5,7 +5,8 @@
       <template v-for="(item, idx) in chats">
         <v-list-item :key="idx">
           <v-list-item-avatar v-if="item.userName!=nickname">
-            <v-img :src="psas[item.user_id]"></v-img>
+            <v-img v-if="psas[item.user_id]!=null" :src="psas[item.user_id]"></v-img>
+            <v-icon v-else x-large>mdi-account-circle</v-icon>
           </v-list-item-avatar>
 
           <v-list-item-content :class="{ 'text-right': item.userName==nickname}">
@@ -140,6 +141,10 @@ export default {
   },
   created() {
     this.connect()
+  },
+  updated() {
+    const chatbox = document.querySelector('#chats') 
+    chatbox.scrollTop = chatbox.scrollHeight
   }
 } 
 </script>
@@ -157,7 +162,7 @@ export default {
   #chats{
     position: absolute;
     overflow-y: scroll;
-    height: 450px;
+    height: 550px;
     width: 100%;
     top: 100px;
   }
