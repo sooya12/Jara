@@ -24,6 +24,7 @@
     <v-form class="input mt-5 d-flex" style="width: 100%; font-family: 'Handon3gyeopsal300g' !important;">
       <v-textarea
         v-model="chat"
+        autofocus
         label="채팅을 남겨주세요."
         color="green darken-1"
         auto-grow
@@ -163,7 +164,7 @@ export default {
   #chats{
     position: absolute;
     overflow-y: scroll;
-    height: 550px;
+    height: 250px;
     width: 100%;
     top: 100px;
   }
