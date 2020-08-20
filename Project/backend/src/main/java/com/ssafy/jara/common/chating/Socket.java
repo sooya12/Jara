@@ -30,11 +30,11 @@ public class Socket {
 		this.content = content;
 	}
 
-	public int getUserId() {
+	public int getUser_id() {
 		return user_id;
 	}
 
-	public void setUserId(int user_id) {
+	public void setUser_id(int user_id) {
 		this.user_id = user_id;
 	}
 	
@@ -42,5 +42,4 @@ public class Socket {
 	public String toString() {
 		return "Socket [userName=" + userName + ", content=" + content + ", user_id=" + user_id + "]";
 	}
-
 }
