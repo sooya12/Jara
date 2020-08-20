@@ -15,7 +15,8 @@
           </v-list-item-content>
 
           <v-list-item-avatar v-if="item.userName==nickname">
-            <v-img :src="psas[userInfo.id]"></v-img>
+            <v-img v-if="psas[item.user_id]!=null" :src="psas[userInfo.id]"></v-img>
+            <v-icon v-else x-large>mdi-account-circle</v-icon>
           </v-list-item-avatar>
         </v-list-item>
       </template>
