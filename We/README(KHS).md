@@ -365,3 +365,33 @@
 ### :blonde_woman:
 
 :video_camera: UCC 준비에 들어간다.
+
+
+
+# 2020.08.19 Day :one::two:
+
+### :computer:
+
+:hammer_and_wrench: 수정 및 보완
+
+
+
+### :blonde_woman:
+
+:iphone: 시연영상 준비
+
+
+
+# 2020.08.20 Day :one::three:
+
+### :computer:
+
+:hammer_and_wrench: 수정 및 보완
+
+:link: 코드 리뷰
+
+
+
+### :blonde_woman:
+
+:chart_with_upwards_trend: 발표 준비
