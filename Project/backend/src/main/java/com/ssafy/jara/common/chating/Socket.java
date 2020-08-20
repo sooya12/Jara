@@ -3,13 +3,15 @@ package com.ssafy.jara.common.chating;
 public class Socket {
 	private String userName;	// 사용자
 	private String content;		// 채팅 내용
-	
+	private int user_id;
+
 	public Socket() {}
 
-	public Socket(String userName, String content) {
+	public Socket(String userName, String content, int user_id) {
 		super();
 		this.userName = userName;
 		this.content = content;
+		this.user_id = user_id;
 	}
 
 	public String getUserName() {
@@ -27,10 +29,18 @@ public class Socket {
 	public void setContent(String content) {
 		this.content = content;
 	}
+
+	public int getUserId() {
+		return user_id;
+	}
+
+	public void setUserId(int user_id) {
+		this.user_id = user_id;
+	}
 	
 	@Override
 	public String toString() {
-		return "Socket [userName=" + userName + ", content=" + content + "]";
+		return "Socket [userName=" + userName + ", content=" + content + ", user_id=" + user_id + "]";
 	}
 
 }
