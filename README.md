@@ -207,7 +207,7 @@ $ git commit -m "| header | 설명"
 
 
 
-### :100: 명세 요건 진척률 : 90%
+### :100: 진척률 : 100%
 
 
 
@@ -216,6 +216,108 @@ $ git commit -m "| header | 설명"
 :ballot_box_with_check: 암호화
 
 :ballot_box_with_check: Firebase
+
+
+
+## :file_folder: 폴더 구조
+
+```
+├─backend
+│  ├─.mvn
+│  │  └─wrapper
+│  ├─.settings
+│  ├─.vscode
+│  ├─bin
+│  │  ├─.mvn
+│  │  │  └─wrapper
+│  │  └─src
+│  │      └─main
+│  │          ├─resources
+│  │          │  ├─config
+│  │          │  └─mappers
+│  │          └─webapp
+│  │              └─WEB-INF
+│  │                  └─views
+│  ├─src
+│  │  ├─main
+│  │  │  ├─java
+│  │  │  │  └─com
+│  │  │  │      └─ssafy
+│  │  │  │          └─jara
+│  │  │  │              ├─common
+│  │  │  │              │  ├─chating
+│  │  │  │              │  ├─interceptor
+│  │  │  │              │  ├─service
+│  │  │  │              │  │  └─jwt
+│  │  │  │              │  └─weather
+│  │  │  │              ├─config
+│  │  │  │              ├─controller
+│  │  │  │              ├─dao
+│  │  │  │              ├─dto
+│  │  │  │              ├─filter
+│  │  │  │              ├─handler
+│  │  │  │              └─service
+│  │  │  └─resources
+│  │  │      ├─config
+│  │  │      └─mappers
+│  │  └─test
+│  │      └─java
+│  │          └─com
+│  │              └─ssafy
+│  │                  └─jara
+│  └─target
+│      ├─classes
+│      │  ├─com
+│      │  │  └─ssafy
+│      │  │      └─jara
+│      │  │          ├─common
+│      │  │          │  ├─chating
+│      │  │          │  ├─interceptor
+│      │  │          │  ├─service
+│      │  │          │  │  └─jwt
+│      │  │          │  └─weather
+│      │  │          ├─config
+│      │  │          ├─controller
+│      │  │          ├─dao
+│      │  │          ├─dto
+│      │  │          ├─encryption
+│      │  │          ├─filter
+│      │  │          ├─handler
+│      │  │          └─service
+│      │  ├─config
+│      │  └─mappers
+│      ├─generated-sources
+│      │  └─annotations
+│      ├─generated-test-sources
+│      │  └─test-annotations
+│      ├─maven-archiver
+│      ├─maven-status
+│      │  └─maven-compiler-plugin
+│      │      ├─compile
+│      │      │  └─default-compile
+│      │      └─testCompile
+│      │          └─default-testCompile
+│      ├─surefire-reports
+│      └─test-classes
+│          └─com
+│              └─ssafy
+│                  └─jara
+├─frontend
+    ├─public
+    └─src
+        ├─assets
+        ├─components
+        │  ├─Accounts
+        │  ├─Articles
+        │  ├─Barters
+        │  ├─Checks
+        │  ├─Eithers
+        │  └─Tips
+        ├─plugins
+        ├─router
+        ├─store
+        └─views
+```
 
 
 
