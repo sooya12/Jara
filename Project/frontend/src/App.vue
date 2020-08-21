@@ -155,7 +155,7 @@
 
           <v-list-item @click="report">
             <v-dialog
-              v-model="isDialog"
+              :value="isDialog"
               width="500"
             >
               <template v-slot:activator="{ on, attrs }">
