@@ -314,3 +314,10 @@
 ## :pig2: 8월 20일 (목) 오늘 한 일 :deciduous_tree:
 
 * ppt 완성
+
+
+
+## :pig2: 8월 21일 (금) 오늘 한 일 :eight_pointed_black_star:
+
+* ppt 에 영상 추가
+* 발표준비
