@@ -32,10 +32,10 @@
         v-for="either in hotEithers"
         :key="either.id"
       >
-        <v-card-text v-if="all||ing">
+        <v-card-text v-if="all||ing" @click="goToEither(either.id)">
           <div class="d-flex justify-space-between align-center">
             <div class="font-weight-bold" style="font-family: 'Handon3gyeopsal600g' !important;">
-              <v-icon class="mr-2" v-if="psas[either.writer]==null">mdi-account-circle</v-icon>
+              <v-icon class="mr-2" v-if="psas[either.writer]==null" x-large>mdi-account-circle</v-icon>
               <v-avatar class="mr-2" v-else><img :src="psas[either.writer]"></v-avatar>
               {{ users[either.writer] }}
             </div>
@@ -88,10 +88,10 @@
         :key="either.id"
         @click="goToEither(either.id)"
       >
-        <v-card-text v-if="all">
+        <v-card-text v-if="all" @click="goToEither(either.id)">
           <div class="d-flex justify-space-between align-center">
             <div class="font-weight-bold" style="font-family: 'Handon3gyeopsal600g' !important;">
-              <v-icon class="mr-2" v-if="psas[either.writer]==null">mdi-account-circle</v-icon>
+              <v-icon class="mr-2" v-if="psas[either.writer]==null" x-large>mdi-account-circle</v-icon>
               <v-avatar class="mr-2" v-else><img :src="psas[either.writer]"></v-avatar>
               {{ users[either.writer] }}
             </div>
@@ -124,10 +124,10 @@
             <v-col cols="6" class="blue darken-2 rounded">{{ either.choiceB }}</v-col>
           </v-row>
         </v-card-text>
-        <v-card-text v-else-if="ing&&either.status==0">
+        <v-card-text v-else-if="ing&&either.status==0" @click="goToEither(either.id)">
           <div class="d-flex justify-space-between align-center">
             <div class="font-weight-bold" style="font-family: 'Handon3gyeopsal600g' !important;">
-              <v-icon class="mr-2" v-if="psas[either.writer]==null">mdi-account-circle</v-icon>
+              <v-icon class="mr-2" v-if="psas[either.writer]==null" x-large>mdi-account-circle</v-icon>
               <v-avatar class="mr-2" v-else><img :src="psas[either.writer]"></v-avatar>
               {{ users[either.writer] }}
             </div>
@@ -151,10 +151,10 @@
             <v-col cols="6" class="blue darken-2 rounded">{{ either.choiceB }}</v-col>
           </v-row>
         </v-card-text>
-        <v-card-text v-else-if="done&&either.status==1">
+        <v-card-text v-else-if="done&&either.status==1" @click="goToEither(either.id)"> 
           <div class="d-flex justify-space-between align-center">
             <div class="font-weight-bold" style="font-family: 'Handon3gyeopsal600g' !important;">
-              <v-icon class="mr-2" v-if="psas[either.writer]==null">mdi-account-circle</v-icon>
+              <v-icon class="mr-2" v-if="psas[either.writer]==null" x-large>mdi-account-circle</v-icon>
               <v-avatar class="mr-2" v-else><img :src="psas[either.writer]"></v-avatar>
               {{ users[either.writer] }}
             </div>

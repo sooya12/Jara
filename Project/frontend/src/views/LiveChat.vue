@@ -1,19 +1,30 @@
 <template>
   <v-container fluid mt-5>
     <div class="text-sm-h3 text-h4 font-weight-bold ml-3" style="font-family: 'Handon3gyeopsal600g' !important;">심심한 자라<v-icon x-large class="ml-2">mdi-cellphone-message</v-icon></div>
-    <div
-      v-for="(item, idx) in chats"
-      :key="idx"
-      class="mt-5"
-    >
-      <div :class="{ 'text-right': item.userName==nickname}">
-        <div v-if="item.userName!=nickname" style="font-family: 'Handon3gyeopsal300g' !important;"><v-icon>mdi-account-circle</v-icon> {{ item.userName }} :</div>
-        <div class="text-h6 mx-3 font-weight-bold" style="font-family: 'Handon3gyeopsal300g' !important;">{{ item.content }}</div>
-      </div>
-    </div>
-    <v-form class="mt-5 d-flex" style="font-family: 'Handon3gyeopsal300g' !important;">
+    <v-list id="chats" three-line style="font-family: 'Handon3gyeopsal300g';">
+      <template v-for="(item, idx) in chats">
+        <v-list-item :key="idx">
+          <v-list-item-avatar v-if="item.userName!=nickname">
+            <v-img v-if="psas[item.user_id]!=null" :src="psas[item.user_id]"></v-img>
+            <v-icon v-else x-large>mdi-account-circle</v-icon>
+          </v-list-item-avatar>
+
+          <v-list-item-content :class="{ 'text-right': item.userName==nickname}">
+            <v-list-item-subtitle>{{ item.userName }}</v-list-item-subtitle>
+            <v-list-item-title>{{ item.content }}</v-list-item-title>
+          </v-list-item-content>
+
+          <v-list-item-avatar v-if="item.userName==nickname">
+            <v-img v-if="psas[item.user_id]!=null" :src="psas[userInfo.id]"></v-img>
+            <v-icon v-else x-large>mdi-account-circle</v-icon>
+          </v-list-item-avatar>
+        </v-list-item>
+      </template>
+    </v-list>
+    <v-form class="input mt-5 d-flex" style="width: 100%; font-family: 'Handon3gyeopsal300g' !important;">
       <v-textarea
         v-model="chat"
+        autofocus
         label="채팅을 남겨주세요."
         color="green darken-1"
         auto-grow
@@ -79,12 +90,14 @@ export default {
     ...mapState([
       'users',
       'userInfo',
-      'api_server'
+      'psas',
+      'api_server',
     ])
   },
   data() {
     return {
       nickname: this.$store.state.userInfo.nickname,
+      id: this.$store.state.userInfo.id,
       chat: '',
       chats: [],
       fab: false,
@@ -101,7 +114,8 @@ export default {
       if (this.stompClient && this.stompClient.connected) {
         const msg = { 
           userName: this.nickname,
-          content: this.chat
+          content: this.chat,
+          user_id: this.id
         }
         this.stompClient.send("/receive", JSON.stringify(msg), {})
       }
@@ -129,6 +143,10 @@ export default {
   },
   created() {
     this.connect()
+  },
+  updated() {
+    const chatbox = document.querySelector('#chats') 
+    chatbox.scrollTop = chatbox.scrollHeight
   }
 } 
 </script>
@@ -136,5 +154,18 @@ export default {
 <style scoped>
   #jara {
     top: 10vh;
+  }
+
+  .input {
+    position: absolute;
+    bottom: 0;
+  }
+
+  #chats{
+    position: absolute;
+    overflow-y: scroll;
+    height: 450px;
+    width: 100%;
+    top: 100px;
   }
 </style>

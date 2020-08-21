@@ -26,23 +26,6 @@ public class TipServiceImpl implements TipService {
 	}
 
 	@Override
-	public List<Tip> selectListTipTag(int tag_id) {
-		System.out.println("service : " + tag_id);
-		return tipDao.selectListTipTag(tag_id);
-	}
-
-	@Override
-	public List<Tip> selectListTipSearch(String searchWord) {
-		return tipDao.selectListTipSearch(searchWord); 
-	}
-	
-	@Override
-	public List<Tip> selectListTipTagSearch(HashMap<String, String> hashMap) {
-		return tipDao.selectListTipTagSearch(hashMap);
-	}
-
-
-	@Override
 	public Tip selectTip(int id) {
 		return tipDao.selectTip(id);
 	}
@@ -50,11 +33,6 @@ public class TipServiceImpl implements TipService {
 	@Override
 	public int updateTip(Tip tip) {
 		return tipDao.updateTip(tip);
-	}
-
-	@Override
-	public int updateTipHits(int id) {
-		return tipDao.updateTipHits(id);
 	}
 
 	@Override
@@ -80,11 +58,6 @@ public class TipServiceImpl implements TipService {
 	@Override
 	public int deleteTipLike(HashMap<String, Integer> hashMap) {
 		return tipDao.deleteTipLike(hashMap);
-	}
-
-	@Override
-	public int deleteTipLikes(int tip_id) {
-		return tipDao.deleteTipLikes(tip_id);
 	}
 
 	@Override

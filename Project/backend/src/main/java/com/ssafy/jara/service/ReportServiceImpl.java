@@ -19,11 +19,6 @@ public class ReportServiceImpl implements ReportService {
 	}
 	
 	@Override
-	public int countReport(String nickname) {
-		return reportDao.countReport(nickname);
-	}
-	
-	@Override
 	public int findAccusedId(String nickname) {
 		return reportDao.findAccusedId(nickname);
 	}

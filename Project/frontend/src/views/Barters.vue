@@ -51,13 +51,14 @@
                 </v-chip>
               </template>
             </v-data-table>
-            <div class="text-center pt-2">
+            <div class="text-center py-2">
               <v-pagination v-model="page" :length="pageCount" color="green darken-2"></v-pagination>
             </div>
           </v-flex>
         </v-layout>
       </v-container>
     </div>
+    <div class="pb-5"></div>
     <v-dialog v-model="dialog" max-width="500px">
       <template v-slot:activator="{ on, attrs}">
         <v-spacer></v-spacer>
@@ -70,7 +71,7 @@
           class="my-1"
           v-bind="attrs"
           v-on="on"
-          color="green ligten-1"
+          color="green lighten-1"
         >
           <v-icon color="white">mdi-pencil</v-icon>
         </v-btn>
@@ -194,7 +195,6 @@ export default {
     this.loading = true
     axios.get(`${this.$store.state.api_server}/barters`)
       .then(res => {
-        // console.log(res.data)
         this.barters = res.data
         this.barters.forEach(function(item) {
           const tags = {
@@ -262,16 +262,13 @@ export default {
         })
     },
     goToBarterDetail(val) {
-      // console.log(val.id)
       this.$router.push(`/barters/${val.id}`)
     },
     uploadImg() {
       firebase.storage().ref(`barters/${this.id}`).put(this.file)
         .then(() => {
-          // console.log('저장')
           firebase.storage().ref(`barters/${this.id}`).getDownloadURL()
             .then(url => {
-              // console.log(url)
               axios.put(`${this.$store.state.api_server}/barters/${this.id}/img`,{ img_src : url })
                 .then(() => alert('거래를 성공적으로 등록했습니다.'))
             })

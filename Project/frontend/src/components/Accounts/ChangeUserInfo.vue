@@ -29,7 +29,7 @@
         v-model="user.nickname"
         :rules="[nickNameRules.required, nickNameRules.max]"
         background-color="white"
-        placeholder="닉네임을 입력해주세요. (특수문자는 사용할 수 없습니다.)"
+        placeholder="닉네임을 입력해주세요."
         outlined
         color="green darken-2"
         class="my-2"
@@ -185,7 +185,7 @@ export default {
       ],
       nickNameRules: {
         required: value => !!value || '닉네임을 입력해주세요.',
-        max: v => v.length <= 6 || '닉네임은 6자리 이하이어야 합니다.'
+        max: v => v.length <= 8 || '닉네임은 8자리 이하이어야 합니다.'
       },
       currentPWDRules: {
         required: value => !!value || '현재 비밀번호를 입력해주세요.',

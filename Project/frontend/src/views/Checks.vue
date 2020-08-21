@@ -54,6 +54,7 @@
           v-model="item.checked"
           color="green darken-2"
           :label="item.item"
+          :class="{ 'done' : item.checked }"
         ></v-checkbox>
       </div>
     </div>
@@ -64,6 +65,7 @@
           v-model="item.checked"
           color="green darken-2"
           :label="item.item"
+          :class="{ 'done' : item.checked }"
         ></v-checkbox>
       </div>
     </div>
@@ -89,6 +91,7 @@
           v-model="item.checked"
           color="green darken-2"
           :label="item.item"
+          :class="{ 'done' : item.checked }"
         ></v-checkbox>
         <v-btn @click="del(idx)" icon><v-icon>mdi-close-circle</v-icon></v-btn>
       </div>
@@ -300,7 +303,7 @@ export default {
         }
         this.self.push(data)
         this.checkItem = ''
-        localStorage.setItem(data.id, `${data.item}: ${data.checked}`)
+        localStorage.setItem(data.id, `${data.item}:${data.checked}`)
         this.cnt++
         localStorage.setItem('custom', `${this.cnt}`)
       }
@@ -336,7 +339,8 @@ export default {
           } else {
             const result = status.split(':')
             const item = result[0]
-            const checked = result[1]
+            let checked = false
+            if (result[1] == 'true') { checked = true }
             const custom = {
               id : i,
               item: item,

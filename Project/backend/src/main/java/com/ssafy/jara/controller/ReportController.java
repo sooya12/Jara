@@ -42,22 +42,6 @@ public class ReportController {
 	private ResponseEntity<String> insertReport(@RequestBody Report report) {
 
 		if (reportService.insertReport(report) > 0) { // 신고테이블에 추가
-
-			// 신고 테이블에 같은 아이디 값이 3회 이상 이면 회원 탈퇴
-//			if(reportService.countReport(report.getAccused_nickname())>=3) {
-//				System.out.println("count 3이상");
-//				
-//				int id = reportService.findAccusedId(report.getAccused_nickname());
-//				System.out.println("id : "+id);
-
-			// 회원 탈퇴시키기
-//				accountService.deleteAllFollow(id); // 팔로잉 팔로워일때 삭제
-//				
-//				if(accountService.deleteAccount(id) > 0) { // 회원 삭제
-//					return new ResponseEntity<String>("success", HttpStatus.OK);
-//				}
-//				
-//			}
 			return new ResponseEntity<String>("success", HttpStatus.OK);
 		}
 
@@ -71,16 +55,16 @@ public class ReportController {
 		Map<String, Object> tokenMap = new HashMap<>();
 		Map<String, Object> accountMap = new HashMap<>();
 		
-		System.out.println("token: " + token);
-		
 		tokenMap.putAll(jwtService.get(token));
 		accountMap = (Map<String, Object>) tokenMap.get("Account");
 		String nickname = (String) accountMap.get("nickname");
 		
 		Map<String, Object> resultMap = new HashMap<>();
 		
-		if (nickname.equals("관리자")) {
+		if (nickname.equals("관리자")) { // 관리자만 신고 리스트 관리 가능
 			List<Report> report = reportService.selectListReport();
+			
+			// 신고 리스트에 신고자 닉네임 추가
 			for(int i=0;i< report.size();i++) {
 				Report addInfo = report.get(i);
 				addInfo.setReporter_nickname(reportService.findNickname(addInfo.getReporter_id()));
@@ -88,14 +72,11 @@ public class ReportController {
 			resultMap.put("report", report);
 			resultMap.put("isAdmin", true);
 			if (!reportService.selectListReport().equals(null)) {
-				System.out.println(report);
 				return new ResponseEntity<Map<String, Object>>(resultMap, HttpStatus.OK);
 			} else {
-				System.out.println("내역이 없습니다.");
 				return new ResponseEntity<Map<String, Object>>(HttpStatus.NO_CONTENT);
 			}
 		} else {
-			System.out.println("Error: 권한이 없습니다.");
 			resultMap.put("isAdmin", false);
 			return new ResponseEntity<Map<String, Object>>(resultMap, HttpStatus.OK);
 		}
@@ -107,16 +88,12 @@ public class ReportController {
 		Map<String, Object> tokenMap = new HashMap<>();
 		Map<String, Object> accountMap = new HashMap<>();
 		
-		System.out.println("token: " + token);
-		
 		tokenMap.putAll(jwtService.get(token));
 		accountMap = (Map<String, Object>) tokenMap.get("Account");
 		String nickname = (String) accountMap.get("nickname");
 		
 		if (nickname.equals("관리자")) {
 			int id = reportService.findAccusedId(report.getAccused_nickname());
-			
-			accountService.deleteAllFollow(id); // 팔로잉 팔로워일때 삭제
 					
 			if(accountService.deleteAccount(id) > 0) { // 회원 삭제
 			
@@ -125,7 +102,6 @@ public class ReportController {
 				return new ResponseEntity<List<Report>>(HttpStatus.BAD_REQUEST);
 			}
 		} else {
-			System.out.println("Error: 권한이 없습니다.");
 			return new ResponseEntity<List<Report>>(HttpStatus.FORBIDDEN);
 		}
 	}

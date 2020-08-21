@@ -23,7 +23,7 @@ public class SwaggerSocketConfig implements WebSocketMessageBrokerConfigurer {
 	@Bean
 	public Docket postsApi() {
 		return new Docket(DocumentationType.SWAGGER_2)
-				.groupName("SSAFY_JARA")
+				.groupName("JARA")
 				.apiInfo(apiInfo())
 				.select()
 				.apis(RequestHandlerSelectors.basePackage("com.ssafy.jara.controller"))
@@ -32,11 +32,10 @@ public class SwaggerSocketConfig implements WebSocketMessageBrokerConfigurer {
 	}
 
 	private ApiInfo apiInfo() {
-		return new ApiInfoBuilder().title("SSAFY_JARA API")
-				.description("SSAFY_JARA API Reference for Developers")
-				.termsOfServiceUrl("https://edu.ssafy.com")
-				.license("SSAFY_JARA License")
-				.licenseUrl("ssafy_jara@ssafy.com").version("1.0").build();
+		return new ApiInfoBuilder().title("JARA API")
+				.description("JARA API Reference for Developers / jaraauth@gmail.com")
+				.license("JARA License")
+				.licenseUrl("https://i3a308.p.ssafy.io/").version("1.0").build();
 	}
 	
 	// Vue.js로 구현한 채팅

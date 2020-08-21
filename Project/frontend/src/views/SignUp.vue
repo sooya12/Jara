@@ -140,7 +140,7 @@
                   v-model="signUpData.nickname"
                   :rules="[nickNameRules.required, nickNameRules.max]"
                   background-color="white"
-                  placeholder="닉네임을 입력해주세요. (특수문자는 사용할 수 없습니다.)"
+                  placeholder="닉네임을 입력해주세요."
                   outlined
                   color="green darken-2"
                   class="my-2"

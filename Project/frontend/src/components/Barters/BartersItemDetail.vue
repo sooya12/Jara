@@ -32,7 +32,7 @@
                       <v-list-item-avatar>
                       <!-- <img :src="'https://steemitimages.com/u/' + author + '/avatar/small'" alt="avatar" onerror="this.src='https://steemitimages.com/u/monawoo/avatar/small'"> -->
                       <v-avatar>
-                        <v-icon v-if="psas[barter.writer]==null">mdi-account-circle</v-icon>
+                        <v-icon v-if="psas[barter.writer]==null" x-large>mdi-account-circle</v-icon>
                         <img v-else :src="psas[barter.writer]">
                       </v-avatar>
                       </v-list-item-avatar>
@@ -59,13 +59,13 @@
                 <article class="black--text">{{ barter.contents }}</article>
               </v-card-text>
               <v-card-text>
-                <v-toolbar v-if="$store.state.userInfo.id === barter.writer" flat color="white">
+                <v-toolbar flat color="white">
                   <v-row justify="center" align="center">
                     <template>
                       <v-chip class='tag'>#{{ tag_name[barter.tag_id] }}</v-chip>
                     </template>
                     <v-spacer></v-spacer>
-                    <v-dialog v-model="dialog" persistent max-width="600px">
+                    <v-dialog v-if="$store.state.userInfo.id === barter.writer" v-model="dialog" persistent max-width="600px">
                       <template v-slot:activator="{ on, attrs }">
                         <v-btn icon @click="deleteItem">
                           <v-icon>
@@ -206,11 +206,9 @@ export default {
     axios.get(`${this.$store.state.api_server}/barters/${this.$route.params.item_id}`)
       .then(res => {
         this.barter = res.data
-        // console.log('1차 성공')
       })
     axios.get(`${this.$store.state.api_server}/barters/${this.$route.params.item_id}/comments`)
       .then(res => {
-        // console.log('2차 성공')
         this.comments = res.data
       })
     this.isTaken = true
@@ -219,7 +217,6 @@ export default {
     newComment() {
       axios.post(`${this.$store.state.api_server}/barters/${this.barter.id}/comments`, this.new_comment)
         .then(res => {
-          // console.log('성공~')
           this.comments.push(res.data)
           this.new_comment.contents = ''
         })
@@ -265,7 +262,6 @@ export default {
         if (response) {
           axios.delete(`${this.$store.state.api_server}/barters/${this.barter.id}`)
             .then(() => {
-              // console.log('성공')
               if (flag) {
                 firebase.storage().ref().child(`barters/${this.tip.id}`).delete()
               }
@@ -289,10 +285,8 @@ export default {
       if ((this.$store.state.userInfo.id === this.barter.writer) && !this.barter.status) {
         const tag_id_dict = {'구해요':5,'사요':6,'팔아요':7,'나눠요':8}
         this.editedItem.tag_id = tag_id_dict[this.tag]
-        console.log(this.editedItem)
         axios.put(`${this.$store.state.api_server}/barters/${this.barter.id}`,this.editedItem)
           .then(res => {
-            // console.log(res.data)
             this.barter = res.data
           })
         this.close()

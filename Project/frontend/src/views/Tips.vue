@@ -66,15 +66,17 @@
           :tip="tip"
         />
         <v-pagination
+          class="pt-2"
           v-model="curPageNum"
           :length="numOfPages"
           color="green darken-2"
-          :total-visible="7"
+          total-visible="7"
           light
         >
         </v-pagination>
       </div>
     </div>
+    <div class="pb-16"></div>
     <v-speed-dial
       v-model="fab"
       fixed
