@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -79,7 +80,7 @@ public class ReportController {
 	
 	@ApiOperation(value = "관리자 페이지 - 계정 삭제", response = String.class)
 	@DeleteMapping("admin")
-	private ResponseEntity<List<Report>> deleteAccount(@RequestBody Report report, @RequestHeader(value="token") String token) {
+	private ResponseEntity<List<Report>> deleteAccount(@RequestParam("accused_nickname") String accused_nickname, @RequestHeader(value="token") String token) {
 		Map<String, Object> tokenMap = new HashMap<>();
 		Map<String, Object> accountMap = new HashMap<>();
 		
@@ -88,7 +89,8 @@ public class ReportController {
 		String nickname = (String) accountMap.get("nickname");
 
 		if (nickname.equals("관리자")) {
-			int id = reportService.findAccusedId(report.getAccused_nickname());
+			// int id = reportService.findAccusedId(report.getAccused_nickname());
+			int id = reportService.findAccusedId(accused_nickname);
 					
 			if(accountService.deleteAccount(id) > 0) { // 회원 삭제
 			

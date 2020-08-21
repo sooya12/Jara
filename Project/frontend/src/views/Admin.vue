@@ -75,12 +75,7 @@ export default {
     },
     setUserDisabled() {
       if (confirm(`정말 ${this.user} 님을 삭제하시겠습니까?`)) {
-        const requestHeaders = {
-          heaers: {
-            token: this.$cookies.get('auth-token')
-          }
-        }
-        axios.delete(`${this.$store.state.api_server}/reports/admin`, { accused_nickname: this.user }, requestHeaders)
+        axios.delete(`${this.$store.state.api_server}/reports/admin`, { params: { accused_nickname: this.user }, headers: { token: this.$cookies.get('auth-token')} })
           .then(() => {
             alert(`${this.user} 님이 성공적으로 삭제되었습니다.`)
             this.user = ''
