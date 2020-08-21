@@ -129,7 +129,7 @@ export default {
   },
   beforeRouteLeave(to, from, next) {
     if (!this.isSave) {
-      if (confirm('주소를 입력하지 않으면 자라의 부분적인 이용만 가능합니다. 정말로 이 페이지에서 벗어나시겠습니까?')) {next()}
+      if (confirm('주소를 입력하지 않으면 자라의 부분적인 이용만 가능합니다.\n정말로 이 페이지에서 벗어나시겠습니까?')) {next()}
       else {next(false)}
     } else {next()}
   },
