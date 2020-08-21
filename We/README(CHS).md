@@ -2212,3 +2212,31 @@ public class SwaggerSocketConfig implements WebSocketMessageBrokerConfigurer {
 
 
 
+### :feet: 20.08.20
+
+##### 발표 PPT 확인
+
+##### 컨설턴트님, 코치님과 14시 50분에 팀미팅
+
+> ###### AWS 시연
+>
+> ###### 어려웠던 점, 소감 발표
+
+##### 팀원들과 마지막 소소한 이야기 나눔
+
+-----
+
+
+
+### :feet: 20.08.21
+
+##### 공통 프로젝트 마지막 날
+
+##### 최종 UCC, PPT 확인
+
+------
+
+
+
+#### :happy: 열정넘치고 배려 깊은 팀원들을 만나서 행복했던 프로젝트 끝 :happy: 
+

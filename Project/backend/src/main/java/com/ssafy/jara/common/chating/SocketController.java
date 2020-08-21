@@ -12,8 +12,9 @@ public class SocketController {
 	public Socket SocketHandler(Socket socket) {
 		String userName = socket.getUserName();
 		String content = socket.getContent();
+		int user_id = socket.getUser_id();
 		
-		Socket result = new Socket(userName, content);
+		Socket result = new Socket(userName, content, user_id);
 		
 		return result;
 	}
