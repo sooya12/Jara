@@ -64,3 +64,33 @@ sudo date
 - Container가 꺼졌을 때 키는법
     - `docker start [Container 이름]`
     - ex) `docker start maria-db`
+
+### Nginx 사용 명령어
+```
+// 시작
+$ sudo service nginx start
+$ sudo systemctl start nginx
+$ sudo /etc/init.d/nginx start
+
+// 재시작
+$ sudo service nginx restart
+$ sudo systemctl restart nginx
+$ sudo /etc/init.d/nginx restart
+
+// 중지
+$ sudo service nginx stop
+$ sudo systemctl stop nginx
+$ sudo /etc/init.d/nginx stop
+
+// 상태
+$ sudo service nginx status
+$ sudo systemctl status nginx
+
+// 설정 reload
+$ sudo service nginx reload
+$ sudo systemctl reload nginx
+$ sudo nginx -s reload
+
+// configuration file syntax check
+$ sudo nginx -t
+```
