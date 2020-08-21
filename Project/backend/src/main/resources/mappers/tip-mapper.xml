@@ -81,7 +81,7 @@
 					 WHERE user_id=#{user_id})
 	</select>
 	
-	<!-- (좋아요수+조회수) 순 > 좋아요순 > 최신순 정렬 상위 5개 조회-->
+	<!-- (좋아요수+스크랩수) 순 > 좋아요순 > 최신순 정렬 상위 5개 조회-->
 	<select id="selectListTipTop5" resultType="com.ssafy.jara.dto.Tip">
 		SELECT *, (SELECT COUNT(*)
 				   FROM tip_like
@@ -93,7 +93,7 @@
 				   FROM tip_comment 
 				   WHERE tip_id=tip.id) AS commentCount
 	    FROM tip
-	    ORDER BY (likes + hits) DESC, likes DESC, created_at DESC
+	    ORDER BY (likes + scraps) DESC, likes DESC, created_at DESC
 	    LIMIT 5 
 	</select>
 	
