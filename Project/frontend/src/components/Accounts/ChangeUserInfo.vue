@@ -248,7 +248,7 @@ export default {
   },
   beforeRouteLeave(to, from, next) {
     if (!this.isSave) {
-      if (confirm('입력 내용이 저장되지 않습니다. 정말로 이 페이지에서 벗어나시겠습니까?')) {next()}
+      if (confirm('입력 내용이 저장되지 않습니다.\n정말로 이 페이지에서 벗어나시겠습니까?')) {next()}
       else {next(false)}
     } else {next()}
   },
