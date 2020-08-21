@@ -64,11 +64,6 @@ public class ReportController {
 		if (nickname.equals("관리자")) { // 관리자만 신고 리스트 관리 가능
 			List<Report> report = reportService.selectListReport();
 			
-			// 신고 리스트에 신고자 닉네임 추가
-			for(int i=0;i< report.size();i++) {
-				Report addInfo = report.get(i);
-				addInfo.setReporter_nickname(reportService.findNickname(addInfo.getReporter_id()));
-			}
 			resultMap.put("report", report);
 			resultMap.put("isAdmin", true);
 			if (!reportService.selectListReport().equals(null)) {
@@ -91,7 +86,7 @@ public class ReportController {
 		tokenMap.putAll(jwtService.get(token));
 		accountMap = (Map<String, Object>) tokenMap.get("Account");
 		String nickname = (String) accountMap.get("nickname");
-		
+
 		if (nickname.equals("관리자")) {
 			int id = reportService.findAccusedId(report.getAccused_nickname());
 					

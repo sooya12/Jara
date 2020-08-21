@@ -28,7 +28,9 @@
    
    <!-- 신고수 내림차순, 닉네임 오름차순으로 전체 신고 조회 -->
    <select id="selectListReport" resultType="com.ssafy.jara.dto.Report">
-   		SELECT * 
+   		SELECT *, (SELECT nickname
+   				   FROM user AS u
+   				   WHERE a.reporter_id=u.id) AS reporter_nickname 
 		FROM report AS a
 		ORDER BY (SELECT COUNT(reporter_id) 
 				  FROM report AS b 
