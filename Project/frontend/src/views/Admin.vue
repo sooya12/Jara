@@ -36,6 +36,7 @@ export default {
   data() {
     return {
       dialog: false,
+      allUsers: [],
       user: '',
       headers: [
         {
@@ -65,6 +66,9 @@ export default {
         .then(res => {
           if (res.data.isAdmin) {
             this.reports = res.data.report
+            for (const key in this.$store.state.users) {
+              this.allUsers.push(this.$store.state.users[key])
+            }
           }
           else {this.$router.push({name:'PageNotFound'})}
         })
