@@ -96,11 +96,9 @@ public class AccountController extends HttpServlet {
 	WeatherService weatherService;
 	
 	private final String BACK_SERVER_URI = "http://localhost:8081";			// local (back)
-//	private final String BACK_SERVER_URI = "https://i3a308.p.ssafy.io";		// server (back)
-	
+
 	private final String FRONT_SERVER_URI = "http://localhost:3030";		// local (front)
-//	private final String FRONT_SERVER_URI = "https://i3a308.p.ssafy.io";	// server (front)
-	
+
 	/* 네이버 소셜 로그인 URI */
 	/* Back */
 	private final String naverRedirectBackURI = BACK_SERVER_URI + "/jara/accounts/signin/naver/access";
@@ -120,11 +118,6 @@ public class AccountController extends HttpServlet {
 			NoSuchPaddingException, InvalidAlgorithmParameterException, IllegalBlockSizeException, BadPaddingException {
 
 		if (accountService.duplicateCheck(account) < 1) { // 이메일, 닉네임 중복 체크
-			// 비밀번호 암호화
-//			String hashPassword = BCrypt.hashpw(account.getPassword(), BCrypt.gensalt());
-//			account.setPassword(hashPassword);
-//			System.out.println("hashPassword : "+hashPassword);
-
 			if (accountService.insertAccount(account) > 0) { // 회원가입
 				
 				// 관리자 팔로우 추가하기
@@ -173,13 +166,6 @@ public class AccountController extends HttpServlet {
 	@PostMapping("signin")
 	private ResponseEntity<Account> loginAccount(@RequestBody Account account, HttpServletResponse response) {
 
-		// (암호화) 비밀번호와 비교
-//		Account findAccount =null;
-//
-//		if(BCrypt.checkpw(account.getPassword(),accountService.findPassword(account.getEmail()))) { // 기존 비밀번호와 같음
-//			findAccount = accountService.selectAccount(account); // 로그인
-//		}
-
 		Account findAccount = accountService.selectAccount(account); // 로그인
 
 		if (!findAccount.equals(null)) {
@@ -222,10 +208,6 @@ public class AccountController extends HttpServlet {
 	@ApiOperation(value = "비밀번호 변경 처리", response = Account.class)
 	@PutMapping("setnewpwd")
 	private ResponseEntity<String> setNewPassword(@RequestBody Account account) {
-
-		// 비밀번호 암호화
-//		String hashPassword = BCrypt.hashpw(account.getPassword(), BCrypt.gensalt());
-//		account.setPassword(hashPassword);
 
 		if (accountService.changePassword(account) > 0) { // 비밀번호 변경
 			return new ResponseEntity<String>("success", HttpStatus.OK);
@@ -289,16 +271,6 @@ public class AccountController extends HttpServlet {
 		}
 		return new ResponseEntity<String>("success", HttpStatus.OK);
 	}
-
-//	@ApiOperation(value = "회원 정보 삭제하기")
-//	@DeleteMapping("{id}")
-//	private ResponseEntity<String> deleteAccount(@RequestBody Account account) {
-//
-//		if (accountService.deleteAccount(account.getId()) > 0) { // 회원 삭제
-//			return new ResponseEntity<String>("success", HttpStatus.OK);
-//		}
-//		return new ResponseEntity<String>("fail", HttpStatus.NO_CONTENT);
-//	}
 
 	@ApiOperation(value = "팔로우 요청 보내기")
 	@PostMapping("follow")
@@ -535,20 +507,6 @@ public class AccountController extends HttpServlet {
 			throw new RuntimeException("API 응답을 읽는데 실패했습니다.", e);
 		}
 	}
-
-//	@ApiOperation(value = "카카오 로그인")
-//	@GetMapping("/signin/kakao")
-//	private ResponseEntity<String> loginKakao() throws UnsupportedEncodingException {
-//		String clientId = "2e50ed388c52dc3ef17eb1c332285923"; // REST API 키
-//		String redirectURI = URLEncoder.encode(kakaoRedirectBackURI, "UTF-8");
-//
-//		String apiURL = "https://kauth.kakao.com/oauth/authorize?";
-//		apiURL += "client_id=" + clientId;
-//		apiURL += "&redirect_uri=" + redirectURI;
-//		apiURL += "&response_type=code";
-//
-//		return new ResponseEntity<String>(apiURL, HttpStatus.OK);
-//	}
 
 	@ApiOperation(value = "카카오 로그인 토큰 접근")
 	@GetMapping("/signin/kakao/access")

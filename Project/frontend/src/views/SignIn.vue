@@ -100,8 +100,8 @@ export default {
       },
       isValid: false,
       showPWD: false,
-      naverLoginURL: 'https://nid.naver.com/oauth2.0/authorize?response_type=code&client_id=y_9J6LuNu9tyN5tgnmEN&redirect_uri=https://i3a308.p.ssafy.io/jara/accounts/signin/naver/access&state=20200708',
-      kakaoLoginURL: 'https://kauth.kakao.com/oauth/authorize?client_id=2e50ed388c52dc3ef17eb1c332285923&redirect_uri=https://i3a308.p.ssafy.io/jara/accounts/signin/kakao/access&response_type=code'
+      naverLoginURL: 'https://nid.naver.com/oauth2.0/authorize?response_type=code&client_id=[CLIENT_ID]&redirect_uri=[REDIRECT_URI]&state=20200708',
+      kakaoLoginURL: 'https://kauth.kakao.com/oauth/authorize?client_id=[CLIENT_ID]&redirect_uri=[REDIRECT_URI]&response_type=code'
     }
   },
   methods: {

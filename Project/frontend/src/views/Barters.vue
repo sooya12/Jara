@@ -18,16 +18,6 @@
           </v-text-field>
         </v-flex>
       </div>
-      <!-- <div align="center" justify="center">
-        <BartersItem
-          v-for="(barter, index) in barters"
-          :key="index"
-          :barter="barter"
-        />
-      </div> -->
-      <!-- <v-btn @click="write" style="position: fixed; bottom:3vh; right: 3vh" color="primary" fab small dark absolute bottom right>
-        <v-icon>mdi-pencil</v-icon>
-      </v-btn> -->
       <v-container>
         <v-layout row wrap>
           <v-flex xs12>
@@ -133,16 +123,12 @@
 
 <script>
 import axios from 'axios'
-// import BartersItem from '../components/Barters/BartersItem.vue'
 import _ from 'lodash'
 import { mapState } from 'vuex'
 import firebase from 'firebase'
 
 export default {
   name: 'Barters',
-  // components: {
-  //   BartersItem,
-  // },
   data() {
     return {
       barters: [],
