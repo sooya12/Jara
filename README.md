@@ -1,6 +1,6 @@
 # Sub PJT 3 [2020.08.03 ~ 2020.08.21] 
 
-## :woman_technologist: :man_technologist: 화장실 앞 정수기 테이블
+## :computer: 화장실 앞 정수기 테이블
 
 #### 팀장 : 김혜선 (front-end) ​​
 
