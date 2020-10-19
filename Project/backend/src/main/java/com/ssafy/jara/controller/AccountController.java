@@ -335,8 +335,8 @@ public class AccountController extends HttpServlet {
 	@GetMapping("/signin/naver/access")
 	private ResponseEntity<String> accessTokenNaver(HttpServletRequest request, HttpServletResponse response)
 			throws UnsupportedEncodingException {
-		String clientId = "y_9J6LuNu9tyN5tgnmEN";// 애플리케이션 클라이언트 아이디값";
-		String clientSecret = "8bMro7T5Dt";// 애플리케이션 클라이언트 시크릿값";
+		String clientId = "[CLIENT_ID]";// 애플리케이션 클라이언트 아이디값";
+		String clientSecret = "[CLIENT_SECRET]";// 애플리케이션 클라이언트 시크릿값";
 		String code = request.getParameter("code");
 		String state = request.getParameter("state");
 		String redirectURI = URLEncoder.encode(naverRedirectBackURI, "UTF-8");
@@ -584,10 +584,10 @@ public class AccountController extends HttpServlet {
 			BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(con.getOutputStream()));
 			StringBuilder sb = new StringBuilder();
 			sb.append("grant_type=authorization_code");
-			sb.append("&client_id=2e50ed388c52dc3ef17eb1c332285923");
+			sb.append("&client_id=[CLIENT_ID]");
 			sb.append("&redirect_uri=" + kakaoRedirectBackURI);
 			sb.append("&code=" + authorize_code);
-			sb.append("&client_secret=xoKGm0MyGUK9fZ6HO436hWPhqS67MNbJ");
+			sb.append("&client_secret=[CLIENT_SECRET]");
 			
 			bw.write(sb.toString());
 			bw.flush();
